@@ -1,0 +1,22 @@
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>도입문의 | NEXORA</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script></head>
+<body class="bg-[#f8f9ff] text-[#0b1c30] font-[Inter] min-h-screen"><jsp:include page="/inc/top.jsp" />
+<main class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-14">
+<nav class="flex items-center gap-2 text-sm text-slate-500 mb-8"><a class="hover:text-blue-600" href="${pageContext.request.contextPath}/index.jsp">홈</a><span>›</span><a class="hover:text-blue-600" href="${pageContext.request.contextPath}/customer/customer.jsp">고객센터</a><span>›</span><strong class="text-slate-900">도입문의</strong></nav>
+<section class="grid lg:grid-cols-[0.85fr_1.15fr] gap-8 items-start">
+<div class="rounded-2xl bg-[#0d1c32] text-white p-8 lg:p-10 shadow-sm"><span class="inline-flex px-3 py-1 rounded-full bg-blue-500/15 text-sky-300 text-xs font-bold tracking-wider">CONTACT NEXORA</span><h1 class="text-3xl lg:text-4xl font-bold mt-5 leading-tight">기업 환경에 맞는<br>솔루션을 상담해보세요.</h1><p class="mt-5 text-slate-300 leading-7">웹 인프라, 보안, 결제, SentinelOps 도입 및 기술지원에 대해 문의해 주세요. 담당자가 내용을 확인한 뒤 연락드립니다.</p>
+<div class="mt-9 space-y-4 text-sm"><div class="flex gap-3"><span class="material-symbols-outlined text-sky-400">schedule</span><div><b>응답 목표</b><p class="text-slate-400 mt-1">영업일 기준 1차 답변</p></div></div><div class="flex gap-3"><span class="material-symbols-outlined text-sky-400">support_agent</span><div><b>기술지원</b><p class="text-slate-400 mt-1">서비스 장애 및 기술 문의 접수</p></div></div><div class="flex gap-3"><span class="material-symbols-outlined text-sky-400">mail</span><div><b>이메일</b><p class="text-slate-400 mt-1">contact@nexora.co.kr</p></div></div></div></div>
+<div class="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 lg:p-10 shadow-sm"><div class="mb-7"><p class="text-xs font-bold tracking-wider text-blue-600">INQUIRY FORM</p><h2 class="text-2xl font-bold mt-2">문의 정보</h2><p class="text-sm text-slate-500 mt-2">현재는 화면 프로토타입이며, 제출 처리는 추후 Servlet/DAO와 연결하면 됩니다.</p></div>
+<form onsubmit="event.preventDefault(); alert('문의 화면 확인용 프로토타입입니다. 추후 Servlet과 연결하세요.');" class="grid sm:grid-cols-2 gap-5">
+<label class="text-sm font-semibold">이름 / 담당자명<input required class="mt-2 w-full rounded-lg border border-slate-300 px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500" type="text" placeholder="홍길동"></label>
+<label class="text-sm font-semibold">이메일<input required class="mt-2 w-full rounded-lg border border-slate-300 px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500" type="email" placeholder="name@company.com"></label>
+<label class="text-sm font-semibold">회사명<input class="mt-2 w-full rounded-lg border border-slate-300 px-4 py-3 outline-none focus:border-blue-500" type="text" placeholder="회사명"></label>
+<label class="text-sm font-semibold">문의 유형<select class="mt-2 w-full rounded-lg border border-slate-300 px-4 py-3 bg-white outline-none focus:border-blue-500"><option>솔루션 도입</option><option>SentinelOps</option><option>기술지원</option><option>일반 문의</option></select></label>
+<label class="sm:col-span-2 text-sm font-semibold">제목<input required class="mt-2 w-full rounded-lg border border-slate-300 px-4 py-3 outline-none focus:border-blue-500" type="text" placeholder="문의 제목을 입력하세요"></label>
+<label class="sm:col-span-2 text-sm font-semibold">문의 내용<textarea required rows="7" class="mt-2 w-full rounded-lg border border-slate-300 px-4 py-3 outline-none resize-y focus:border-blue-500" placeholder="도입 환경이나 발생한 문제를 작성해 주세요."></textarea></label>
+<div class="sm:col-span-2 flex flex-col sm:flex-row justify-between gap-4 pt-2"><a href="${pageContext.request.contextPath}/customer/customer.jsp" class="px-5 py-3 rounded-lg border border-slate-300 text-center font-semibold hover:bg-slate-50">고객센터로 돌아가기</a><button class="px-7 py-3 rounded-lg bg-[#0d1c32] text-white font-bold hover:bg-blue-700" type="submit">문의 접수</button></div>
+</form></div></section></main><jsp:include page="/inc/bottom.jsp" /></body></html>
