@@ -7,11 +7,9 @@
 <title>글쓰기 | NEXORA Community</title>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>
-tailwind.config={theme:{extend:{colors:{navy:'#0d1c32',blue:'#1c4fd7',page:'#f8f9ff',line:'#d3e4fe',muted:'#5c6678'},fontFamily:{sans:['Inter','sans-serif'],mono:['JetBrains Mono','monospace']}}}};
-</script>
-</head>
+
+
+<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/pages/board_write.css"/></head>
 <body class="bg-page text-navy font-sans min-h-screen">
 <jsp:include page="/inc/top.jsp" />
 <main class="w-full max-w-[1200px] mx-auto px-4 md:px-8 py-10">

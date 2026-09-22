@@ -3,7 +3,7 @@
 <title>도입문의 | NEXORA</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
-<script src="https://cdn.tailwindcss.com"></script></head>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/pages/customer_inquiry.css"/></head>
 <body class="bg-[#f8f9ff] text-[#0b1c30] font-[Inter] min-h-screen"><jsp:include page="/inc/top.jsp" />
 <main class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-14">
 <nav class="flex items-center gap-2 text-sm text-slate-500 mb-8"><a class="hover:text-blue-600" href="${pageContext.request.contextPath}/index.jsp">홈</a><span>›</span><a class="hover:text-blue-600" href="${pageContext.request.contextPath}/customer/customer.jsp">고객센터</a><span>›</span><strong class="text-slate-900">도입문의</strong></nav>
