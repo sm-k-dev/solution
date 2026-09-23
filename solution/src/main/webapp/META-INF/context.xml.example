@@ -11,6 +11,6 @@
         maxTotal="50"
         maxIdle="10"
         maxWaitMillis="-1"
-        url="jdbc:mysql://YOUR_DB_ENDPOINT:3306/nexora?serverTimezone=Asia/Seoul&amp;characterEncoding=UTF-8&amp;allowPublicKeyRetrieval=true&amp;useSSL=true"
+        url="jdbc:mysql://YOUR_DB_ENDPOINT:3306/solution?serverTimezone=Asia/Seoul&amp;characterEncoding=UTF-8&amp;allowPublicKeyRetrieval=true&amp;useSSL=true"
     />
 </Context>

@@ -5,11 +5,11 @@
 -- v4: board tags + board/comment/file structure finalized
 -- ============================================================
 
-CREATE DATABASE IF NOT EXISTS nexora
+CREATE DATABASE IF NOT EXISTS solution
   CHARACTER SET utf8mb4
   COLLATE utf8mb4_0900_ai_ci;
 
-USE nexora;
+USE solution;
 
 -- 1. MEMBER
 CREATE TABLE member (

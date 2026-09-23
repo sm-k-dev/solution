@@ -1,5 +1,5 @@
 -- NEXORA Sample Data v4
-USE nexora;
+USE solution;
 
 -- 실제 앱에서는 BCrypt 등으로 생성한 비밀번호 해시를 저장하세요.
 INSERT INTO member
