@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Context>
+
+    <Resource
+        name="jdbc/jspdb"
+        auth="Container"
+        type="javax.sql.DataSource"
+        driverClassName="com.mysql.cj.jdbc.Driver"
+
+        username="YOUR_DB_USERNAME"
+        password="YOUR_DB_PASSWORD"
+
+        maxTotal="50"
+        maxIdle="10"
+        maxWaitMillis="-1"
+
+        url="jdbc:mysql://YOUR_DB_ENDPOINT:3306/nexora?serverTimezone=Asia/Seoul&amp;characterEncoding=UTF-8&amp;allowPublicKeyRetrieval=true&amp;useSSL=true"
+    />
+
+</Context>
