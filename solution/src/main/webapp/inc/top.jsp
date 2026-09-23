@@ -117,7 +117,7 @@
 </div>
 </div>
 <!-- Item 3: 고객센터 -->
-<a class="px-3.5 py-2 text-[15px] font-medium text-slate-700 hover:text-[#1c4fd7] hover:bg-slate-50 rounded-md transition-colors" href="${pageContext.request.contextPath}/customer/customer.jsp">
+<a class="px-3.5 py-2 text-[15px] font-medium text-slate-700 hover:text-[#1c4fd7] hover:bg-slate-50 rounded-md transition-colors" href="${pageContext.request.contextPath}/inquiry/index.jsp">
             고객센터
           </a>
 <!-- Item 4: 커뮤니티 -->
@@ -138,7 +138,7 @@
           회원가입
         </a>
 <!-- Enterprise RFP Quick Button -->
-<a class="ml-1 inline-flex items-center gap-1.5 px-4 py-2 text-[14px] font-semibold text-white bg-[#0a192f] hover:bg-[#1c4fd7] rounded-lg shadow-sm hover:shadow transition-all active:scale-[0.98]" href="${pageContext.request.contextPath}/customer/inquiry.jsp">
+<a class="ml-1 inline-flex items-center gap-1.5 px-4 py-2 text-[14px] font-semibold text-white bg-[#0a192f] hover:bg-[#1c4fd7] rounded-lg shadow-sm hover:shadow transition-all active:scale-[0.98]" href="${pageContext.request.contextPath}/inquiry/write.jsp">
 <span>도입문의</span>
 <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
 </a>
@@ -239,7 +239,7 @@
 </a>
 </div>
 </div>
-<a class="px-3 py-2.5 font-medium text-slate-700 hover:bg-slate-50 rounded-lg flex items-center justify-between" href="${pageContext.request.contextPath}/customer/customer.jsp">
+<a class="px-3 py-2.5 font-medium text-slate-700 hover:bg-slate-50 rounded-lg flex items-center justify-between" href="${pageContext.request.contextPath}/inquiry/index.jsp">
 <span>고객센터</span>
 <span class="material-symbols-outlined text-[18px] text-slate-400">chevron_right</span>
 </a>
@@ -256,7 +256,7 @@
 <span>1544-6820</span>
 <span class="text-[11px] font-normal text-slate-500">(24/7/365 긴급대응)</span>
 </div>
-<a class="w-full mt-2 py-3 rounded-xl bg-[#1c4fd7] text-white text-center text-xs font-bold shadow-sm hover:bg-[#0a192f] transition-colors" href="${pageContext.request.contextPath}/customer/inquiry.jsp">
+<a class="w-full mt-2 py-3 rounded-xl bg-[#1c4fd7] text-white text-center text-xs font-bold shadow-sm hover:bg-[#0a192f] transition-colors" href="${pageContext.request.contextPath}/inquiry/write.jsp">
             기술 도입 상담 신청
           </a>
 </div>

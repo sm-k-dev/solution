@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 
 <html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_blank" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/pages/customer_customer.css"/></head><body class="bg-background font-body-md text-body-md text-on-surface min-h-screen antialiased">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/pages/inquiry_index.css"/></head><body class="bg-background font-body-md text-body-md text-on-surface min-h-screen antialiased">
 <jsp:include page="/inc/top.jsp" /><main class="w-full max-w-[1200px] mx-auto px-gutter-mobile lg:px-gutter-desktop py-space-xl"><div class="flex flex-col w-full space-y-12">
 <!-- 1. Breadcrumb & Page Header Banner -->
 <section class="flex flex-col gap-6 bg-surface-container-lowest p-8 md:p-10 rounded-xl shadow-sm">
@@ -124,7 +124,7 @@
 </div>
 </a>
 <!-- Card 4 -->
-<a class="group relative flex flex-col justify-between p-6 rounded-xl bg-surface-container-lowest shadow-sm hover:shadow-md transition-all duration-200" href="${pageContext.request.contextPath}/customer/inquiry.jsp">
+<a class="group relative flex flex-col justify-between p-6 rounded-xl bg-surface-container-lowest shadow-sm hover:shadow-md transition-all duration-200" href="${pageContext.request.contextPath}/inquiry/write.jsp">
 <div class="space-y-4">
 <div class="w-12 h-12 rounded-xl bg-surface-container-low flex items-center justify-center text-secondary group-hover:bg-secondary group-hover:text-on-secondary transition-colors">
 <span class="material-symbols-outlined text-[26px]">chat</span>

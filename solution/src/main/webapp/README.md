@@ -3,10 +3,10 @@
 ## Fixed in v4
 - Header login -> `/member/login.jsp`
 - Header signup -> `/member/signup.jsp`
-- Header/CTA 도입문의 -> `/customer/inquiry.jsp`
-- Customer Center 문의하기 -> `/customer/inquiry.jsp`
+- Header/CTA 도입문의 -> `/inquiry/write.jsp`
+- Customer Center 문의하기 -> `/inquiry/write.jsp`
 - Footer internal links converted to `${pageContext.request.contextPath}` paths
-- Added `customer/inquiry.jsp`
+- Added `inquiry/write.jsp`
 - Added `legal/legal.jsp` and `legal/sitemap.jsp` so footer policy links no longer 404
 - Fixed `board.jsp` JSP compilation collision caused by JavaScript template-literal `${...}` being parsed as JSP EL
 - Board prototype links that require unimplemented controllers now stay inside the prototype instead of producing immediate 404s
