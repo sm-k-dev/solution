@@ -1,52 +1,51 @@
-# Eclipse / IDE
+# Eclipse
 .metadata/
 bin/
 tmp/
 *.tmp
 *.bak
 *.swp
-.settings/
-.classpath
-.project
+*~.nib
+.recommenders/
+
+# IDE
 .idea/
 *.iml
 .vscode/
 
-# Java/build
-*.class
-target/
+# Build output
 build/
+target/
 out/
+*.class
 
 # Tomcat/runtime
-Servers/
 work/
+temp/
 logs/
-*.log
 
-# OS
-.DS_Store
-Thumbs.db
-desktop.ini
-
-# Runtime uploads
+# Runtime upload files
 src/main/webapp/upload/*
 !src/main/webapp/upload/.gitkeep
 
-# Secrets / local config
+# Local DB / secrets
 .env
-.env.*
-!.env.example
 db.properties
 database.properties
 application-local.properties
 secrets.properties
+**/context.xml
+
+# Safe templates
+!db.properties.example
+!**/context.xml.example
+
+# Keys / certificates
 *.pem
 *.key
 *.p12
 *.pfx
-config/local/
 
-# Tomcat local JNDI / DB configuration
-**/context.xml
-!**/context.xml.example
+# OS
+.DS_Store
+Thumbs.db

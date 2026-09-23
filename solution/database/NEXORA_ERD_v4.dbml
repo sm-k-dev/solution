@@ -1,0 +1,178 @@
+Project NEXORA {
+  database_type: 'MySQL'
+  Note: 'NEXORA v4 - team-friendly naming, JSP requirements, tags/files finalized'
+}
+
+Table member {
+  member_id bigint [pk, increment]
+  login_id varchar(50) [not null, unique]
+  password_hash varchar(255) [not null]
+  name varchar(50) [not null]
+  email varchar(150) [not null, unique]
+  phone varchar(30)
+  postcode varchar(10)
+  address varchar(255)
+  address_detail varchar(255)
+  role varchar(10) [note: 'USER / ADMIN']
+  status varchar(20) [note: 'ACTIVE / SUSPENDED / WITHDRAWN']
+  created_at datetime [note: '가입일자']
+  updated_at datetime
+  withdrawn_at datetime
+}
+
+Table board {
+  board_id bigint [pk, increment]
+  member_id bigint [not null]
+  category varchar(20)
+  title varchar(200)
+  content text
+  tags varchar(500) [note: '쉼표 구분 태그']
+  view_count int
+  is_deleted boolean
+  created_at datetime
+  updated_at datetime
+  deleted_at datetime
+}
+
+Table board_comment {
+  comment_id bigint [pk, increment]
+  board_id bigint [not null]
+  member_id bigint [not null]
+  parent_comment_id bigint
+  content varchar(2000)
+  is_deleted boolean
+  created_at datetime
+  updated_at datetime
+  deleted_at datetime
+}
+
+Table board_file {
+  file_id bigint [pk, increment]
+  board_id bigint [not null]
+  original_name varchar(255)
+  saved_name varchar(255)
+  file_path varchar(500)
+  file_size bigint
+  file_type varchar(100)
+  is_deleted boolean
+  created_at datetime
+  deleted_at datetime
+}
+
+Table inquiry {
+  inquiry_id bigint [pk, increment]
+  member_id bigint
+  assigned_admin_id bigint
+  contact_name varchar(100)
+  contact_email varchar(150)
+  company_name varchar(150)
+  category varchar(20)
+  title varchar(200)
+  content text
+  status varchar(20)
+  admin_answer text
+  is_deleted boolean
+  created_at datetime
+  updated_at datetime
+  answered_at datetime
+  deleted_at datetime
+}
+
+Table inquiry_file {
+  file_id bigint [pk, increment]
+  inquiry_id bigint [not null]
+  original_name varchar(255)
+  saved_name varchar(255)
+  file_path varchar(500)
+  file_size bigint
+  file_type varchar(100)
+  is_deleted boolean
+  created_at datetime
+  deleted_at datetime
+}
+
+Table incident {
+  incident_id bigint [pk, increment]
+  member_id bigint
+  service_name varchar(100)
+  error_type varchar(150)
+  error_message text
+  stack_trace text
+  severity varchar(10)
+  status varchar(20)
+  request_uri varchar(500)
+  http_method varchar(10)
+  ip_address varchar(45)
+  is_deleted boolean
+  occurred_at datetime
+  acknowledged_at datetime
+  resolved_at datetime
+  created_at datetime
+  updated_at datetime
+  deleted_at datetime
+}
+
+Table incident_analysis {
+  analysis_id bigint [pk, increment]
+  incident_id bigint [not null]
+  summary text
+  possible_cause text
+  suggested_action text
+  model_name varchar(100)
+  is_deleted boolean
+  created_at datetime
+  deleted_at datetime
+}
+
+Table incident_alert {
+  alert_id bigint [pk, increment]
+  incident_id bigint
+  alert_type varchar(30)
+  channel_name varchar(100)
+  message text
+  send_status varchar(10)
+  error_message varchar(1000)
+  sent_at datetime
+  created_at datetime
+}
+
+Table incident_history {
+  history_id bigint [pk, increment]
+  incident_id bigint [not null]
+  changed_by bigint
+  previous_status varchar(20)
+  new_status varchar(20)
+  note varchar(1000)
+  changed_at datetime
+}
+
+Table incident_inquiry {
+  incident_inquiry_id bigint [pk, increment]
+  incident_id bigint [not null]
+  inquiry_id bigint [not null]
+  linked_by bigint
+  link_reason varchar(500)
+  is_deleted boolean
+  linked_at datetime
+  deleted_at datetime
+  indexes {
+    (incident_id, inquiry_id) [unique]
+  }
+}
+
+Ref: board.member_id > member.member_id
+Ref: board_comment.board_id > board.board_id
+Ref: board_comment.member_id > member.member_id
+Ref: board_comment.parent_comment_id > board_comment.comment_id
+Ref: board_file.board_id > board.board_id
+Ref: inquiry.member_id > member.member_id
+Ref: inquiry.assigned_admin_id > member.member_id
+Ref: inquiry_file.inquiry_id > inquiry.inquiry_id
+Ref: incident.member_id > member.member_id
+Ref: incident_analysis.incident_id > incident.incident_id
+Ref: incident_alert.incident_id > incident.incident_id
+Ref: incident_history.incident_id > incident.incident_id
+Ref: incident_history.changed_by > member.member_id
+Ref: incident_inquiry.incident_id > incident.incident_id
+Ref: incident_inquiry.inquiry_id > inquiry.inquiry_id
+Ref: incident_inquiry.linked_by > member.member_id
