@@ -51,6 +51,37 @@
           (관리자 ID <c:out value="${entry.changedBy}"/>)</li>
     </c:forEach>
   </ul>
+
+  <h2>연결된 문의</h2>
+  <c:choose>
+    <c:when test="${empty linkedInquiries}"><p>연결된 문의가 없습니다.</p></c:when>
+    <c:otherwise>
+      <ul>
+        <c:forEach var="item" items="${linkedInquiries}">
+          <li>문의 #<c:out value="${item.inquiryId}"/>:
+              <c:out value="${item.title}"/> (<c:out value="${item.status}"/>)
+              <c:out value="${item.linkReason}"/>
+              <span>연결: <c:out value="${item.linkedAt}"/></span>
+              <form method="post" action="${pageContext.request.contextPath}/sentinel/incident/inquiry/unlink">
+                <input type="hidden" name="id" value="${incident.incidentId}">
+                <input type="hidden" name="inquiryId" value="${item.inquiryId}">
+                <input type="hidden" name="csrfToken" value="${csrfToken}">
+                <button type="submit">연결 해제</button>
+              </form>
+          </li>
+        </c:forEach>
+      </ul>
+    </c:otherwise>
+  </c:choose>
+  <h3>문의 연결</h3>
+  <p>존재하는 문의 ID를 입력하세요. 삭제된 문의는 연결할 수 없습니다.</p>
+  <form method="post" action="${pageContext.request.contextPath}/sentinel/incident/inquiry/link">
+    <input type="hidden" name="id" value="${incident.incidentId}">
+    <input type="hidden" name="csrfToken" value="${csrfToken}">
+    <label>문의 ID <input type="number" name="inquiryId" min="1" required></label>
+    <label>연결 사유 <input type="text" name="reason" maxlength="500"></label>
+    <button type="submit">문의 연결</button>
+  </form>
 </main>
 </body>
 </html>

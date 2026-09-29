@@ -26,6 +26,7 @@ public class IncidentFilter implements Filter {
             return;
         }
         HttpServletRequest httpRequest = (HttpServletRequest) request;
+        request.setCharacterEncoding("UTF-8");
         StatusResponse wrapped = new StatusResponse((HttpServletResponse) response);
         try {
             chain.doFilter(request, wrapped);
