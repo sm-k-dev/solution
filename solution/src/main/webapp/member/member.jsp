@@ -1,3 +1,4 @@
+<%@page import="member.dto.MemberDTO"%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 
@@ -51,6 +52,7 @@ main>:last-child {
 							class="flex items-center gap-1.5 text-on-surface-variant font-body-sm text-body-sm">
 							<span>홈</span> <span
 								class="material-symbols-outlined text-[16px] text-outline">chevron_right</span>
+								<% MemberDTO member = (MemberDTO) request.getAttribute("member"); %>
 							<span>마이페이지</span> <span
 								class="material-symbols-outlined text-[16px] text-outline">chevron_right</span>
 							<span class="text-on-surface font-semibold">회원정보 관리</span>
@@ -116,7 +118,7 @@ main>:last-child {
 									class="font-label-caps text-label-caps text-on-surface-variant uppercase">아이디
 									(ID)</span>
 								<div class="flex items-center gap-1.5 mt-0.5">
-									<span class="font-metric-val text-metric-val text-on-surface">admin</span>
+									<span class="font-metric-val text-metric-val text-on-surface"><%=member.getLoginId()%></span>
 								</div>
 							</div>
 							<div
@@ -275,7 +277,7 @@ main>:last-child {
 										<div class="relative flex items-center">
 											<input
 												class="w-full h-11 px-3.5 bg-surface-container-low text-on-surface-variant font-code-inline text-code-inline rounded-lg cursor-not-allowed select-none focus:outline-none"
-												readonly="" type="text" value="nexora_admin" /> <span
+												readonly="" type="text" value="<%=member.getLoginId()%>" /> <span
 												class="material-symbols-outlined absolute right-3 text-outline text-[18px]">lock</span>
 										</div>
 										<p
@@ -291,7 +293,7 @@ main>:last-child {
 											for="memberName"> 담당자 성명 <span class="text-error">*</span>
 										</label> <input
 											class="w-full h-11 px-3.5 bg-surface-container-lowest text-on-surface font-body-md text-body-md rounded-lg shadow-sm focus:outline-none focus:bg-surface-container-lowest"
-											id="memberName" required="" type="text" value="홍길동" />
+											id="memberName" required="" type="text" value="<%=member.getName()%>" />
 									</div>
 									<!-- Corporate Email with action -->
 									<div>
@@ -305,7 +307,7 @@ main>:last-child {
 												<input
 													class="w-full h-11 px-3.5 bg-surface-container-lowest text-on-surface font-body-md text-body-md rounded-lg shadow-sm focus:outline-none"
 													id="memberEmail" required="" type="email"
-													value="hong.gd@nexura-systems.com" />
+													value="<%=member.getEmail()%>" />
 												<div
 													class="absolute right-3 top-2.5 flex items-center gap-1 bg-surface-container px-2 py-0.5 rounded-full text-secondary text-label-caps font-label-caps">
 													<span class="material-symbols-outlined text-[14px]">check</span>
@@ -324,7 +326,7 @@ main>:last-child {
 											for="memberPhone"> 휴대폰 번호 <span class="text-error">*</span>
 										</label> <input
 											class="w-full h-11 px-3.5 bg-surface-container-lowest text-on-surface font-body-md text-body-md rounded-lg shadow-sm focus:outline-none"
-											id="memberPhone" required="" type="tel" value="010-1234-5678" />
+											id="memberPhone" required="" type="tel" value="<%=member.getPhone()%>" />
 									</div>
 									<!-- Business Address -->
 									<div class="space-y-2">
@@ -334,7 +336,7 @@ main>:last-child {
 										<div class="flex gap-2">
 											<input
 												class="w-32 h-11 px-3.5 bg-surface-container-low text-on-surface font-code-inline text-code-inline rounded-lg focus:outline-none"
-												placeholder="우편번호" readonly="" type="text" value="06164" />
+												placeholder="우편번호" readonly="" type="text" value="<%=member.getPostcode() == 0 ? "" : member.getPostcode()%>" />
 											<button
 												class="h-11 px-4 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-body-sm text-body-sm font-medium transition-colors flex items-center justify-center"
 												type="button">
@@ -344,10 +346,10 @@ main>:last-child {
 										</div>
 										<input
 											class="w-full h-11 px-3.5 bg-surface-container-low text-on-surface font-body-md text-body-md rounded-lg focus:outline-none"
-											readonly="" type="text" value="서울특별시 강남구 영동대로 517 (삼성동)" /> <input
+											readonly="" type="text" value="<%=member.getAddress() == null ? "" : member.getAddress()%>" /> <input
 											class="w-full h-11 px-3.5 bg-surface-container-lowest text-on-surface font-body-md text-body-md rounded-lg shadow-sm focus:outline-none"
 											placeholder="상세 주소를 입력하세요" type="text"
-											value="아셈타워 28층 클라우드 엔지니어링 랩" />
+											value="<%= member.getAddressDetail() == null ? "" : member.getAddressDetail() %>" />
 									</div>
 								</form>
 							</div>
@@ -397,7 +399,7 @@ main>:last-child {
 									<div class="relative flex items-center">
 										<input
 											class="w-full h-11 px-3.5 pr-10 bg-surface-container-lowest text-on-surface font-body-md text-body-md rounded-lg shadow-sm focus:outline-none"
-											id="currentPassword" placeholder="현재 비밀번호를 입력하세요"
+											id="currentPassword" placeholder="현재 비밀번호를 입력하세요" name="currentPassword"
 											type="password" />
 										<button
 											class="absolute right-3 text-outline hover:text-on-surface focus:outline-none flex items-center"
@@ -406,6 +408,7 @@ main>:last-child {
 											<span class="material-symbols-outlined text-[20px]">visibility</span>
 										</button>
 									</div>
+									<p id="passwordCheckMessage" style="font-size: 12px;"></p>
 								</div>
 								<!-- New Password -->
 								<div>
@@ -423,8 +426,8 @@ main>:last-child {
 											<span class="material-symbols-outlined text-[20px]">visibility</span>
 										</button>
 									</div>
-									<p class="font-body-sm text-body-sm text-outline mt-1">8자
-										이상 영문 대소문자, 숫자, 특수문자 조합</p>
+									<p id="passwordMatchMessage" class="font-body-sm text-body-sm text-outline mt-1">
+									8자 이상 영문 대소문자, 숫자, 특수문자 조합</p>
 								</div>
 								<!-- Confirm New Password -->
 								<div>
@@ -432,14 +435,10 @@ main>:last-child {
 										class="block font-body-sm text-body-sm font-medium text-on-surface mb-1"
 										for="confirmPassword"> 새 비밀번호 확인 </label>
 									<div class="relative flex items-center">
-										<input
-											class="w-full h-11 px-3.5 pr-10 bg-surface-container-lowest text-on-surface font-body-md text-body-md rounded-lg shadow-sm focus:outline-none"
-											id="confirmPassword" placeholder="새 비밀번호 다시 입력"
-											type="password" />
-										<button
-											class="absolute right-3 text-outline hover:text-on-surface focus:outline-none flex items-center"
-											onclick="togglePasswordVisibility('confirmPassword', this)"
-											type="button">
+										<input class="w-full h-11 px-3.5 pr-10 bg-surface-container-lowest text-on-surface font-body-md text-body-md rounded-lg shadow-sm focus:outline-none"
+											id="confirmPassword" name="confirmPassword" placeholder="새 비밀번호 다시 입력" type="password" />
+										<button class="absolute right-3 text-outline hover:text-on-surface focus:outline-none flex items-center"
+											onclick="togglePasswordVisibility('confirmPassword', this)" type="button">
 											<span class="material-symbols-outlined text-[20px]">visibility</span>
 										</button>
 									</div>
@@ -451,8 +450,7 @@ main>:last-child {
 									</span>
 								</div>
 								<div class="pt-2">
-									<button
-										class="w-full h-11 px-4 rounded-lg bg-primary-container hover:bg-on-surface text-on-primary font-body-md text-body-md font-medium shadow-sm transition-colors flex items-center justify-center gap-2"
+									<button class="w-full h-11 px-4 rounded-lg bg-primary-container hover:bg-on-surface text-on-primary font-body-md text-body-md font-medium shadow-sm transition-colors flex items-center justify-center gap-2"
 										type="button">
 										<span class="material-symbols-outlined text-[18px]">lock_reset</span>
 										비밀번호 변경 적용
@@ -579,37 +577,179 @@ main>:last-child {
 				</section>
 			</div>
 			<script>
-  function togglePasswordVisibility(fieldId, buttonElement) {
-    const input = document.getElementById(fieldId);
-    if (!input) return;
-    const icon = buttonElement.querySelector('.material-symbols-outlined');
-    if (input.type === 'password') {
-      input.type = 'text';
-      if (icon) icon.textContent = 'visibility_off';
-    } else {
-      input.type = 'password';
-      if (icon) icon.textContent = 'visibility';
-    }
-  }
+				function togglePasswordVisibility(fieldId, buttonElement) {
+					
+					const input = document.getElementById(fieldId);
+					
+				    if (!input) return;
+				    
+					const icon = buttonElement.querySelector('.material-symbols-outlined');
+					
+					if (input.type === 'password') {
+			    	
+						input.type = 'text';
+			      
+						if (icon) icon.textContent = 'visibility_off';
+			      
+					} else {
+			    	
+						input.type = 'password';
+			      
+					if (icon) icon.textContent = 'visibility';
+					
+					}
+			    
+				}
+			
+				function handleSaveSuccess() {
+					
+					const notice = document.getElementById('saveNotice');
+					
+					if (notice) {
+						
+						notice.classList.remove('hidden');
+						notice.classList.add('flex');
+						setTimeout(() => {
+							
+							notice.classList.add('hidden');
+							notice.classList.remove('flex');
+						}, 3500);
+			    	}
+				}
+			
+				function confirmAccountTermination() {
+			    	if (confirm('엔터프라이즈 마스터 계정 탈퇴 신청 시 기업 연계 서비스가 중단될 수 있습니다. 탈퇴 절차를 진행하시겠습니까?')) {
+			    		
+						alert('본인 확인 및 기업 대표자 확인 절차를 위해 고객지원센터로 연결됩니다.');
+			    	}
+				}
+			  
+				document.getElementById("currentPassword").addEventListener("blur", function() {
+			
+					const currentPassword = this.value;
+				    const message = document.getElementById("passwordCheckMessage");
+			
+				    if (currentPassword.trim() === "") {
+				        message.textContent = "";
+				        return;
+				    }
+			
+				    fetch("<%= request.getContextPath() %>/member/passwordCheck.do", {
+				        method: "POST",
+				        headers: {
+				            "Content-Type": "application/x-www-form-urlencoded"
+				        },
+				        body: "currentPassword=" + encodeURIComponent(currentPassword)
+				    })
+				    .then(response => response.text())
+				    .then(result => {
+			
+				        result = result.trim();
+			
+				        if (result === "MATCH") {
+				            message.textContent = "비밀번호가 일치합니다.";
+				            message.style.color = "blue";
+				        } else {
+				            message.textContent = "비밀번호가 일치하지 않습니다.";
+				            message.style.color = "red";
+				        }
+				    })
+				    .catch(error => {
+				        console.error(error);
+				        message.textContent = "비밀번호 확인 중 오류가 발생했습니다.";
+				        message.style.color = "red";
+				    });
+				});
+			  
+				const newPassword = document.getElementById("newPassword");
+				const confirmPassword = document.getElementById("confirmPassword");
+				const passwordMatchMessage = document.getElementById("passwordMatchMessage");
 
-  function handleSaveSuccess() {
-    const notice = document.getElementById('saveNotice');
-    if (notice) {
-      notice.classList.remove('hidden');
-      notice.classList.add('flex');
-      setTimeout(() => {
-        notice.classList.add('hidden');
-        notice.classList.remove('flex');
-      }, 3500);
-    }
-  }
+				const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
 
-  function confirmAccountTermination() {
-    if (confirm('엔터프라이즈 마스터 계정 탈퇴 신청 시 기업 연계 서비스가 중단될 수 있습니다. 탈퇴 절차를 진행하시겠습니까?')) {
-      alert('본인 확인 및 기업 대표자 확인 절차를 위해 고객지원센터로 연결됩니다.');
-    }
-  }
-</script>
+				function checkPasswordMatch() {
+
+				    const current = document.getElementById("currentPassword").value;
+				    const password = newPassword.value;
+				    const confirm = confirmPassword.value;
+
+				    if(password === "") {
+
+				        passwordMatchMessage.textContent = "8자 이상 영문 대소문자, 숫자, 특수문자 조합";
+				        passwordMatchMessage.className = "font-body-sm text-body-sm text-outline mt-1";
+				        passwordMatchMessage.style.color = "";
+
+				        return;
+				    }
+
+				    if(!passwordPattern.test(password)) {
+
+				        passwordMatchMessage.textContent = "";
+				        passwordMatchMessage.style.color = "";
+
+				        return;
+				    }
+
+				    if(current !== "" && current === password) {
+
+				        passwordMatchMessage.textContent = "현재 비밀번호와 일치하여 변경할 수 없습니다.";
+				        passwordMatchMessage.className = "font-body-sm text-[12px]";
+				        passwordMatchMessage.style.color = "red";
+
+				        return;
+				    }
+
+				    if(confirm === "") {
+
+				        passwordMatchMessage.textContent = "";
+				        passwordMatchMessage.style.color = "";
+
+				        return;
+				    }
+
+				    passwordMatchMessage.className = "font-body-sm text-[12px]";
+
+				    if(password === confirm) {
+
+				        passwordMatchMessage.textContent = "비밀번호가 일치합니다.";
+				        passwordMatchMessage.style.color = "green";
+
+				    } else {
+
+				        passwordMatchMessage.textContent = "비밀번호가 일치하지 않습니다.";
+				        passwordMatchMessage.style.color = "red";
+				    }
+				}
+
+				function checkPasswordPattern() {
+
+				    const password = newPassword.value;
+
+				    if(password === "") {
+
+				        passwordMatchMessage.textContent = "8자 이상 영문 대소문자, 숫자, 특수문자 조합";
+				        passwordMatchMessage.className = "font-body-sm text-body-sm text-outline mt-1";
+				        passwordMatchMessage.style.color = "";
+
+				        return;
+				    }
+
+				    if(!passwordPattern.test(password)) {
+
+				        passwordMatchMessage.textContent = "8자 이상 영문 대소문자, 숫자, 특수문자 조합으로 작성해주세요.";
+				        passwordMatchMessage.className = "font-body-sm text-[12px]";
+				        passwordMatchMessage.style.color = "red";
+
+				        return;
+				    }
+
+				    checkPasswordMatch();
+				}
+
+				newPassword.addEventListener("input", checkPasswordMatch);
+				confirmPassword.addEventListener("input", checkPasswordMatch);
+				newPassword.addEventListener("blur", checkPasswordPattern);
+			</script>
 		</div>
 	</main><jsp:include page="/inc/bottom.jsp" />
 </body>

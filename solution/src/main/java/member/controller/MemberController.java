@@ -44,17 +44,57 @@ public class MemberController extends HttpServlet {
 
         try {
 
-            if (loginId == null && ("/member/memberUpdate.do".equals(action) || "/member/memberUpdatePro.do".equals(action) || "/member/memberDelete.do".equals(action))) {
-            	
+            if (loginId == null && ("/member/member.do".equals(action) || "/member/memberUpdate.do".equals(action) || "/member/memberUpdatePro.do".equals(action) || "/member/memberDelete.do".equals(action))) {
                 response.sendRedirect(request.getContextPath() + "/member/login.do");
+                
                 return;
             }
 
-            if ("/member/login.do".equals(action)) {
+            if ("/member/member.do".equals(action)) {
+
+                if (loginId == null) {
+                	
+                    response.sendRedirect(request.getContextPath() + "/member/login.do");
+                    return;
+                }
+
+                MemberDTO member = memberService.getMember(loginId);
+
+                if (member == null) {
+                	
+                    response.sendRedirect(request.getContextPath() + "/member/login.do");
+                    return;
+                }
+
+                request.setAttribute("member", member);
+                request.getRequestDispatcher("/member/member.jsp").forward(request, response);
+                return;
+
+            } else if ("/member/passwordCheck.do".equals(action)) {
+
+                if (loginId == null) {
+                	
+                    response.sendRedirect(request.getContextPath() + "/member/login.do");
+                    return;
+                }
+
+                String currentPassword = request.getParameter("currentPassword");
+
+                boolean passwordMatch = memberService.checkCurrentPassword(loginId, currentPassword);
+
+                if (passwordMatch) {
+                	
+                    response.getWriter().write("MATCH");
+                } else {
+                	
+                    response.getWriter().write("NOT_MATCH");
+                }
+
+                return;
+            } else if ("/member/login.do".equals(action)) {
 
                 request.getRequestDispatcher("/member/login.jsp").forward(request, response);
                 return;
-
             } else if ("/member/loginAction.do".equals(action)) {
 
                 String loginIdParam = request.getParameter("userId");
@@ -67,30 +107,45 @@ public class MemberController extends HttpServlet {
                     return;
                 }
 
-                MemberDTO member = memberService.login(loginIdParam, password);
+                String loginResult = memberService.checkLogin(loginIdParam, password);
 
-                if (member != null) {
-
-                    if (session != null) {
-                        session.invalidate();
-                    }
-
-                    session = request.getSession(true);
-
-                    session.setAttribute("memberId", member.getMemberId());
-                    session.setAttribute("loginId", member.getLoginId());
-                    session.setAttribute("name", member.getName());
-                    session.setAttribute("role", member.getRole());
-
-                    response.sendRedirect(request.getContextPath() + "/index.jsp");
-                    return;
-
-                } else {
-
-                    request.setAttribute("errorMessage", "아이디 또는 비밀번호가 올바르지 않습니다.");
+                if ("INVALID_ID".equals(loginResult)) {
+                	
+                    request.setAttribute("errorMessage", "등록되지 않은 아이디 입니다.");
                     request.getRequestDispatcher("/member/login.jsp").forward(request, response);
                     return;
                 }
+
+                if ("INVALID_PASSWORD".equals(loginResult)) {
+                	
+                    request.setAttribute("errorMessage", "비밀번호가 일치하지 않습니다.");
+                    request.getRequestDispatcher("/member/login.jsp").forward(request, response);
+                    return;
+                }
+
+                MemberDTO member = memberService.login(loginIdParam, password);
+
+                if (member == null) {
+                	
+                    request.setAttribute("errorMessage", "로그인 처리 중 오류가 발생했습니다.");
+                    request.getRequestDispatcher("/member/login.jsp").forward(request, response);
+                    return;
+                }
+
+                if (session != null) {
+                	
+                    session.invalidate();
+                }
+
+                session = request.getSession(true);
+
+                session.setAttribute("memberId", member.getMemberId());
+                session.setAttribute("loginId", member.getLoginId());
+                session.setAttribute("name", member.getName());
+                session.setAttribute("role", member.getRole());
+
+                response.sendRedirect(request.getContextPath() + "/index.jsp");
+                return;
 
             } else if ("/member/logout.do".equals(action)) {
 
@@ -108,7 +163,7 @@ public class MemberController extends HttpServlet {
             }
 
         } catch (Exception e) {
-
+        	
             e.printStackTrace();
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }

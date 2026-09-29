@@ -168,6 +168,13 @@ main>:last-child {
 								class="font-body-md text-body-md text-on-surface-variant mt-1.5">등록된
 								기업 계정 정보를 입력해 주세요.</p>
 						</div>
+						
+						<% if (request.getAttribute("errorMessage") != null) { %>
+							<script>
+							    alert("<%= request.getAttribute("errorMessage") %>");
+							</script>
+						<% } %>
+						
 						<!-- Login Form Body (JSP Standard Form Format) -->
 						<form action="loginAction.do" class="space-y-5" id="loginForm"
 							method="post">

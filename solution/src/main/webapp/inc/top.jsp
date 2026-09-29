@@ -200,7 +200,7 @@
 
 					<a
 						class="px-4 py-2 text-[14px] font-medium text-[#0a192f] border border-slate-300 rounded-lg hover:bg-slate-50 hover:border-slate-400 transition-all"
-						href="${pageContext.request.contextPath}/member/member.jsp">
+						href="${pageContext.request.contextPath}/member/member.do">
 						마이페이지 </a>
 
 					<a
