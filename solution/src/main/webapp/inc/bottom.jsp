@@ -135,7 +135,7 @@
                 </a>
 </li>
 <li>
-<a class="text-[#cbd5e1] hover:text-white hover:text-[#38bdf8] transition-colors" href="${pageContext.request.contextPath}/customer/customer.jsp">
+<a class="text-[#cbd5e1] hover:text-white hover:text-[#38bdf8] transition-colors" href="${pageContext.request.contextPath}/inquiry/index.jsp">
                   고객센터
                 </a>
 </li>
@@ -145,12 +145,12 @@
                 </a>
 </li>
 <li>
-<a class="text-[#cbd5e1] hover:text-white hover:text-[#38bdf8] transition-colors" href="${pageContext.request.contextPath}/customer/inquiry.jsp">
+<a class="text-[#cbd5e1] hover:text-white hover:text-[#38bdf8] transition-colors" href="${pageContext.request.contextPath}/inquiry/write.jsp">
                   도입 및 견적 문의
                 </a>
 </li>
 <li>
-<a class="text-[#cbd5e1] hover:text-white hover:text-[#38bdf8] transition-colors" href="${pageContext.request.contextPath}/customer/customer.jsp#faq">
+<a class="text-[#cbd5e1] hover:text-white hover:text-[#38bdf8] transition-colors" href="${pageContext.request.contextPath}/inquiry/index.jsp#faq">
                   자주 묻는 질문 (FAQ)
                 </a>
 </li>
@@ -221,7 +221,7 @@
 <!-- Quick Inquiry Direct Button Box -->
 <div class="lg:col-span-3 flex lg:justify-end">
 <div class="w-full sm:w-auto flex flex-col gap-2">
-<a class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs shadow-sm transition-colors text-center" href="${pageContext.request.contextPath}/customer/inquiry.jsp">
+<a class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs shadow-sm transition-colors text-center" href="${pageContext.request.contextPath}/inquiry/write.jsp">
 <span class="material-symbols-outlined text-[16px]">support_agent</span>
 <span>기술지원 및 견적 문의하기</span>
 </a>

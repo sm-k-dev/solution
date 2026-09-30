@@ -1,1 +1,51 @@
-/build/
+# Eclipse
+.metadata/
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+.recommenders/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Build output
+build/
+target/
+out/
+*.class
+
+# Tomcat/runtime
+work/
+temp/
+logs/
+
+# Runtime upload files
+src/main/webapp/upload/*
+!src/main/webapp/upload/.gitkeep
+
+# Local DB / secrets
+.env
+db.properties
+database.properties
+application-local.properties
+secrets.properties
+**/context.xml
+
+# Safe templates
+!db.properties.example
+!**/context.xml.example
+
+# Keys / certificates
+*.pem
+*.key
+*.p12
+*.pfx
+
+# OS
+.DS_Store
+Thumbs.db

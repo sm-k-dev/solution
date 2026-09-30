@@ -6,31 +6,9 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Nexura Systems - 엔터프라이즈 미션 크리티컬 IT 인프라 &amp; 보안 솔루션</title>
 <!-- Tailwind CSS v3 CDN with forms and container-queries -->
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
 <!-- Tailwind Custom Configuration -->
-<script data-purpose="tailwind-config" id="tailwind-config">
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            brand: {
-              navy: '#0a192f',
-              dark: '#061122',
-              surface: '#0b172a',
-              card: '#0f2744',
-              blue: '#1e50d8',
-              cyan: '#00f2fe',
-              lightcyan: '#38bdf8',
-              accent: '#0284c7'
-            }
-          },
-          fontFamily: {
-            sans: ['Pretendard', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
-          }
-        }
-      }
-    }
-  </script>
+
 <!-- Google Material Symbols & Web Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet"/>
@@ -44,7 +22,7 @@
       animation: pulseGlow 3s ease-in-out infinite;
     }
   </style>
-<meta content="web_blank" name="shell-type"/></head>
+<meta content="web_blank" name="shell-type"/><link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/pages/company_company.css"/></head>
 <body class="bg-[#f8f9ff]">
 <jsp:include page="/inc/top.jsp" />
 <!-- BEGIN: MainContent -->

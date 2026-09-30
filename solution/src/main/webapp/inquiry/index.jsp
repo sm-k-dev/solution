@@ -124,7 +124,8 @@
 </div>
 </a>
 <!-- Card 4 -->
-<a class="group relative flex flex-col justify-between p-6 rounded-xl bg-surface-container-lowest shadow-sm hover:shadow-md transition-all duration-200" href="${pageContext.request.contextPath}/inquiry/new">
+<a class="group relative flex flex-col justify-between p-6 rounded-xl bg-surface-container-lowest shadow-sm hover:shadow-md transition-all duration-200" href="${pageContext.request.contextPath}/inquiry/write.jsp">
+
 <div class="space-y-4">
 <div class="w-12 h-12 rounded-xl bg-surface-container-low flex items-center justify-center text-secondary group-hover:bg-secondary group-hover:text-on-secondary transition-colors">
 <span class="material-symbols-outlined text-[26px]">chat</span>
@@ -422,6 +423,7 @@
 </div>
 </div>
 <div class="flex flex-col gap-3 w-full lg:w-auto">
+
 <a class="w-full lg:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-xl bg-secondary hover:bg-secondary-container text-on-secondary font-headline-sm text-headline-sm transition-all shadow-md hover:shadow-lg" href="${pageContext.request.contextPath}/inquiry/new">
 <span>기술지원 문의 접수하기</span>
 <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
@@ -576,4 +578,8 @@
     });
   })();
 </script></main><jsp:include page="/inc/bottom.jsp" />
+<<<<<<< HEAD
 </body></html>
+=======
+</body></html>
+>>>>>>> origin/team
