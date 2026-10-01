@@ -104,7 +104,7 @@ public class IncidentManagementServlet extends HttpServlet {
                 } else if (!inquiryDao.softDeleteIncidentInquiry(id, inquiryId)) {
                     response.sendError(HttpServletResponse.SC_NOT_FOUND); return;
                 }
-                response.sendRedirect(request.getContextPath() + "/sentinel/incident?id=" + id);
+                completeMutation(request, response, request.getContextPath() + "/sentinel/incident?id=" + id);
                 return;
             }
             if ("/sentinel/incident/analyze".equals(path)) {
@@ -112,10 +112,14 @@ public class IncidentManagementServlet extends HttpServlet {
                 if (incident == null) { response.sendError(HttpServletResponse.SC_NOT_FOUND); return; }
                 try {
                     analysisDao.insertAnalysis(id, aiService.analyzeIncident(incident));
-                    response.sendRedirect(request.getContextPath() + "/sentinel/incident?id=" + id);
+                    completeMutation(request, response, request.getContextPath() + "/sentinel/incident?id=" + id);
                 } catch (IOException aiError) {
                     getServletContext().log("SentinelOps AI analysis unavailable", aiError);
-                    response.sendRedirect(request.getContextPath() + "/sentinel/incident?id=" + id + "&aiError=1");
+                    if (isFetchRequest(request)) {
+                        response.sendError(HttpServletResponse.SC_BAD_GATEWAY, "AI analysis unavailable");
+                    } else {
+                        response.sendRedirect(request.getContextPath() + "/sentinel/incident?id=" + id + "&aiError=1");
+                    }
                 }
                 return;
             }
@@ -127,11 +131,24 @@ public class IncidentManagementServlet extends HttpServlet {
             if (!statusService.updateIncidentStatus(id, ((Number) actor).longValue(), expected, next)) {
                 response.sendError(HttpServletResponse.SC_CONFLICT); return;
             }
-            response.sendRedirect(request.getContextPath() + "/sentinel/incident?id=" + id);
+            completeMutation(request, response, request.getContextPath() + "/sentinel/incident?id=" + id);
         } catch (NumberFormatException error) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST);
         } catch (SQLException | NamingException error) {
             throw new ServletException("Incident status update failed", error);
+        }
+    }
+
+    private boolean isFetchRequest(HttpServletRequest request) {
+        return "fetch".equalsIgnoreCase(request.getHeader("X-Requested-With"));
+    }
+
+    private void completeMutation(HttpServletRequest request, HttpServletResponse response, String redirect)
+            throws IOException {
+        if (isFetchRequest(request)) {
+            response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+        } else {
+            response.sendRedirect(redirect);
         }
     }
 

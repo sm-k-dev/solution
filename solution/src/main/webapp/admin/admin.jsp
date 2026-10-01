@@ -49,7 +49,7 @@
 <!-- Section 1: KPI Summary Cards (4 Cards Grid) -->
 <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-md mb-space-xl">
 <!-- KPI 1: 전체 회원 -->
-<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+<a aria-label="회원 목록 관리로 이동" href="${pageContext.request.contextPath}/admin/members" class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow focus:outline-none focus:ring-2 focus:ring-secondary">
 <div class="flex items-start justify-between mb-space-sm">
 <div class="flex flex-col">
 <span class="font-label-caps text-label-caps uppercase text-on-surface-variant tracking-wider font-semibold">전체 회원 (Total Members)</span>
@@ -63,11 +63,11 @@
 <span class="inline-flex items-center font-semibold text-secondary">
 <span class="material-symbols-outlined text-[16px]">database</span>DB 조회
         </span>
-<a class="text-outline" href="${pageContext.request.contextPath}/admin/members">회원 목록 관리 →</a>
+<span class="text-outline">회원 목록 관리 →</span>
 </div>
-</div>
+</a>
 <!-- KPI 2: 신규 문의 -->
-<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+<a aria-label="문의 관리로 이동" href="${pageContext.request.contextPath}/admin/inquiry/list" class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow focus:outline-none focus:ring-2 focus:ring-secondary">
 <div class="flex items-start justify-between mb-space-sm">
 <div class="flex flex-col">
 <span class="font-label-caps text-label-caps uppercase text-on-surface-variant tracking-wider font-semibold">접수 문의 (New Inquiries)</span>
@@ -81,9 +81,9 @@
 <span class="text-on-surface">미처리 대기 중</span>
 <span class="px-space-xs py-0.5 rounded-full bg-surface-container font-code-inline font-semibold text-secondary"><c:out value="${pendingInquiryCount}"/>건 대기 중</span>
 </div>
-</div>
+</a>
 <!-- KPI 3: OPEN Incidents -->
-<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+<a aria-label="인시던트 센터로 이동" href="${pageContext.request.contextPath}/sentinel/incidents" class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow focus:outline-none focus:ring-2 focus:ring-secondary">
 <div class="flex items-start justify-between mb-space-sm">
 <div class="flex flex-col">
 <span class="font-label-caps text-label-caps uppercase text-on-surface-variant tracking-wider font-semibold">OPEN Incidents</span>
@@ -97,9 +97,9 @@
 <span class="material-symbols-outlined text-[16px] text-outline">timelapse</span>
 <span>현재 미해결: <strong class="font-code-inline text-on-surface"><c:out value="${openIncidentCount}"/>건</strong></span>
 </div>
-</div>
+</a>
 <!-- KPI 4: CRITICAL Incidents -->
-<div class="bg-error-container p-space-md rounded-xl shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+<a aria-label="인시던트 센터의 심각 장애 현황으로 이동" href="${pageContext.request.contextPath}/sentinel/incidents" class="bg-error-container p-space-md rounded-xl shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow focus:outline-none focus:ring-2 focus:ring-error">
 <div class="flex items-start justify-between mb-space-sm">
 <div class="flex flex-col">
 <div class="flex items-center gap-1.5">
@@ -119,7 +119,7 @@
 <span class="font-bold text-on-error-container">즉각 대응 필요</span>
 <span class="px-space-xs py-0.5 rounded-full bg-error text-on-error font-code-inline text-code-inline font-bold">HIGH PRIORITY</span>
 </div>
-</div>
+</a>
 </section>
 <section class="mb-space-xl"><a class="flex items-center justify-between gap-space-md rounded-xl bg-surface-container-lowest px-space-lg py-space-md shadow-sm hover:shadow-md transition-shadow" href="${pageContext.request.contextPath}/admin/boards?category=FREE"><span class="flex items-center gap-space-sm"><span class="w-10 h-10 rounded-xl bg-surface-container-low flex items-center justify-center text-secondary"><span class="material-symbols-outlined">forum</span></span><span><strong class="block text-primary-container">게시판 관리</strong><span class="text-on-surface-variant text-body-sm">공지사항 · 자료실 · 자유게시판 게시글 확인</span></span></span><span class="font-headline-sm font-bold text-primary-container"><c:out value="${boardCount}"/>건 <span class="material-symbols-outlined align-middle">chevron_right</span></span></a></section>
 <!-- Section 2: Incident Overview Analytics (2 Columns) -->
