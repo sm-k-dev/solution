@@ -22,28 +22,39 @@ public class BoardDAO {
     }
 
     public List<BoardDTO> findPage(String category, String query, int offset, int pageSize) throws Exception {
-        String sql = "SELECT b.board_id,b.member_id,b.category,b.title,b.content,b.tags,b.view_count,b.created_at,b.updated_at,m.name "
+        String term = query == null ? "" : query.trim();
+        boolean searching = !term.isEmpty();
+        String sql = "SELECT b.board_id,b.member_id,b.category,b.title,b.tags,b.view_count,b.created_at,b.updated_at,m.name "
                 + "FROM board b JOIN member m ON m.member_id=b.member_id WHERE b.is_deleted=FALSE AND b.category=? "
-                + "AND (?='' OR b.title LIKE ? OR b.content LIKE ? OR b.tags LIKE ? OR m.name LIKE ?) "
+                + (searching ? "AND (b.title LIKE ? OR b.content LIKE ? OR b.tags LIKE ? OR m.name LIKE ?) " : "")
                 + "ORDER BY b.created_at DESC,b.board_id DESC LIMIT ? OFFSET ?";
         List<BoardDTO> rows = new ArrayList<BoardDTO>();
         try (Connection c=dataSource.getConnection(); PreparedStatement p=c.prepareStatement(sql)) {
-            String term = query == null ? "" : query.trim();
-            p.setString(1, category); p.setString(2, term);
-            String like = "%" + term + "%";
-            p.setString(3, like); p.setString(4, like); p.setString(5, like); p.setString(6, like);
-            p.setInt(7, pageSize); p.setInt(8, offset);
-            try (ResultSet r=p.executeQuery()) { while(r.next()) rows.add(mapBoard(r)); }
+            int index = 1;
+            p.setString(index++, category);
+            if (searching) {
+                String like = "%" + term + "%";
+                p.setString(index++, like); p.setString(index++, like);
+                p.setString(index++, like); p.setString(index++, like);
+            }
+            p.setInt(index++, pageSize); p.setInt(index, offset);
+            try (ResultSet r=p.executeQuery()) { while(r.next()) rows.add(mapBoardSummary(r)); }
         }
         return rows;
     }
 
     public int count(String category, String query) throws Exception {
-        String sql = "SELECT COUNT(*) FROM board b JOIN member m ON m.member_id=b.member_id WHERE b.is_deleted=FALSE AND b.category=? "
-                + "AND (?='' OR b.title LIKE ? OR b.content LIKE ? OR b.tags LIKE ? OR m.name LIKE ?)";
+        String term = query == null ? "" : query.trim();
+        boolean searching = !term.isEmpty();
+        String sql = searching
+                ? "SELECT COUNT(*) FROM board b JOIN member m ON m.member_id=b.member_id WHERE b.is_deleted=FALSE AND b.category=? AND (b.title LIKE ? OR b.content LIKE ? OR b.tags LIKE ? OR m.name LIKE ?)"
+                : "SELECT COUNT(*) FROM board WHERE is_deleted=FALSE AND category=?";
         try (Connection c=dataSource.getConnection(); PreparedStatement p=c.prepareStatement(sql)) {
-            String term=query==null?"":query.trim(); String like="%"+term+"%";
-            p.setString(1,category); p.setString(2,term); p.setString(3,like); p.setString(4,like); p.setString(5,like); p.setString(6,like);
+            p.setString(1, category);
+            if (searching) {
+                String like = "%" + term + "%";
+                p.setString(2, like); p.setString(3, like); p.setString(4, like); p.setString(5, like);
+            }
             try(ResultSet r=p.executeQuery()){ r.next(); return r.getInt(1); }
         }
     }
@@ -118,6 +129,16 @@ public class BoardDAO {
         String sql="SELECT f.file_id,f.board_id,f.original_name,f.saved_name,f.file_path,f.file_size,f.file_type FROM board_file f JOIN board b ON b.board_id=f.board_id WHERE f.file_id=? AND f.is_deleted=FALSE AND b.is_deleted=FALSE";
         try(Connection c=dataSource.getConnection();PreparedStatement p=c.prepareStatement(sql)){p.setLong(1,fileId);try(ResultSet r=p.executeQuery()){if(!r.next())return null;BoardFileDTO f=new BoardFileDTO();f.setFileId(r.getLong("file_id"));f.setOriginalName(r.getString("original_name"));f.setSavedName(r.getString("saved_name"));f.setFilePath(r.getString("file_path"));f.setFileSize(r.getLong("file_size"));f.setFileType(r.getString("file_type"));return f;}}
     }
+    private BoardDTO mapBoardSummary(ResultSet r) throws Exception {
+        BoardDTO b = new BoardDTO();
+        b.setBoardId(r.getLong("board_id")); b.setMemberId(r.getLong("member_id"));
+        b.setCategory(r.getString("category")); b.setTitle(r.getString("title"));
+        b.setTags(r.getString("tags")); b.setViewCount(r.getInt("view_count"));
+        b.setCreatedAt(r.getTimestamp("created_at")); b.setUpdatedAt(r.getTimestamp("updated_at"));
+        b.setAuthorName(r.getString("name"));
+        return b;
+    }
+
     private BoardDTO mapBoard(ResultSet r) throws Exception {
         BoardDTO b=new BoardDTO();b.setBoardId(r.getLong("board_id"));b.setMemberId(r.getLong("member_id"));b.setCategory(r.getString("category"));b.setTitle(r.getString("title"));b.setContent(r.getString("content"));b.setTags(r.getString("tags"));b.setViewCount(r.getInt("view_count"));b.setCreatedAt(r.getTimestamp("created_at"));b.setUpdatedAt(r.getTimestamp("updated_at"));b.setAuthorName(r.getString("name"));return b;
     }

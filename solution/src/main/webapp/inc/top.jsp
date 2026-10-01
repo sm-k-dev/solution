@@ -17,6 +17,29 @@
 	pointer-events: auto
 }
 
+/* Keep dropdown cards within their own columns; the main nav uses nowrap. */
+.nexora-desktop-nav .dropdown-enter,
+.nexora-desktop-nav .dropdown-enter a {
+	white-space: normal;
+}
+.nexora-desktop-nav .dropdown-enter > .grid {
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.nexora-desktop-nav .dropdown-enter a {
+	min-width: 0;
+}
+.nexora-desktop-nav .dropdown-enter a > div:last-child {
+	min-width: 0;
+	flex: 1 1 0%;
+}
+.nexora-desktop-nav .dropdown-enter a p {
+	max-width: 100%;
+	white-space: normal;
+	word-break: keep-all;
+	overflow-wrap: anywhere;
+	line-height: 1.5;
+}
+
 #mobile-drawer {
 	transition: transform .3s cubic-bezier(.16, 1, .3, 1), opacity .25s ease
 }
@@ -71,7 +94,7 @@
 					</a>
 					<!-- Mega Dropdown Panel -->
 					<div
-						class="dropdown-enter absolute left-0 top-[calc(100%+8px)] w-[680px] bg-white rounded-xl border border-slate-200/90 shadow-xl p-5 z-50">
+						class="dropdown-enter absolute left-0 top-full w-[680px] bg-white rounded-xl border border-slate-200/90 shadow-xl p-5 z-50">
 						<!-- Mega Menu Header Note -->
 						<div
 							class="flex items-center justify-between pb-3.5 mb-3.5 border-b border-slate-100">

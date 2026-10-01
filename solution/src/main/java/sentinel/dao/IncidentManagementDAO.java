@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.HashMap;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
@@ -31,6 +32,50 @@ public class IncidentManagementDAO {
         try (Connection connection=source().getConnection();
              PreparedStatement statement=connection.prepareStatement("SELECT COUNT(*) FROM incident WHERE is_deleted=0");
              ResultSet rows=statement.executeQuery()) { rows.next(); return rows.getInt(1); }
+    }
+
+    public Map<String, Integer> findDashboardCounts() throws SQLException, NamingException {
+        Map<String, Integer> counts = new HashMap<String, Integer>();
+        String sql = "SELECT COUNT(*) AS total_count, "
+                + "COALESCE(SUM(status='OPEN'),0) AS open_count, "
+                + "COALESCE(SUM(severity='CRITICAL'),0) AS critical_count, "
+                + "COALESCE(SUM(severity='LOW'),0) AS low_count, "
+                + "COALESCE(SUM(severity='MEDIUM'),0) AS medium_count, "
+                + "COALESCE(SUM(severity='HIGH'),0) AS high_count "
+                + "FROM incident WHERE is_deleted=0";
+        try (Connection connection=source().getConnection(); PreparedStatement statement=connection.prepareStatement(sql);
+             ResultSet rows=statement.executeQuery()) {
+            if (rows.next()) {
+                counts.put("total", Integer.valueOf(rows.getInt("total_count")));
+                counts.put("open", Integer.valueOf(rows.getInt("open_count")));
+                counts.put("critical", Integer.valueOf(rows.getInt("critical_count")));
+                counts.put("low", Integer.valueOf(rows.getInt("low_count")));
+                counts.put("medium", Integer.valueOf(rows.getInt("medium_count")));
+                counts.put("high", Integer.valueOf(rows.getInt("high_count")));
+            }
+        }
+        return counts;
+    }
+
+    public List<Incident> findRecentIncidentSummaries(int limit) throws SQLException, NamingException {
+        String sql = "SELECT incident_id,service_name,error_type,error_message,severity,status,request_uri,http_method,occurred_at "
+                + "FROM incident WHERE is_deleted=0 ORDER BY occurred_at DESC,incident_id DESC LIMIT ?";
+        List<Incident> incidents = new ArrayList<Incident>();
+        try (Connection connection=source().getConnection(); PreparedStatement statement=connection.prepareStatement(sql)) {
+            statement.setInt(1, Math.max(1, limit));
+            try (ResultSet rows=statement.executeQuery()) {
+                while (rows.next()) {
+                    Incident incident = new Incident();
+                    incident.setIncidentId(rows.getLong("incident_id"));
+                    incident.setServiceName(rows.getString("service_name")); incident.setErrorType(rows.getString("error_type"));
+                    incident.setErrorMessage(rows.getString("error_message")); incident.setSeverity(rows.getString("severity"));
+                    incident.setStatus(rows.getString("status")); incident.setRequestUri(rows.getString("request_uri"));
+                    incident.setHttpMethod(rows.getString("http_method")); incident.setOccurredAt(rows.getTimestamp("occurred_at"));
+                    incidents.add(incident);
+                }
+            }
+        }
+        return incidents;
     }
 
     public Map<String,Integer> countByDay(int days) throws SQLException, NamingException {
