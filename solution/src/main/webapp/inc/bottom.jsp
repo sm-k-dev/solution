@@ -140,7 +140,7 @@
                 </a>
 </li>
 <li>
-<a class="text-[#cbd5e1] hover:text-white hover:text-[#38bdf8] transition-colors" href="${pageContext.request.contextPath}/board/board.jsp">
+<a class="text-[#cbd5e1] hover:text-white hover:text-[#38bdf8] transition-colors" href="${pageContext.request.contextPath}/board/list?category=FREE">
                   커뮤니티 / 공지사항
                 </a>
 </li>

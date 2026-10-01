@@ -1,8 +1,10 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 
 <html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_blank" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/pages/inquiry_index.css"/></head><body class="bg-background font-body-md text-body-md text-on-surface min-h-screen antialiased">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/pages/index.css"/><link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/pages/inquiry_index.css"/></head><body class="bg-background font-body-md text-body-md text-on-surface min-h-screen antialiased">
 <jsp:include page="/inc/top.jsp" /><main class="w-full max-w-[1200px] mx-auto px-gutter-mobile lg:px-gutter-desktop py-space-xl"><div class="flex flex-col w-full space-y-12">
 <!-- 1. Breadcrumb & Page Header Banner -->
 <section class="flex flex-col gap-6 bg-surface-container-lowest p-8 md:p-10 rounded-xl shadow-sm">
@@ -124,7 +126,8 @@
 </div>
 </a>
 <!-- Card 4 -->
-<a class="group relative flex flex-col justify-between p-6 rounded-xl bg-surface-container-lowest shadow-sm hover:shadow-md transition-all duration-200" href="${pageContext.request.contextPath}/inquiry/write.jsp">
+<a class="group relative flex flex-col justify-between p-6 rounded-xl bg-surface-container-lowest shadow-sm hover:shadow-md transition-all duration-200" href="${pageContext.request.contextPath}/inquiry/new">
+
 <div class="space-y-4">
 <div class="w-12 h-12 rounded-xl bg-surface-container-low flex items-center justify-center text-secondary group-hover:bg-secondary group-hover:text-on-secondary transition-colors">
 <span class="material-symbols-outlined text-[26px]">chat</span>
@@ -154,130 +157,34 @@
 <h2 class="font-headline-lg text-headline-lg text-on-surface">공지사항</h2>
 <span class="text-label-caps font-label-caps px-2 py-0.5 rounded bg-surface-container text-on-surface-variant">LATEST BULLETINS</span>
 </div>
-<a class="flex items-center gap-1 text-body-sm font-semibold text-secondary hover:text-on-secondary-fixed-variant transition-colors" href="${pageContext.request.contextPath}/board/board.jsp">
-<span>더보기</span>
-<span class="material-symbols-outlined text-[16px]">add</span>
+<a class="flex items-center gap-1 text-body-sm font-semibold text-secondary hover:text-on-secondary-fixed-variant transition-colors" href="${pageContext.request.contextPath}/board/list?category=NOTICE">
+<span>더보기</span><span class="material-symbols-outlined text-[16px]">add</span>
 </a>
 </div>
-<!-- Desktop Data Table View -->
 <div class="hidden md:block overflow-hidden rounded-xl bg-surface-container-lowest shadow-sm">
 <table class="w-full text-left">
-<thead class="bg-surface-container-low text-on-surface-variant font-label-caps text-label-caps">
-<tr>
-<th class="py-3 px-6 text-center w-20" scope="col">번호</th>
-<th class="py-3 px-4 w-32" scope="col">분류</th>
-<th class="py-3 px-6" scope="col">제목</th>
-<th class="py-3 px-6 text-center w-36" scope="col">작성일</th>
-<th class="py-3 px-6 text-right w-28" scope="col">조회수</th>
-</tr>
-</thead>
+<thead class="bg-surface-container-low text-on-surface-variant font-label-caps text-label-caps"><tr><th class="py-3 px-6 text-center w-20" scope="col">번호</th><th class="py-3 px-4 w-32" scope="col">분류</th><th class="py-3 px-6" scope="col">제목</th><th class="py-3 px-6 text-center w-36" scope="col">작성일</th><th class="py-3 px-6 text-right w-28" scope="col">조회수</th></tr></thead>
 <tbody class="divide-y divide-transparent font-body-md text-body-md text-on-surface">
-<tr class="hover:bg-surface-container-low transition-colors group cursor-pointer">
-<td class="py-4 px-6 text-center font-code-inline text-code-inline text-outline">05</td>
-<td class="py-4 px-4">
-<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-error-container text-error">
-                보안권고
-              </span>
-</td>
-<td class="py-4 px-6">
-<div class="flex items-center gap-2">
-<span class="font-medium group-hover:text-secondary transition-colors">OpenSSL 및 커널 취약점 보안 패치 적용 안내</span>
-<span class="px-1.5 py-0.2 rounded bg-error text-on-error font-label-caps text-[10px]">NEW</span>
+<c:forEach var="notice" items="${noticeList}" varStatus="status">
+<tr class="hover:bg-surface-container-low transition-colors group cursor-pointer ${status.index mod 2 eq 1 ? 'bg-surface/50' : ''}">
+<td class="py-4 px-6 text-center font-code-inline text-code-inline text-outline"><c:out value="${noticeCount - status.index}"/></td>
+<td class="py-4 px-4"><span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-error-container text-error">공지사항</span></td>
+<td class="py-4 px-6"><a class="block font-medium group-hover:text-secondary transition-colors" href="${pageContext.request.contextPath}/board/list?category=NOTICE&amp;id=${notice.boardId}#detail-preview-section"><c:out value="${notice.title}"/></a></td>
+<td class="py-4 px-6 text-center font-code-inline text-code-inline text-on-surface-variant"><fmt:formatDate value="${notice.createdAt}" pattern="yyyy-MM-dd"/></td>
+<td class="py-4 px-6 text-right font-code-inline text-code-inline text-on-surface-variant"><c:out value="${notice.viewCount}"/></td>
+</tr>
+</c:forEach>
+<c:if test="${empty noticeList}"><tr><td class="py-10 px-6 text-center text-on-surface-variant" colspan="5">등록된 공지사항이 없습니다.</td></tr></c:if>
+</tbody></table>
 </div>
-</td>
-<td class="py-4 px-6 text-center font-code-inline text-code-inline text-on-surface-variant">2026-03-28</td>
-<td class="py-4 px-6 text-right font-code-inline text-code-inline text-on-surface-variant">1,420</td>
-</tr>
-<tr class="hover:bg-surface-container-low transition-colors group cursor-pointer bg-surface/50">
-<td class="py-4 px-6 text-center font-code-inline text-code-inline text-outline">04</td>
-<td class="py-4 px-4">
-<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-surface-variant text-secondary">
-                긴급점검
-              </span>
-</td>
-<td class="py-4 px-6">
-<span class="font-medium group-hover:text-secondary transition-colors">KT 목동 제1데이터센터 백본 네트워크 정기 점검 작업 안내</span>
-</td>
-<td class="py-4 px-6 text-center font-code-inline text-code-inline text-on-surface-variant">2026-03-24</td>
-<td class="py-4 px-6 text-right font-code-inline text-code-inline text-on-surface-variant">2,890</td>
-</tr>
-<tr class="hover:bg-surface-container-low transition-colors group cursor-pointer">
-<td class="py-4 px-6 text-center font-code-inline text-code-inline text-outline">03</td>
-<td class="py-4 px-4">
-<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-secondary-fixed text-on-secondary-fixed-variant">
-                업데이트
-              </span>
-</td>
-<td class="py-4 px-6">
-<span class="font-medium group-hover:text-secondary transition-colors">SentinelOps™ v4.2 릴리즈 및 슬랙 웹훅 v2 마이그레이션 가이드</span>
-</td>
-<td class="py-4 px-6 text-center font-code-inline text-code-inline text-on-surface-variant">2026-03-18</td>
-<td class="py-4 px-6 text-right font-code-inline text-code-inline text-on-surface-variant">3,150</td>
-</tr>
-<tr class="hover:bg-surface-container-low transition-colors group cursor-pointer bg-surface/50">
-<td class="py-4 px-6 text-center font-code-inline text-code-inline text-outline">02</td>
-<td class="py-4 px-4">
-<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-surface-container text-on-surface-variant">
-                안내
-              </span>
-</td>
-<td class="py-4 px-6">
-<span class="font-medium group-hover:text-secondary transition-colors">2026년 1분기 무중단 클라우드 인프라 및 WAF 보안 리포트 발행</span>
-</td>
-<td class="py-4 px-6 text-center font-code-inline text-code-inline text-on-surface-variant">2026-03-10</td>
-<td class="py-4 px-6 text-right font-code-inline text-code-inline text-on-surface-variant">1,840</td>
-</tr>
-<tr class="hover:bg-surface-container-low transition-colors group cursor-pointer">
-<td class="py-4 px-6 text-center font-code-inline text-code-inline text-outline">01</td>
-<td class="py-4 px-4">
-<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-surface-container text-on-surface-variant">
-                안내
-              </span>
-</td>
-<td class="py-4 px-6">
-<span class="font-medium group-hover:text-secondary transition-colors">전자세금계산서 발행 및 결제 대행(PG) 정산 주기 변경 건</span>
-</td>
-<td class="py-4 px-6 text-center font-code-inline text-code-inline text-on-surface-variant">2026-03-02</td>
-<td class="py-4 px-6 text-right font-code-inline text-code-inline text-on-surface-variant">960</td>
-</tr>
-</tbody>
-</table>
-</div>
-<!-- Mobile Card/List View -->
 <div class="flex flex-col gap-3 md:hidden">
-<div class="p-4 rounded-xl bg-surface-container-lowest shadow-sm flex flex-col gap-2">
-<div class="flex items-center justify-between">
-<span class="px-2 py-0.5 rounded text-[11px] font-semibold bg-error-container text-error">보안권고</span>
-<span class="font-code-inline text-code-inline text-outline">2026-03-28</span>
-</div>
-<p class="font-body-md font-semibold text-on-surface">OpenSSL 및 커널 취약점 보안 패치 적용 안내</p>
-<div class="flex items-center justify-between text-body-sm text-outline pt-2">
-<span>No. 05</span>
-<span>조회 1,420</span>
-</div>
-</div>
-<div class="p-4 rounded-xl bg-surface-container-lowest shadow-sm flex flex-col gap-2">
-<div class="flex items-center justify-between">
-<span class="px-2 py-0.5 rounded text-[11px] font-semibold bg-surface-variant text-secondary">긴급점검</span>
-<span class="font-code-inline text-code-inline text-outline">2026-03-24</span>
-</div>
-<p class="font-body-md font-semibold text-on-surface">KT 목동 제1데이터센터 백본 네트워크 정기 점검 작업 안내</p>
-<div class="flex items-center justify-between text-body-sm text-outline pt-2">
-<span>No. 04</span>
-<span>조회 2,890</span>
-</div>
-</div>
-<div class="p-4 rounded-xl bg-surface-container-lowest shadow-sm flex flex-col gap-2">
-<div class="flex items-center justify-between">
-<span class="px-2 py-0.5 rounded text-[11px] font-semibold bg-secondary-fixed text-on-secondary-fixed-variant">업데이트</span>
-<span class="font-code-inline text-code-inline text-outline">2026-03-18</span>
-</div>
-<p class="font-body-md font-semibold text-on-surface">SentinelOps™ v4.2 릴리즈 및 슬랙 웹훅 v2 마이그레이션 가이드</p>
-<div class="flex items-center justify-between text-body-sm text-outline pt-2">
-<span>No. 03</span>
-<span>조회 3,150</span>
-</div>
-</div>
+<c:forEach var="notice" items="${noticeList}" varStatus="status">
+<a class="p-4 rounded-xl bg-surface-container-lowest shadow-sm flex flex-col gap-2 hover:bg-surface-container-low" href="${pageContext.request.contextPath}/board/list?category=NOTICE&amp;id=${notice.boardId}#detail-preview-section">
+<div class="flex items-center justify-between"><span class="px-2 py-0.5 rounded text-[11px] font-semibold bg-error-container text-error">공지사항</span><span class="font-code-inline text-code-inline text-outline"><fmt:formatDate value="${notice.createdAt}" pattern="yyyy-MM-dd"/></span></div>
+<p class="font-body-md font-semibold text-on-surface"><c:out value="${notice.title}"/></p><div class="flex items-center justify-between text-body-sm text-outline pt-2"><span>No. <c:out value="${noticeCount - status.index}"/></span><span>조회 <c:out value="${notice.viewCount}"/></span></div>
+</a>
+</c:forEach>
+<c:if test="${empty noticeList}"><div class="p-6 rounded-xl bg-surface-container-lowest text-center text-on-surface-variant">등록된 공지사항이 없습니다.</div></c:if>
 </div>
 </section>
 <!-- 4. FAQ Preview (자주 묻는 질문 아코디언) -->
@@ -422,12 +329,13 @@
 </div>
 </div>
 <div class="flex flex-col gap-3 w-full lg:w-auto">
-<button class="w-full lg:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-xl bg-secondary hover:bg-secondary-container text-on-secondary font-headline-sm text-headline-sm transition-all shadow-md hover:shadow-lg" type="button">
+
+<a class="w-full lg:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-xl bg-secondary hover:bg-secondary-container text-on-secondary font-headline-sm text-headline-sm transition-all shadow-md hover:shadow-lg" href="${pageContext.request.contextPath}/inquiry/new">
 <span>기술지원 문의 접수하기</span>
 <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
-</button>
+</a>
 <span class="text-center text-body-sm text-on-primary-container">
-          티켓 등록 즉시 P1-P4 우선순위가 자동 책정됩니다.
+          문의가 접수되면 담당자가 내용을 확인합니다.
         </span>
 </div>
 </div>
@@ -576,4 +484,8 @@
     });
   })();
 </script></main><jsp:include page="/inc/bottom.jsp" />
+<<<<<<< HEAD
 </body></html>
+=======
+</body></html>
+>>>>>>> origin/team

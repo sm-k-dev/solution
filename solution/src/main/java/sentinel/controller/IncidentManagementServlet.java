@@ -12,16 +12,18 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import sentinel.dao.IncidentManagementDAO;
 import sentinel.dao.IncidentAnalysisDAO;
+import sentinel.dao.IncidentInquiryDAO;
 import sentinel.dto.Incident;
 import sentinel.service.IncidentAiService;
 import sentinel.service.IncidentAlertService;
 import sentinel.service.IncidentStatusService;
 
-@WebServlet(urlPatterns = {"/sentinel/incidents", "/sentinel/incident", "/sentinel/incident/status", "/sentinel/incident/analyze", "/sentinel/daily-summary"})
+@WebServlet(urlPatterns = {"/sentinel/incidents", "/sentinel/incident", "/sentinel/incident/status", "/sentinel/incident/analyze", "/sentinel/daily-summary", "/sentinel/incident/inquiry/link", "/sentinel/incident/inquiry/unlink"})
 public class IncidentManagementServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private final IncidentManagementDAO dao = new IncidentManagementDAO();
     private final IncidentAnalysisDAO analysisDao = new IncidentAnalysisDAO();
+    private final IncidentInquiryDAO inquiryDao = new IncidentInquiryDAO();
     private final IncidentAiService aiService = new IncidentAiService();
     private final IncidentAlertService alertService = new IncidentAlertService();
     private final IncidentStatusService statusService = new IncidentStatusService();
@@ -34,7 +36,7 @@ public class IncidentManagementServlet extends HttpServlet {
             if ("/sentinel/incidents".equals(path)) {
                 request.setAttribute("csrfToken", csrfToken(request.getSession(false)));
                 request.setAttribute("incidents", dao.findIncidentList());
-                request.getRequestDispatcher("/WEB-INF/views/sentinel/incident-list.jsp")
+                request.getRequestDispatcher("/admin/sentinel-incident-list.jsp")
                     .forward(request, response);
                 return;
             }
@@ -46,7 +48,8 @@ public class IncidentManagementServlet extends HttpServlet {
                 request.setAttribute("incident", incident);
                 request.setAttribute("history", dao.findIncidentHistoryList(id));
                 request.setAttribute("analysis", analysisDao.findLatestAnalysis(id));
-                request.getRequestDispatcher("/WEB-INF/views/sentinel/incident-detail.jsp")
+                request.setAttribute("linkedInquiries", inquiryDao.findLinkedInquiryList(id));
+                request.getRequestDispatcher("/admin/sentinel-incident-detail.jsp")
                     .forward(request, response);
                 return;
             }
@@ -60,11 +63,14 @@ public class IncidentManagementServlet extends HttpServlet {
 
     @Override protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+    	request.setCharacterEncoding("UTF-8");
         if (!isAdmin(request)) { response.sendError(HttpServletResponse.SC_FORBIDDEN); return; }
         String path = request.getServletPath();
         if (!"/sentinel/incident/status".equals(path) &&
             !"/sentinel/incident/analyze".equals(path) &&
-            !"/sentinel/daily-summary".equals(path)) {
+            !"/sentinel/daily-summary".equals(path) &&
+            !"/sentinel/incident/inquiry/link".equals(path) &&
+            !"/sentinel/incident/inquiry/unlink".equals(path)) {
             response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED); return;
         }
         HttpSession session = request.getSession(false);
@@ -82,6 +88,25 @@ public class IncidentManagementServlet extends HttpServlet {
                 return;
             }
             long id = parsePositiveId(request.getParameter("id"));
+            if ("/sentinel/incident/inquiry/link".equals(path) ||
+                "/sentinel/incident/inquiry/unlink".equals(path)) {
+                long inquiryId = parsePositiveId(request.getParameter("inquiryId"));
+                if ("/sentinel/incident/inquiry/link".equals(path)) {
+                    String reason = request.getParameter("reason");
+                    if (reason != null) reason = reason.trim();
+                    if (reason != null && reason.length() > 500) {
+                        response.sendError(HttpServletResponse.SC_BAD_REQUEST); return;
+                    }
+                    int result = inquiryDao.insertIncidentInquiry(id, inquiryId,
+                        ((Number) actor).longValue(), reason == null || reason.isEmpty() ? null : reason);
+                    if (result == 0) { response.sendError(HttpServletResponse.SC_NOT_FOUND); return; }
+                    if (result < 0) { response.sendError(HttpServletResponse.SC_CONFLICT); return; }
+                } else if (!inquiryDao.softDeleteIncidentInquiry(id, inquiryId)) {
+                    response.sendError(HttpServletResponse.SC_NOT_FOUND); return;
+                }
+                response.sendRedirect(request.getContextPath() + "/sentinel/incident?id=" + id);
+                return;
+            }
             if ("/sentinel/incident/analyze".equals(path)) {
                 Incident incident = dao.findIncidentById(id);
                 if (incident == null) { response.sendError(HttpServletResponse.SC_NOT_FOUND); return; }

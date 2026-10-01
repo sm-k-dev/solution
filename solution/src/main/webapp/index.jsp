@@ -575,7 +575,7 @@
 <a class="px-7 py-3.5 rounded-xl bg-[#0a192f] hover:bg-[#1e50d8] text-white text-sm font-semibold transition-colors text-center shadow-md" href="#contact">
               문의하기
             </a>
-<a class="px-7 py-3.5 rounded-xl bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 text-sm font-semibold transition-colors text-center" href="#support">
+<a class="px-7 py-3.5 rounded-xl bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 text-sm font-semibold transition-colors text-center" href="${pageContext.request.contextPath}/inquiry/index.jsp">
               고객센터
             </a>
 </div>
@@ -595,7 +595,7 @@
           지금 Nexura의 클라우드 인프라와 SentinelOps로 안정적인 디지털 비즈니스를 시작하세요.
         </p>
 <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
-<a class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-9 py-4 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-bold text-base shadow-xl shadow-cyan-900/30 transition-all" href="#contact-form">
+<a class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-9 py-4 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-bold text-base shadow-xl shadow-cyan-900/30 transition-all" href="${pageContext.request.contextPath}/inquiry/write.jsp">
 <span>문의하기</span>
 <span class="material-symbols-outlined text-lg">arrow_forward</span>
 </a>

@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <style>
+.nexora-header-inner,.nexora-desktop-nav,.nexora-desktop-actions,.nexora-desktop-nav a,.nexora-desktop-actions a,.nexora-desktop-actions span { white-space: nowrap; }
 .dropdown-enter {
 	opacity: 0;
 	transform: translateY(-8px) scale(.98);
@@ -27,9 +28,9 @@
 <header
 	class="sticky top-0 z-50 w-full bg-white border-b border-slate-200/80 shadow-[0_2px_12px_rgba(15,23,42,0.04)] backdrop-blur-md bg-white/95 transition-colors">
 	<div
-		class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 h-[72px] flex items-center justify-between">
+		class="nexora-header-inner max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 h-[72px] flex items-center justify-between gap-2 whitespace-nowrap">
 		<!-- Left: Brand Logo -->
-		<div class="flex items-center gap-8">
+		<div class="flex items-center gap-4 shrink-0">
 			<a aria-label="NEXORA 홈으로 이동"
 				class="flex items-center gap-2.5 group py-2 focus:outline-none"
 				href="${pageContext.request.contextPath}/index.jsp"> <!-- Logo Symbol: Geometric Shield & Network Node -->
@@ -54,20 +55,20 @@
 			</a>
 			<!-- Desktop Navigation Bar -->
 			<nav aria-label="메인 내비게이션"
-				class="hidden lg:flex items-center gap-1 pl-4">
+			class="nexora-desktop-nav hidden lg:flex items-center gap-0.5 pl-1 shrink-0 whitespace-nowrap">
 				<!-- Item 1: 회사소개 -->
 				<a
-					class="px-3.5 py-2 text-[15px] font-medium text-slate-700 hover:text-[#1c4fd7] hover:bg-slate-50 rounded-md transition-colors"
+					class="px-2.5 py-2 text-[14px] font-medium text-slate-700 hover:text-[#1c4fd7] hover:bg-slate-50 rounded-md transition-colors shrink-0 whitespace-nowrap"
 					href="${pageContext.request.contextPath}/company/company.jsp">
 					회사소개 </a>
 				<!-- Item 2: 솔루션 (Dropdown Mega-Menu) -->
 				<div class="relative group">
-					<button aria-expanded="false" aria-haspopup="true"
-						class="px-3.5 py-2 text-[15px] font-medium text-[#1c4fd7] bg-blue-50/60 rounded-md flex items-center gap-1 hover:text-[#1c4fd7] hover:bg-blue-50 transition-colors focus:outline-none"
-						type="button">
+					<a aria-haspopup="true"
+						class="px-2.5 py-2 text-[14px] font-medium text-[#1c4fd7] bg-blue-50/60 rounded-md flex items-center gap-1 hover:text-[#1c4fd7] hover:bg-blue-50 transition-colors focus:outline-none shrink-0 whitespace-nowrap"
+						href="${pageContext.request.contextPath}/solutions/solutions.jsp">
 						<span>솔루션</span> <span
 							class="material-symbols-outlined text-[18px] transition-transform duration-200 group-hover:rotate-180 text-[#1c4fd7]">expand_more</span>
-					</button>
+					</a>
 					<!-- Mega Dropdown Panel -->
 					<div
 						class="dropdown-enter absolute left-0 top-[calc(100%+8px)] w-[680px] bg-white rounded-xl border border-slate-200/90 shadow-xl p-5 z-50">
@@ -178,33 +179,39 @@
 				</div>
 				<!-- Item 3: 고객센터 -->
 				<a
-					class="px-3.5 py-2 text-[15px] font-medium text-slate-700 hover:text-[#1c4fd7] hover:bg-slate-50 rounded-md transition-colors"
+					class="px-2.5 py-2 text-[14px] font-medium text-slate-700 hover:text-[#1c4fd7] hover:bg-slate-50 rounded-md transition-colors shrink-0 whitespace-nowrap"
 					href="${pageContext.request.contextPath}/inquiry/index.jsp">
 					고객센터 </a>
 				<!-- Item 4: 커뮤니티 -->
 				<a
-					class="px-3.5 py-2 text-[15px] font-medium text-slate-700 hover:text-[#1c4fd7] hover:bg-slate-50 rounded-md transition-colors"
-					href="${pageContext.request.contextPath}/board/board.jsp"> 커뮤니티
+					class="px-2.5 py-2 text-[14px] font-medium text-slate-700 hover:text-[#1c4fd7] hover:bg-slate-50 rounded-md transition-colors shrink-0 whitespace-nowrap"
+					href="${pageContext.request.contextPath}/board/list?category=FREE"> 커뮤니티
 				</a>
 			</nav>
 		</div>
 		<!-- Right: User Actions (Desktop Auth & RFP CTA) -->
-		<div class="hidden lg:flex items-center gap-3">
+		<div class="nexora-desktop-actions hidden lg:flex items-center gap-0.5 shrink-0 whitespace-nowrap">
 
 			<c:choose>
 
 				<c:when test="${not empty sessionScope.loginId}">
 
-					<span class="px-3.5 py-2 text-[14px] font-medium text-slate-700">
+					<span class="px-2 py-2 text-[13px] font-medium text-slate-700">
 						${sessionScope.name}님 </span>
 
 					<a
-						class="px-4 py-2 text-[14px] font-medium text-[#0a192f] border border-slate-300 rounded-lg hover:bg-slate-50 hover:border-slate-400 transition-all"
+						class="px-2.5 py-2 text-[13px] font-medium text-[#0a192f] border border-slate-300 rounded-lg hover:bg-slate-50 hover:border-slate-400 transition-all"
 						href="${pageContext.request.contextPath}/member/member.do">
 						마이페이지 </a>
 
+					<a class="px-2 py-2 text-[13px] font-medium text-slate-700 hover:text-[#1c4fd7] transition-colors" href="${pageContext.request.contextPath}/inquiry/my">내 문의</a>
+
+					<c:if test="${sessionScope.role eq 'ADMIN'}">
+						<a class="px-2 py-2 text-[13px] font-semibold text-[#1c4fd7] hover:text-[#0a192f] transition-colors" href="${pageContext.request.contextPath}/admin/dashboard">관리자</a>
+					</c:if>
+
 					<a
-						class="px-3.5 py-2 text-[14px] font-medium text-slate-700 hover:text-[#1c4fd7] transition-colors"
+						class="px-2 py-2 text-[13px] font-medium text-slate-700 hover:text-[#1c4fd7] transition-colors"
 						href="${pageContext.request.contextPath}/member/logout.do">
 						로그아웃 </a>
 
@@ -213,21 +220,21 @@
 				<c:otherwise>
 
 					<a
-						class="px-3.5 py-2 text-[14px] font-medium text-slate-700 hover:text-[#1c4fd7] transition-colors"
+						class="px-2 py-2 text-[13px] font-medium text-slate-700 hover:text-[#1c4fd7] transition-colors"
 						href="${pageContext.request.contextPath}/member/login.do"> 로그인
 					</a>
 
 					<span class="w-px h-4 bg-slate-200"></span>
 
 					<a
-						class="px-4 py-2 text-[14px] font-medium text-[#0a192f] border border-slate-300 rounded-lg hover:bg-slate-50 hover:border-slate-400 transition-all"
+						class="px-2.5 py-2 text-[13px] font-medium text-[#0a192f] border border-slate-300 rounded-lg hover:bg-slate-50 hover:border-slate-400 transition-all"
 						href="${pageContext.request.contextPath}/member/signup.jsp">
 						회원가입 </a>
 				</c:otherwise>
 			</c:choose>
 
 			<a
-				class="ml-1 inline-flex items-center gap-1.5 px-4 py-2 text-[14px] font-semibold text-white bg-[#0a192f] hover:bg-[#1c4fd7] rounded-lg shadow-sm hover:shadow transition-all active:scale-[0.98]"
+				class="ml-1 inline-flex items-center gap-1 px-2.5 py-2 text-[13px] font-semibold text-white bg-[#0a192f] hover:bg-[#1c4fd7] rounded-lg shadow-sm hover:shadow transition-all active:scale-[0.98]"
 				href="${pageContext.request.contextPath}/inquiry/write.jsp"> <span>도입문의</span>
 				<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
 			</a>
@@ -235,10 +242,14 @@
 		</div>
 		<!-- Mobile Right: Hamburger Toggle Button -->
 		<div class="flex items-center gap-2 lg:hidden">
-			<a
-				class="px-3 py-1.5 text-xs font-semibold text-slate-700 hover:text-[#1c4fd7] border border-slate-200 rounded-md"
-				href="${pageContext.request.contextPath}/member/login.jsp"> 로그인
-			</a>
+			<c:choose>
+				<c:when test="${not empty sessionScope.loginId}">
+					<a class="px-3 py-1.5 text-xs font-semibold text-slate-700 hover:text-[#1c4fd7] border border-slate-200 rounded-md" href="${pageContext.request.contextPath}/member/member.do">마이페이지</a>
+				</c:when>
+				<c:otherwise>
+					<a class="px-3 py-1.5 text-xs font-semibold text-slate-700 hover:text-[#1c4fd7] border border-slate-200 rounded-md" href="${pageContext.request.contextPath}/member/login.do">로그인</a>
+				</c:otherwise>
+			</c:choose>
 			<button aria-label="모바일 메뉴 열기"
 				class="w-10 h-10 flex items-center justify-center rounded-lg text-slate-700 hover:bg-slate-100 focus:outline-none"
 				id="mobile-menu-btn" onclick="toggleMobileDrawer()" type="button">
@@ -278,22 +289,22 @@
 		<!-- Drawer Scrollable Body -->
 		<div class="flex-1 overflow-y-auto p-5 flex flex-col gap-6">
 			<!-- Mobile Auth Banner -->
-			<div
-				class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 flex flex-col gap-3">
-				<div class="flex items-center justify-between">
-					<span class="text-xs font-semibold text-slate-500">NEXORA 계정
-						서비스</span> <span class="text-[11px] text-[#1c4fd7] font-semibold">기업
-						회원</span>
-				</div>
-				<div class="grid grid-cols-2 gap-2">
-					<a
-						class="w-full py-2.5 rounded-lg bg-white border border-slate-200 text-center text-xs font-bold text-slate-800 hover:bg-slate-100 transition-colors"
-						href="${pageContext.request.contextPath}/member/login.jsp">
-						로그인 </a> <a
-						class="w-full py-2.5 rounded-lg bg-[#0a192f] text-center text-xs font-bold text-white hover:bg-[#1c4fd7] transition-colors"
-						href="${pageContext.request.contextPath}/member/signup.jsp">
-						회원가입 </a>
-				</div>
+			<div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 flex flex-col gap-3">
+				<c:choose>
+					<c:when test="${not empty sessionScope.loginId}">
+						<div class="flex items-center justify-between"><span class="text-sm font-bold text-slate-800"><c:out value="${sessionScope.name}"/>님</span><span class="text-[11px] text-[#1c4fd7] font-semibold"><c:out value="${sessionScope.role}"/></span></div>
+						<div class="grid grid-cols-2 gap-2">
+							<a class="w-full py-2.5 rounded-lg bg-white border border-slate-200 text-center text-xs font-bold text-slate-800 hover:bg-slate-100 transition-colors" href="${pageContext.request.contextPath}/member/member.do">마이페이지</a>
+							<a class="w-full py-2.5 rounded-lg bg-white border border-slate-200 text-center text-xs font-bold text-slate-800 hover:bg-slate-100 transition-colors" href="${pageContext.request.contextPath}/inquiry/my">내 문의</a>
+						</div>
+						<c:if test="${sessionScope.role eq 'ADMIN'}"><a class="w-full py-2.5 rounded-lg bg-blue-50 text-center text-xs font-bold text-[#1c4fd7] hover:bg-blue-100 transition-colors" href="${pageContext.request.contextPath}/admin/dashboard">관리자 화면</a></c:if>
+						<a class="w-full py-2.5 rounded-lg bg-[#0a192f] text-center text-xs font-bold text-white hover:bg-[#1c4fd7] transition-colors" href="${pageContext.request.contextPath}/member/logout.do">로그아웃</a>
+					</c:when>
+					<c:otherwise>
+						<div class="flex items-center justify-between"><span class="text-xs font-semibold text-slate-500">NEXORA 계정 서비스</span><span class="text-[11px] text-[#1c4fd7] font-semibold">기업 회원</span></div>
+						<div class="grid grid-cols-2 gap-2"><a class="w-full py-2.5 rounded-lg bg-white border border-slate-200 text-center text-xs font-bold text-slate-800 hover:bg-slate-100 transition-colors" href="${pageContext.request.contextPath}/member/login.do">로그인</a><a class="w-full py-2.5 rounded-lg bg-[#0a192f] text-center text-xs font-bold text-white hover:bg-[#1c4fd7] transition-colors" href="${pageContext.request.contextPath}/member/signup.jsp">회원가입</a></div>
+					</c:otherwise>
+				</c:choose>
 			</div>
 			<!-- Mobile Nav Links -->
 			<nav aria-label="모바일 내비게이션" class="flex flex-col gap-1 text-[15px]">
@@ -318,6 +329,11 @@
 					<!-- Submenu Items -->
 					<div class="pl-4 pr-1 py-2 flex flex-col gap-1"
 						id="mobile-sub-menu">
+						<a class="p-2 rounded-lg hover:bg-slate-50 flex items-center gap-2.5 font-semibold text-[#1c4fd7]"
+							href="${pageContext.request.contextPath}/solutions/solutions.jsp">
+							<span class="material-symbols-outlined text-[18px]">apps</span>
+							<span>솔루션 전체보기</span>
+						</a>
 						<a
 							class="p-2 rounded-lg hover:bg-slate-50 flex items-center gap-2.5"
 							href="${pageContext.request.contextPath}/solutions/solutions.jsp#web-hosting">
@@ -372,7 +388,7 @@
 					<span class="material-symbols-outlined text-[18px] text-slate-400">chevron_right</span>
 				</a> <a
 					class="px-3 py-2.5 font-medium text-slate-700 hover:bg-slate-50 rounded-lg flex items-center justify-between"
-					href="${pageContext.request.contextPath}/board/board.jsp"> <span>커뮤니티</span>
+					href="${pageContext.request.contextPath}/board/list?category=FREE"> <span>커뮤니티</span>
 					<span class="material-symbols-outlined text-[18px] text-slate-400">chevron_right</span>
 				</a>
 			</nav>

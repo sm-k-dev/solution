@@ -144,7 +144,8 @@ public class MemberController extends HttpServlet {
                 session.setAttribute("name", member.getName());
                 session.setAttribute("role", member.getRole());
 
-                response.sendRedirect(request.getContextPath() + "/index.jsp");
+                String destination = "ADMIN".equals(member.getRole()) ? "/admin/dashboard" : "/index.jsp";
+                response.sendRedirect(request.getContextPath() + destination);
                 return;
 
             } else if ("/member/logout.do".equals(action)) {

@@ -4,7 +4,7 @@
 <a class="bg-white border rounded-xl p-5 hover:border-blue-500" href="${pageContext.request.contextPath}/solutions/solutions.jsp"><b>솔루션</b></a>
 <a class="bg-white border rounded-xl p-5 hover:border-blue-500" href="${pageContext.request.contextPath}/solutions/sentinelops.jsp"><b>SentinelOps</b></a>
 <a class="bg-white border rounded-xl p-5 hover:border-blue-500" href="${pageContext.request.contextPath}/inquiry/index.jsp"><b>고객센터</b></a>
-<a class="bg-white border rounded-xl p-5 hover:border-blue-500" href="${pageContext.request.contextPath}/board/board.jsp"><b>커뮤니티</b></a>
+<a class="bg-white border rounded-xl p-5 hover:border-blue-500" href="${pageContext.request.contextPath}/board/list?category=FREE"><b>커뮤니티</b></a>
 <a class="bg-white border rounded-xl p-5 hover:border-blue-500" href="${pageContext.request.contextPath}/inquiry/write.jsp"><b>도입문의</b></a>
 <a class="bg-white border rounded-xl p-5 hover:border-blue-500" href="${pageContext.request.contextPath}/member/login.jsp"><b>로그인</b></a>
 <a class="bg-white border rounded-xl p-5 hover:border-blue-500" href="${pageContext.request.contextPath}/member/signup.jsp"><b>회원가입</b></a>
