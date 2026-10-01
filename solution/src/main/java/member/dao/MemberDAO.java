@@ -30,7 +30,8 @@ public class MemberDAO {
     public String getPassword(String loginId) {
 
         String dbPassword = null;
-        String sql = "SELECT password_hash FROM member WHERE login_id = ?";
+        // 관리자에 의해 활동 정지된 계정은 기존 로그인 세션이 끝난 뒤 다시 로그인할 수 없다.
+        String sql = "SELECT password_hash FROM member WHERE login_id = ? AND status = 'ACTIVE'";
 
         try (Connection conn = dataSource.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
@@ -58,7 +59,7 @@ public class MemberDAO {
 
         String sql = "SELECT member_id, login_id, name, email, phone, postcode, "
                    + "address, address_detail, role, status, created_at, updated_at, withdrawn_at "
-                   + "FROM member WHERE login_id = ?";
+                   + "FROM member WHERE login_id = ? AND status = 'ACTIVE'";
 
         try (Connection conn = dataSource.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {

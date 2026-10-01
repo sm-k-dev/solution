@@ -36,7 +36,7 @@ public class IncidentManagementServlet extends HttpServlet {
             if ("/sentinel/incidents".equals(path)) {
                 request.setAttribute("csrfToken", csrfToken(request.getSession(false)));
                 request.setAttribute("incidents", dao.findIncidentList());
-                request.getRequestDispatcher("/WEB-INF/views/sentinel/incident-list.jsp")
+                request.getRequestDispatcher("/admin/sentinel-incident-list.jsp")
                     .forward(request, response);
                 return;
             }
@@ -49,7 +49,7 @@ public class IncidentManagementServlet extends HttpServlet {
                 request.setAttribute("history", dao.findIncidentHistoryList(id));
                 request.setAttribute("analysis", analysisDao.findLatestAnalysis(id));
                 request.setAttribute("linkedInquiries", inquiryDao.findLinkedInquiryList(id));
-                request.getRequestDispatcher("/WEB-INF/views/sentinel/incident-detail.jsp")
+                request.getRequestDispatcher("/admin/sentinel-incident-detail.jsp")
                     .forward(request, response);
                 return;
             }

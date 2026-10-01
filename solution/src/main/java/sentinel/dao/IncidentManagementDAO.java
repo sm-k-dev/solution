@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
@@ -15,6 +17,37 @@ import sentinel.dto.IncidentHistory;
 public class IncidentManagementDAO {
     private DataSource source() throws NamingException {
         return (DataSource) new InitialContext().lookup("java:comp/env/jdbc/jspdb");
+    }
+
+    public int countByStatus(String status) throws SQLException, NamingException {
+        return count("status", status);
+    }
+
+    public int countBySeverity(String severity) throws SQLException, NamingException {
+        return count("severity", severity);
+    }
+
+    public int countAll() throws SQLException, NamingException {
+        try (Connection connection=source().getConnection();
+             PreparedStatement statement=connection.prepareStatement("SELECT COUNT(*) FROM incident WHERE is_deleted=0");
+             ResultSet rows=statement.executeQuery()) { rows.next(); return rows.getInt(1); }
+    }
+
+    public Map<String,Integer> countByDay(int days) throws SQLException, NamingException {
+        Map<String,Integer> counts=new LinkedHashMap<String,Integer>();
+        String sql="SELECT DATE_FORMAT(occurred_at,'%Y-%m-%d') AS incident_day,COUNT(*) AS incident_count FROM incident WHERE is_deleted=0 AND occurred_at >= CURRENT_DATE - INTERVAL ? DAY GROUP BY DATE(occurred_at)";
+        try(Connection connection=source().getConnection();PreparedStatement statement=connection.prepareStatement(sql)){
+            statement.setInt(1,Math.max(0,days-1));try(ResultSet rows=statement.executeQuery()){while(rows.next())counts.put(rows.getString("incident_day"),Integer.valueOf(rows.getInt("incident_count")));}
+        }
+        return counts;
+    }
+
+    private int count(String column, String value) throws SQLException, NamingException {
+        if (!"status".equals(column) && !"severity".equals(column)) throw new IllegalArgumentException("Unsupported incident count field");
+        try (Connection connection=source().getConnection();
+             PreparedStatement statement=connection.prepareStatement("SELECT COUNT(*) FROM incident WHERE is_deleted=0 AND " + column + "=?")) {
+            statement.setString(1,value);try(ResultSet rows=statement.executeQuery()){rows.next();return rows.getInt(1);}
+        }
     }
 
     public List<Incident> findIncidentList() throws SQLException, NamingException {
