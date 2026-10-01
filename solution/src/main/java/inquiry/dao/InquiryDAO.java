@@ -8,6 +8,8 @@ import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -69,6 +71,34 @@ public class InquiryDAO {
             }
         }
         return inquiries;
+    }
+
+    public List<InquiryDTO> findRecentInquirySummaries(int limit) throws SQLException {
+        String sql = "SELECT inquiry_id, contact_name, title, status, created_at FROM inquiry "
+                + "WHERE is_deleted=FALSE ORDER BY created_at DESC,inquiry_id DESC LIMIT ?";
+        List<InquiryDTO> rows = new ArrayList<InquiryDTO>();
+        try (Connection connection=dataSource.getConnection(); PreparedStatement statement=connection.prepareStatement(sql)) {
+            statement.setInt(1, Math.max(1, limit));
+            try (ResultSet result=statement.executeQuery()) {
+                while (result.next()) {
+                    InquiryDTO item = new InquiryDTO();
+                    item.setInquiryId(result.getLong("inquiry_id")); item.setContactName(result.getString("contact_name"));
+                    item.setTitle(result.getString("title")); item.setStatus(result.getString("status"));
+                    item.setCreatedAt(result.getTimestamp("created_at")); rows.add(item);
+                }
+            }
+        }
+        return rows;
+    }
+
+    public Map<String, Integer> countDashboardStatuses() throws SQLException {
+        Map<String, Integer> counts = new LinkedHashMap<String, Integer>();
+        String sql = "SELECT status,COUNT(*) AS status_count FROM inquiry WHERE is_deleted=FALSE GROUP BY status";
+        try (Connection connection=dataSource.getConnection(); PreparedStatement statement=connection.prepareStatement(sql);
+             ResultSet result=statement.executeQuery()) {
+            while (result.next()) counts.put(result.getString("status"), Integer.valueOf(result.getInt("status_count")));
+        }
+        return counts;
     }
 
     public int countByStatus(String status) throws SQLException {
