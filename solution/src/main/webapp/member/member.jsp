@@ -1,4 +1,6 @@
-<%@page import="member.dto.MemberDTO"%>
+<%@ page import="member.dto.MemberDTO"%>
+<%@ page import="java.time.LocalDate"%>
+<%@ page import="java.time.temporal.ChronoUnit"%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 
@@ -52,7 +54,19 @@ main>:last-child {
 							class="flex items-center gap-1.5 text-on-surface-variant font-body-sm text-body-sm">
 							<span>홈</span> <span
 								class="material-symbols-outlined text-[16px] text-outline">chevron_right</span>
-								<% MemberDTO member = (MemberDTO) request.getAttribute("member"); %>
+								<%
+									MemberDTO member = (MemberDTO) request.getAttribute("member"); 
+									String passwordUpdateMessage = (String) request.getAttribute("passwordUpdateMessage");
+									long membershipDays = 0;
+
+									if(member != null && member.getCreatedAt() != null) {
+
+									    LocalDate createdDate = member.getCreatedAt().toLocalDate();
+									    LocalDate today = LocalDate.now();
+
+									    membershipDays = ChronoUnit.DAYS.between(createdDate, today);
+									}
+								%>
 							<span>마이페이지</span> <span
 								class="material-symbols-outlined text-[16px] text-outline">chevron_right</span>
 							<span class="text-on-surface font-semibold">회원정보 관리</span>
@@ -98,8 +112,7 @@ main>:last-child {
 							</div>
 							<div class="flex flex-col min-w-0">
 								<div class="flex flex-wrap items-center gap-2">
-									<h2 class="font-headline-sm text-headline-sm text-on-surface">홍길동
-										(Hong Gil-Dong)</h2>
+									<h2 class="font-headline-sm text-headline-sm text-on-surface"><%=member.getName()%></h2>
 									<span
 										class="bg-surface-container text-on-secondary-fixed-variant text-label-caps font-label-caps px-2 py-0.5 rounded">
 										기업 마스터 계정 </span>
@@ -128,7 +141,7 @@ main>:last-child {
 									이메일</span>
 								<div class="flex items-center gap-1 mt-0.5 truncate">
 									<span
-										class="font-body-sm text-body-sm text-on-surface font-medium truncate">hong.gd@nexura-systems.com</span>
+										class="font-body-sm text-body-sm text-on-surface font-medium truncate"><%=member.getEmail()%></span>
 									<span
 										class="material-symbols-outlined text-[15px] text-secondary flex-shrink-0"
 										title="인증 완료">check_circle</span>
@@ -140,7 +153,7 @@ main>:last-child {
 									class="font-label-caps text-label-caps text-on-surface-variant uppercase">가입일자</span>
 								<span
 									class="font-body-sm text-body-sm text-on-surface font-medium mt-0.5">
-									2024.03.15 <span class="text-on-surface-variant text-[11px]">(412일째)</span>
+									<%=member.getCreatedAt()%> <span class="text-on-surface-variant text-[11px]">(<%=membershipDays%>일째)</span>
 								</span>
 							</div>
 							<div
@@ -169,7 +182,7 @@ main>:last-child {
 								<span
 									class="font-body-sm text-body-sm text-on-surface-variant font-medium">작성한
 									게시글</span> <span
-									class="font-metric-val text-headline-lg text-on-surface mt-1">14<span
+									class="font-metric-val text-headline-lg text-on-surface mt-1"><%=request.getAttribute("boardCount")%><span
 									class="text-body-md font-body-md text-on-surface-variant ml-0.5">건</span></span>
 								<p class="font-body-sm text-body-sm text-outline mt-1">기술
 									Q&amp;A 및 커뮤니티 게시글</p>
@@ -182,7 +195,7 @@ main>:last-child {
 						<div class="pt-4 mt-2">
 							<a
 								class="inline-flex items-center text-body-sm font-body-sm text-secondary font-medium hover:underline"
-								href="#posts"> 게시글 보기 <span
+								href="<%=request.getContextPath()%>/member/activity.do?tab=posts"> 게시글 보기 <span
 								class="material-symbols-outlined text-[16px] ml-0.5">arrow_forward</span>
 							</a>
 						</div>
@@ -195,7 +208,7 @@ main>:last-child {
 								<span
 									class="font-body-sm text-body-sm text-on-surface-variant font-medium">작성한
 									댓글</span> <span
-									class="font-metric-val text-headline-lg text-on-surface mt-1">48<span
+									class="font-metric-val text-headline-lg text-on-surface mt-1"><%=request.getAttribute("commentCount")%><span
 									class="text-body-md font-body-md text-on-surface-variant ml-0.5">건</span></span>
 								<p class="font-body-sm text-body-sm text-outline mt-1">답변 및
 									피드백 댓글</p>
@@ -208,7 +221,7 @@ main>:last-child {
 						<div class="pt-4 mt-2">
 							<a
 								class="inline-flex items-center text-body-sm font-body-sm text-secondary font-medium hover:underline"
-								href="#comments"> 댓글 보기 <span
+								href="<%=request.getContextPath()%>/member/activity.do?tab=comments"> 댓글 보기 <span
 								class="material-symbols-outlined text-[16px] ml-0.5">arrow_forward</span>
 							</a>
 						</div>
@@ -238,7 +251,7 @@ main>:last-child {
 						<div class="pt-4 mt-2 flex items-center justify-between">
 							<a
 								class="inline-flex items-center text-body-sm font-body-sm text-secondary font-medium hover:underline"
-								href="#inquiries"> 문의 내역 보기 <span
+								href="<%=request.getContextPath()%>/member/activity.do?tab=inquiries"> 문의 내역 보기 <span
 								class="material-symbols-outlined text-[16px] ml-0.5">arrow_forward</span>
 							</a> <span
 								class="font-label-caps text-label-caps text-outline bg-surface-container px-1.5 py-0.5 rounded">SentinelOps
@@ -268,7 +281,7 @@ main>:last-child {
 										class="material-symbols-outlined text-outline text-[24px]">manage_accounts</span>
 								</div>
 								<!-- Form Area -->
-								<form class="space-y-4" id="memberInfoForm">
+								<form class="space-y-4" id="memberInfoForm" action="<%= request.getContextPath() %>/member/memberUpdate.do" method="post">
 									<!-- User ID (Read-only) -->
 									<div>
 										<label
@@ -293,7 +306,7 @@ main>:last-child {
 											for="memberName"> 담당자 성명 <span class="text-error">*</span>
 										</label> <input
 											class="w-full h-11 px-3.5 bg-surface-container-lowest text-on-surface font-body-md text-body-md rounded-lg shadow-sm focus:outline-none focus:bg-surface-container-lowest"
-											id="memberName" required="" type="text" value="<%=member.getName()%>" />
+											id="memberName" name="name" required="" type="text" value="<%=member.getName()%>" />
 									</div>
 									<!-- Corporate Email with action -->
 									<div>
@@ -306,8 +319,7 @@ main>:last-child {
 											<div class="relative flex-1">
 												<input
 													class="w-full h-11 px-3.5 bg-surface-container-lowest text-on-surface font-body-md text-body-md rounded-lg shadow-sm focus:outline-none"
-													id="memberEmail" required="" type="email"
-													value="<%=member.getEmail()%>" />
+													id="memberEmail" name="email" required="" type="email" value="<%=member.getEmail()%>" />
 												<div
 													class="absolute right-3 top-2.5 flex items-center gap-1 bg-surface-container px-2 py-0.5 rounded-full text-secondary text-label-caps font-label-caps">
 													<span class="material-symbols-outlined text-[14px]">check</span>
@@ -326,7 +338,7 @@ main>:last-child {
 											for="memberPhone"> 휴대폰 번호 <span class="text-error">*</span>
 										</label> <input
 											class="w-full h-11 px-3.5 bg-surface-container-lowest text-on-surface font-body-md text-body-md rounded-lg shadow-sm focus:outline-none"
-											id="memberPhone" required="" type="tel" value="<%=member.getPhone()%>" />
+											id="memberPhone" name="phone" required="" type="tel" value="<%=member.getPhone()%>" />
 									</div>
 									<!-- Business Address -->
 									<div class="space-y-2">
@@ -336,7 +348,8 @@ main>:last-child {
 										<div class="flex gap-2">
 											<input
 												class="w-32 h-11 px-3.5 bg-surface-container-low text-on-surface font-code-inline text-code-inline rounded-lg focus:outline-none"
-												placeholder="우편번호" readonly="" type="text" value="<%=member.getPostcode() == 0 ? "" : member.getPostcode()%>" />
+												id="postcode" name=""postcode placeholder="우편번호" readonly="" type="text" 
+												value="<%=member.getPostcode() == 0 ? "" : member.getPostcode()%>" />
 											<button
 												class="h-11 px-4 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-body-sm text-body-sm font-medium transition-colors flex items-center justify-center"
 												type="button">
@@ -346,21 +359,26 @@ main>:last-child {
 										</div>
 										<input
 											class="w-full h-11 px-3.5 bg-surface-container-low text-on-surface font-body-md text-body-md rounded-lg focus:outline-none"
-											readonly="" type="text" value="<%=member.getAddress() == null ? "" : member.getAddress()%>" /> <input
+											readonly="" type="text" id="address" name="address"
+											value="<%=member.getAddress() == null ? "" : member.getAddress()%>" /> 
+										<input
 											class="w-full h-11 px-3.5 bg-surface-container-lowest text-on-surface font-body-md text-body-md rounded-lg shadow-sm focus:outline-none"
-											placeholder="상세 주소를 입력하세요" type="text"
+											placeholder="상세 주소를 입력하세요" type="text" id="addressDetail" name="addressDetail"
 											value="<%= member.getAddressDetail() == null ? "" : member.getAddressDetail() %>" />
 									</div>
 								</form>
 							</div>
 							<!-- Form Actions -->
+							<%
+								String memberUpdateMessage = (String) request.getAttribute("memberUpdateMessage");
+							%>
 							<div
 								class="pt-6 mt-6 flex flex-col sm:flex-row items-center gap-3">
 								<button
-									class="w-full sm:w-auto h-11 px-6 rounded-lg bg-secondary hover:bg-secondary-container text-on-secondary font-body-md text-body-md font-medium shadow-sm flex items-center justify-center gap-1.5 transition-all"
-									onclick="handleSaveSuccess()" type="button">
-									<span class="material-symbols-outlined text-[18px]">check</span>
-									정보 수정 완료 (저장)
+								    class="w-full sm:w-auto h-11 px-6 rounded-lg bg-secondary hover:bg-secondary-container text-on-secondary font-body-md text-body-md font-medium shadow-sm flex items-center justify-center gap-1.5 transition-all"
+								    form="memberInfoForm" type="submit">
+								    <span class="material-symbols-outlined text-[18px]">check</span>
+								    정보 수정 완료 (저장)
 								</button>
 								<button
 									class="w-full sm:w-auto h-11 px-5 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-body-md text-body-md font-medium transition-colors flex items-center justify-center"
@@ -390,8 +408,9 @@ main>:last-child {
 								</div>
 								<span class="material-symbols-outlined text-outline text-[24px]">key</span>
 							</div>
-							<form class="space-y-3.5" id="passwordForm">
+							<form class="space-y-3.5" id="passwordForm" action="<%= request.getContextPath() %>/member/passwordUpdate.do" method="post">
 								<!-- Current Password -->
+								
 								<div>
 									<label
 										class="block font-body-sm text-body-sm font-medium text-on-surface mb-1"
@@ -418,7 +437,7 @@ main>:last-child {
 									<div class="relative flex items-center">
 										<input
 											class="w-full h-11 px-3.5 pr-10 bg-surface-container-lowest text-on-surface font-body-md text-body-md rounded-lg shadow-sm focus:outline-none"
-											id="newPassword" placeholder="새 비밀번호 입력" type="password" />
+											id="newPassword" name="newPassword" placeholder="새 비밀번호 입력" type="password" />
 										<button
 											class="absolute right-3 text-outline hover:text-on-surface focus:outline-none flex items-center"
 											onclick="togglePasswordVisibility('newPassword', this)"
@@ -451,7 +470,7 @@ main>:last-child {
 								</div>
 								<div class="pt-2">
 									<button class="w-full h-11 px-4 rounded-lg bg-primary-container hover:bg-on-surface text-on-primary font-body-md text-body-md font-medium shadow-sm transition-colors flex items-center justify-center gap-2"
-										type="button">
+										type="submit">
 										<span class="material-symbols-outlined text-[18px]">lock_reset</span>
 										비밀번호 변경 적용
 									</button>
@@ -752,5 +771,25 @@ main>:last-child {
 			</script>
 		</div>
 	</main><jsp:include page="/inc/bottom.jsp" />
+<%
+	if(passwordUpdateMessage != null) {
+%>
+	<script>
+	    alert("<%= passwordUpdateMessage %>");
+	</script>
+<%
+	}
+%>
+
+<%
+	if(memberUpdateMessage != null) {
+%>
+	<script>
+	    alert("<%=memberUpdateMessage%>");
+	</script>
+<%
+	}
+%>
+
 </body>
 </html>

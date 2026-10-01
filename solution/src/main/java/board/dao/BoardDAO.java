@@ -86,12 +86,101 @@ public class BoardDAO {
     public int countAll() throws Exception {
         try(Connection c=dataSource.getConnection();PreparedStatement p=c.prepareStatement("SELECT COUNT(*) FROM board WHERE is_deleted=FALSE");ResultSet r=p.executeQuery()){r.next();return r.getInt(1);}
     }
+    
+    public int countByMemberId(long memberId) throws Exception {
+
+        String sql = "SELECT COUNT(*) FROM board WHERE member_id = ? AND is_deleted = FALSE";
+        try (Connection conn = dataSource.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setLong(1, memberId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+
+                if(rs.next()) {
+                	
+                    return rs.getInt(1);
+                }
+            }
+        }
+
+        return 0;
+    }// === countByMemberId Method
+
+    public int countCommentsByMemberId(long memberId) throws Exception {
+
+        String sql = "SELECT COUNT(*) FROM board_comment WHERE member_id = ? AND is_deleted = FALSE";
+        try (Connection conn = dataSource.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setLong(1, memberId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+
+                if(rs.next()) {
+                	
+                    return rs.getInt(1);
+                }
+            }
+        }
+
+        return 0;
+    }// === countCommentsByMemberId Method
+    
     public List<BoardCommentDTO> findComments(long boardId) throws Exception {
         List<BoardCommentDTO> rows=new ArrayList<BoardCommentDTO>();
         String sql="SELECT c.comment_id,c.member_id,c.parent_comment_id,c.content,c.created_at,m.name FROM board_comment c JOIN member m ON m.member_id=c.member_id WHERE c.board_id=? AND c.is_deleted=FALSE ORDER BY COALESCE(c.parent_comment_id,c.comment_id),c.parent_comment_id,c.created_at";
         try(Connection c=dataSource.getConnection();PreparedStatement p=c.prepareStatement(sql)){p.setLong(1,boardId);try(ResultSet r=p.executeQuery()){while(r.next()){BoardCommentDTO d=new BoardCommentDTO();d.setCommentId(r.getLong(1));d.setMemberId(r.getLong(2));long parent=r.getLong(3);d.setParentCommentId(r.wasNull()?null:Long.valueOf(parent));d.setContent(r.getString(4));d.setCreatedAt(r.getTimestamp(5));d.setAuthorName(r.getString(6));rows.add(d);}}}
         return rows;
     }
+    
+    public List<BoardCommentDTO> findCommentsByMemberId(long memberId) throws Exception {
+
+        List<BoardCommentDTO> rows = new ArrayList<BoardCommentDTO>();
+
+        String sql = "SELECT c.comment_id, c.board_id, c.member_id, "
+                   + "c.parent_comment_id, c.content, c.created_at, "
+                   + "b.title AS board_title "
+                   + "FROM board_comment c "
+                   + "JOIN board b ON b.board_id = c.board_id "
+                   + "WHERE c.member_id = ? "
+                   + "AND c.is_deleted = FALSE "
+                   + "AND b.is_deleted = FALSE "
+                   + "ORDER BY c.created_at DESC, c.comment_id DESC";
+
+        try (Connection c = dataSource.getConnection();
+             PreparedStatement p = c.prepareStatement(sql)) {
+
+            p.setLong(1, memberId);
+
+            try (ResultSet r = p.executeQuery()) {
+
+                while(r.next()) {
+
+                    BoardCommentDTO comment = new BoardCommentDTO();
+
+                    comment.setCommentId(r.getLong("comment_id"));
+                    comment.setBoardId(r.getLong("board_id"));
+                    comment.setMemberId(r.getLong("member_id"));
+
+                    long parentCommentId = r.getLong("parent_comment_id");
+
+                    if(r.wasNull()) {
+                    	
+                        comment.setParentCommentId(null);
+                    } else {
+                    	
+                        comment.setParentCommentId(Long.valueOf(parentCommentId));
+                    }
+
+                    comment.setContent(r.getString("content"));
+                    comment.setCreatedAt(r.getTimestamp("created_at"));
+                    comment.setBoardTitle(r.getString("board_title"));
+
+                    rows.add(comment);
+                }
+            }
+        }
+
+        return rows;
+    }
+    
     public boolean addComment(long boardId,long memberId,Long parentId,String content) throws Exception {
         String sql="INSERT INTO board_comment(board_id,member_id,parent_comment_id,content) SELECT ?,?,?,? FROM board WHERE board_id=? AND is_deleted=FALSE";
         try(Connection c=dataSource.getConnection();PreparedStatement p=c.prepareStatement(sql)){p.setLong(1,boardId);p.setLong(2,memberId);if(parentId==null)p.setNull(3,java.sql.Types.BIGINT);else p.setLong(3,parentId.longValue());p.setString(4,content);p.setLong(5,boardId);return p.executeUpdate()==1;}
@@ -121,4 +210,57 @@ public class BoardDAO {
     private BoardDTO mapBoard(ResultSet r) throws Exception {
         BoardDTO b=new BoardDTO();b.setBoardId(r.getLong("board_id"));b.setMemberId(r.getLong("member_id"));b.setCategory(r.getString("category"));b.setTitle(r.getString("title"));b.setContent(r.getString("content"));b.setTags(r.getString("tags"));b.setViewCount(r.getInt("view_count"));b.setCreatedAt(r.getTimestamp("created_at"));b.setUpdatedAt(r.getTimestamp("updated_at"));b.setAuthorName(r.getString("name"));return b;
     }
+    
+    public List<BoardDTO> findByMemberId(long memberId) {
+
+        List<BoardDTO> list = new ArrayList<>();
+
+        String sql = "SELECT b.board_id, b.member_id, b.category, b.title, "
+                   + "b.content, b.tags, b.view_count, b.created_at, b.updated_at, "
+                   + "COUNT(c.comment_id) AS comment_count "
+                   + "FROM board b "
+                   + "LEFT JOIN board_comment c "
+                   + "ON b.board_id = c.board_id "
+                   + "AND c.is_deleted = FALSE "
+                   + "WHERE b.member_id = ? "
+                   + "AND b.is_deleted = FALSE "
+                   + "GROUP BY b.board_id, b.member_id, b.category, b.title, "
+                   + "b.content, b.tags, b.view_count, b.created_at, b.updated_at "
+                   + "ORDER BY b.created_at DESC";
+
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setLong(1, memberId);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+
+                while(rs.next()) {
+
+                    BoardDTO board = new BoardDTO();
+
+                    board.setBoardId(rs.getLong("board_id"));
+                    board.setMemberId(rs.getLong("member_id"));
+                    board.setCategory(rs.getString("category"));
+                    board.setTitle(rs.getString("title"));
+                    board.setContent(rs.getString("content"));
+                    board.setTags(rs.getString("tags"));
+                    board.setViewCount(rs.getInt("view_count"));
+                    board.setCreatedAt(rs.getTimestamp("created_at"));
+                    board.setUpdatedAt(rs.getTimestamp("updated_at"));
+                    board.setCommentCount(rs.getInt("comment_count"));
+
+                    list.add(board);
+                }
+            }
+
+        } catch(Exception e) {
+
+            System.out.println("[BoardDAO] 회원 작성 게시글 조회 오류");
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+    
 }

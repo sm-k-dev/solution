@@ -1,7 +1,12 @@
 package member.controller;
 
 import java.io.IOException;
+import java.util.List;
 
+import board.dao.BoardDAO;
+import board.dto.BoardDTO;
+import board.service.BoardService;
+import board.dto.BoardCommentDTO;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -16,11 +21,21 @@ public class MemberController extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     private MemberService memberService;
+    private BoardService boardService;
 
     @Override
     public void init() throws ServletException {
-    	
+
         memberService = new MemberService();
+        try {
+
+            BoardDAO boardDAO = new BoardDAO();
+            
+            boardService = new BoardService(boardDAO);
+        } catch(Exception e) {
+
+            throw new ServletException("게시판 DB 자원을 찾지 못했습니다.", e);
+        }
     }
 
     @Override
@@ -44,7 +59,8 @@ public class MemberController extends HttpServlet {
 
         try {
 
-            if (loginId == null && ("/member/member.do".equals(action) || "/member/memberUpdate.do".equals(action) || "/member/memberUpdatePro.do".equals(action) || "/member/memberDelete.do".equals(action))) {
+            if (loginId == null && ("/member/member.do".equals(action) || "/member/activity.do".equals(action)
+            	|| "/member/memberUpdate.do".equals(action) || "/member/memberUpdatePro.do".equals(action) || "/member/memberDelete.do".equals(action))) {
                 response.sendRedirect(request.getContextPath() + "/member/login.do");
                 
                 return;
@@ -66,10 +82,65 @@ public class MemberController extends HttpServlet {
                     return;
                 }
 
+                long memberId = member.getMemberId();
+
+                int boardCount = boardService.countByMemberId(memberId);
+                int commentCount = boardService.countCommentsByMemberId(memberId);
+
+                request.setAttribute("boardCount", boardCount);
+                request.setAttribute("commentCount", commentCount);
+                
                 request.setAttribute("member", member);
                 request.getRequestDispatcher("/member/member.jsp").forward(request, response);
                 return;
 
+            } else if("/member/activity.do".equals(action)) {
+
+                if(loginId == null) {
+                    response.sendRedirect(request.getContextPath() + "/member/login.do");
+                    return;
+                }
+
+                MemberDTO member = memberService.getMember(loginId);
+
+                if(member == null) {
+                    response.sendRedirect(request.getContextPath() + "/member/login.do");
+                    return;
+                }
+
+                String tab = request.getParameter("tab");
+
+                if(tab == null || tab.trim().isEmpty()) {
+                    tab = "posts";
+                }
+
+                if(!"posts".equals(tab)
+                        && !"comments".equals(tab)
+                        && !"inquiries".equals(tab)) {
+
+                    tab = "posts";
+                }
+
+                long memberId = member.getMemberId();
+
+                if("posts".equals(tab)) {
+
+                    List<BoardDTO> postList = boardService.findByMemberId(memberId);
+
+                    request.setAttribute("postList", postList);
+                } else if("comments".equals(tab)) {
+
+                    List<BoardCommentDTO> commentList = boardService.findCommentsByMemberId(memberId);
+
+                    request.setAttribute("commentList", commentList);
+                }
+
+                request.setAttribute("tab", tab);
+
+                request.getRequestDispatcher("/member/memberActivity.jsp").forward(request, response);
+                
+                return;
+            
             } else if ("/member/passwordCheck.do".equals(action)) {
 
                 if (loginId == null) {
@@ -147,7 +218,110 @@ public class MemberController extends HttpServlet {
                 String destination = "ADMIN".equals(member.getRole()) ? "/admin/dashboard" : "/index.jsp";
                 response.sendRedirect(request.getContextPath() + destination);
                 return;
+                
+            } else if("/member/memberUpdate.do".equals(action)) {
 
+                if(loginId == null) {
+                    response.sendRedirect(request.getContextPath() + "/member/login.do");
+                    return;
+                }
+
+                String name = request.getParameter("name");
+                String email = request.getParameter("email");
+                String phone = request.getParameter("phone");
+                String postcode = request.getParameter("postcode");
+                String address = request.getParameter("address");
+                String addressDetail = request.getParameter("addressDetail");
+
+                String result = memberService.updateMember(loginId, name, email, phone, postcode, address, addressDetail);
+
+                if("SUCCESS".equals(result)) {
+
+                    request.setAttribute("memberUpdateMessage", "회원정보가 수정되었습니다.");
+
+                    session.setAttribute("name", name.trim());
+                } else if("NAME_EMPTY".equals(result)) {
+
+                    request.setAttribute("memberUpdateMessage", "담당자 성명을 입력해주세요.");
+                } else if("EMAIL_EMPTY".equals(result)) {
+
+                    request.setAttribute("memberUpdateMessage", "기업 담당자 이메일을 입력해주세요.");
+                } else if("INVALID_EMAIL".equals(result)) {
+
+                    request.setAttribute("memberUpdateMessage", "올바른 이메일 형식으로 입력해주세요.");
+                } else if("PHONE_EMPTY".equals(result)) {
+
+                    request.setAttribute("memberUpdateMessage", "휴대폰 번호를 입력해주세요.");
+                } else if("INVALID_PHONE".equals(result)) {
+
+                    request.setAttribute("memberUpdateMessage", "올바른 휴대폰 번호 형식으로 입력해주세요.");
+                } else if("INVALID_POSTCODE".equals(result)) {
+
+                    request.setAttribute("memberUpdateMessage", "올바른 우편번호를 입력해주세요.");
+                } else {
+
+                    request.setAttribute("memberUpdateMessage", "회원정보 수정 중 오류가 발생했습니다.");
+                }
+
+                MemberDTO member = memberService.getMember(loginId);
+
+                request.setAttribute("member", member);
+                request.getRequestDispatcher("/member/member.jsp").forward(request, response);
+                
+                return;
+
+            } else if("/member/passwordUpdate.do".equals(action)) {
+
+                if(loginId == null) {
+                    response.sendRedirect(request.getContextPath() + "/member/login.do");
+                    return;
+                }
+
+                String currentPassword = request.getParameter("currentPassword");
+                String newPassword = request.getParameter("newPassword");
+                String confirmPassword = request.getParameter("confirmPassword");
+
+                String result = memberService.updatePassword(loginId, currentPassword, newPassword, confirmPassword);
+
+                if("SUCCESS".equals(result)) {
+                	
+                    request.setAttribute("passwordUpdateMessage", "비밀번호가 변경되었습니다.");
+                } else if("CURRENT_PASSWORD_EMPTY".equals(result)) {
+                	
+                    request.setAttribute("passwordUpdateMessage", "현재 비밀번호를 입력해주세요.");
+                } else if("NEW_PASSWORD_EMPTY".equals(result)) {
+                	
+                    request.setAttribute("passwordUpdateMessage", "새 비밀번호를 입력해주세요.");
+                } else if("CONFIRM_PASSWORD_EMPTY".equals(result)) {
+                	
+                    request.setAttribute("passwordUpdateMessage", "새 비밀번호 확인을 입력해주세요.");
+                } else if("MEMBER_NOT_FOUND".equals(result)) {
+                	
+                    request.setAttribute("passwordUpdateMessage", "회원정보를 확인할 수 없습니다.");
+                } else if("CURRENT_PASSWORD_NOT_MATCH".equals(result)) {
+                	
+                    request.setAttribute("passwordUpdateMessage", "현재 비밀번호가 일치하지 않습니다.");
+                } else if("INVALID_PASSWORD_PATTERN".equals(result)) {
+                	
+                    request.setAttribute("passwordUpdateMessage", "새 비밀번호는 8자 이상 영문, 숫자, 특수문자를 포함해야 합니다.");
+                } else if("SAME_AS_CURRENT_PASSWORD".equals(result)) {
+                	
+                    request.setAttribute("passwordUpdateMessage", "현재 비밀번호와 일치하여 변경할 수 없습니다.");
+                } else if("NEW_PASSWORD_NOT_MATCH".equals(result)) {
+                	
+                    request.setAttribute("passwordUpdateMessage", "새 비밀번호가 일치하지 않습니다.");
+                } else {
+                	
+                    request.setAttribute("passwordUpdateMessage", "비밀번호 변경 중 오류가 발생했습니다.");
+                }
+
+                MemberDTO member = memberService.getMember(loginId);
+
+                request.setAttribute("member", member);
+                request.getRequestDispatcher("/member/member.jsp").forward(request, response);
+                
+                return;
+                
             } else if ("/member/logout.do".equals(action)) {
 
                 if (session != null) {

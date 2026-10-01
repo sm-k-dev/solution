@@ -9,6 +9,8 @@ public class BoardCommentDTO {
     private String content;
     private String authorName;
     private Timestamp createdAt;
+    private long boardId;
+    private String boardTitle;
 
     public long getCommentId() { return commentId; }
     public void setCommentId(long commentId) { this.commentId = commentId; }
@@ -22,4 +24,9 @@ public class BoardCommentDTO {
     public void setAuthorName(String authorName) { this.authorName = authorName; }
     public Timestamp getCreatedAt() { return createdAt; }
     public void setCreatedAt(Timestamp createdAt) { this.createdAt = createdAt; }
+    public long getBoardId() { return boardId; }
+    public void setBoardId(long boardId) { this.boardId = boardId; }
+    public String getBoardTitle() { return boardTitle; }
+    public void setBoardTitle(String boardTitle) { this.boardTitle = boardTitle; }
+    
 }

@@ -96,4 +96,56 @@ public class MemberDAO {
 
         return member;
     }
+    
+    public int updatePassword(String loginId, String newPassword) {
+
+        int result = 0;
+
+        String sql = "UPDATE member SET password_hash = ?, updated_at = NOW() WHERE login_id = ? AND status = 'ACTIVE'";
+
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, newPassword);
+            pstmt.setString(2, loginId);
+
+            result = pstmt.executeUpdate();
+
+        } catch (Exception e) {
+
+            System.out.println("[MemberDAO] 비밀번호 변경 오류");
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+    
+    public int updateMember(String loginId, String name, String email, String phone, Integer postcode, String address, String addressDetail) {
+
+        int result = 0;
+
+        String sql = "UPDATE member SET name = ?, email = ?, phone = ?, postcode = ?, address = ?, address_detail = ?, updated_at = NOW() WHERE login_id = ? AND status = 'ACTIVE'";
+
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, name);
+            pstmt.setString(2, email);
+            pstmt.setString(3, phone);
+            pstmt.setObject(4, postcode);
+            pstmt.setString(5, address);
+            pstmt.setString(6, addressDetail);
+            pstmt.setString(7, loginId);
+
+            result = pstmt.executeUpdate();
+
+        } catch (Exception e) {
+
+            System.out.println("[MemberDAO] 회원정보 수정 오류");
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+    
 }
