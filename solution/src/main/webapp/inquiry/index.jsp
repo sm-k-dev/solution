@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 
 <html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_blank" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/pages/index.css"/><link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/pages/inquiry_index.css"/></head><body class="bg-background font-body-md text-body-md text-on-surface min-h-screen antialiased">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/pages/index.css"/><link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/pages/inquiry_index.css"/><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"/><link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/top.css?v=20261002-4"/></head><body class="bg-background font-body-md text-body-md text-on-surface min-h-screen antialiased">
 <jsp:include page="/inc/top.jsp" /><main class="w-full max-w-[1200px] mx-auto px-gutter-mobile lg:px-gutter-desktop py-space-xl"><div class="flex flex-col w-full space-y-12">
 <!-- 1. Breadcrumb & Page Header Banner -->
 <section class="flex flex-col gap-6 bg-surface-container-lowest p-8 md:p-10 rounded-xl shadow-sm">
@@ -212,14 +212,14 @@
 <div class="flex items-center gap-3.5 pr-4">
 <span class="flex-shrink-0 w-7 h-7 rounded-lg bg-secondary/10 text-secondary font-code-inline text-code-inline flex items-center justify-center font-bold">Q</span>
 <span class="font-headline-sm text-headline-sm text-on-surface font-medium">
-<span class="text-secondary font-semibold mr-1.5">[기술지원]</span>인프라 장애 발생 시 SLA 보상 및 긴급 NOC 연결 절차는 어떻게 되나요?
+<span class="text-secondary font-semibold mr-1.5">[기술지원]</span>서비스 오류가 발생하면 어디에서 기술 지원을 받을 수 있나요?
             </span>
 </div>
 <span class="material-symbols-outlined text-outline transition-transform duration-200 icon-arrow">expand_more</span>
 </button>
 <div class="faq-content hidden px-5 pb-5 pt-1">
 <div class="p-4 rounded-lg bg-surface-container-low text-body-md text-on-surface-variant leading-relaxed">
-<p>24/7/365 직통 NOC 핫라인(1544-6820)으로 즉시 연결되며, P1 긴급 인시던트의 경우 15분 이내 전담 엔지니어가 지정되어 텔레메트리 세션이 개시됩니다. 월간 가용률 99.99% 미달 시 SLA 규정에 따라 서비스 이용료 감면 조치가 적용됩니다.</p>
+<p>고객센터 문의를 통해 Web Security 또는 SentinelOps API의 연동과 오류에 대한 지원을 요청할 수 있습니다. 문의 시 API 이름과 오류가 발생한 시각, 응답 코드를 함께 남겨 주시면 확인에 도움이 됩니다.</p>
 </div>
 </div>
 </div>

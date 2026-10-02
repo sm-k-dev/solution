@@ -1998,3 +1998,29 @@
     }
   }
 }
+/* My page profile summary: keep the remaining three metrics balanced. */
+.member-quick-metrics-grid {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  padding-top: 16px;
+}
+
+.member-quick-metrics-grid > div {
+  min-width: 0;
+}
+
+@media (min-width: 640px) {
+  .member-quick-metrics-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .member-quick-metrics-grid {
+    flex: 1 1 0%;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    padding-top: 0;
+  }
+}

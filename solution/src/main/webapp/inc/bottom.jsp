@@ -21,7 +21,7 @@
 </div>
 <!-- Short Company Description -->
 <p class="mt-4 text-sm text-[#94a3b8] leading-relaxed max-w-md">
-                (주)넥소라는 금융기관, 글로벌 이커머스 및 엔터프라이즈 환경을 위한 차세대 미션 크리티컬 클라우드 인프라, 무중단 웹 보안 WAF, 고성능 결제 게이트웨이 및 SentinelOps 인공지능 자율 관제 플랫폼을 제공합니다.
+                (주)넥소라는 Web + Network + AI Security와 SentinelOps 구독형 API로 기업의 디지털 자산과 서비스 운영을 보호하는 보안 전문 기업입니다. 두 서비스 모두 무료 플랜으로 시작하고 필요에 따라 유료 구독으로 확장할 수 있습니다.
               </p>
 <!-- Company Contact Mini Badge Grid -->
 <div class="mt-6 flex flex-col gap-2.5 text-xs text-[#cbd5e1]">
@@ -83,21 +83,9 @@
             </h2>
 <ul class="mt-4 space-y-2.5 text-sm">
 <li>
-<a class="flex items-center justify-between text-[#cbd5e1] hover:text-white hover:translate-x-1 transition-all duration-150 group" href="${pageContext.request.contextPath}/solutions/solutions.jsp#web-hosting">
-<span class="group-hover:text-[#38bdf8]">Web Hosting</span>
-<span class="text-[10px] text-slate-500 font-mono uppercase">Tier-IV BareMetal</span>
-</a>
-</li>
-<li>
-<a class="flex items-center justify-between text-[#cbd5e1] hover:text-white hover:translate-x-1 transition-all duration-150 group" href="${pageContext.request.contextPath}/solutions/solutions.jsp#web-security">
-<span class="group-hover:text-[#38bdf8]">Web Security</span>
-<span class="text-[10px] text-slate-500 font-mono uppercase">WAF &amp; 3.2T DDoS</span>
-</a>
-</li>
-<li>
-<a class="flex items-center justify-between text-[#cbd5e1] hover:text-white hover:translate-x-1 transition-all duration-150 group" href="${pageContext.request.contextPath}/solutions/solutions.jsp#web-payment">
-<span class="group-hover:text-[#38bdf8]">Web Payment</span>
-<span class="text-[10px] text-slate-500 font-mono uppercase">PCI-DSS Token</span>
+<a class="flex items-center justify-between text-[#cbd5e1] hover:text-white hover:translate-x-1 transition-all duration-150 group" href="${pageContext.request.contextPath}/solutions/solutions.jsp#security-detail">
+<span class="group-hover:text-[#38bdf8]">Web + Network + AI Security</span>
+<span class="text-[10px] text-slate-500 font-mono uppercase">Network · Web · AI Security API</span>
 </a>
 </li>
 <li>
@@ -196,7 +184,7 @@
 <div class="flex flex-wrap gap-1.5 font-mono text-[10px]">
 <span class="px-2 py-0.5 rounded bg-[#0f2442] border border-[#1e385c] text-slate-300">ISMS-P</span>
 <span class="px-2 py-0.5 rounded bg-[#0f2442] border border-[#1e385c] text-slate-300">ISO 27001</span>
-<span class="px-2 py-0.5 rounded bg-[#0f2442] border border-[#1e385c] text-slate-300">PCI-DSS</span>
+
 </div>
 </div>
 </div>
@@ -212,10 +200,10 @@
                 본사 주소 : 서울특별시 강남구 테헤란로 152 강남파이낸스센터 24층 (NEXORA Cloud NOC &amp; R&amp;D)
               </p>
 <p class="font-mono text-[11px] text-slate-400">
-                제1데이터센터 : KT 목동 IDC 2센터 5F <span class="text-slate-600 mx-1">/</span> 제2데이터센터 : SK u-타워 판교 IDC 7F <span class="text-slate-600 mx-1">/</span> 글로벌 거점 : 싱가포르 Equinix SG1, 도쿄 TYO2
+                Web + Network + AI Security와 SentinelOps 구독형 보안 API 서비스
               </p>
 <p class="text-[11px] text-slate-500 pt-1">
-                개인정보보호책임자(CPO) : 이준호 정보보안실 이사 (privacy@nexora.co.kr) <span class="text-slate-600 mx-1">|</span> 호스팅사업자등록 : 과학기술정보통신부 제 2024-호스팅-019호
+                개인정보보호책임자(CPO) : 이준호 정보보안실 이사 (privacy@nexora.co.kr)
               </p>
 </div>
 <!-- Quick Inquiry Direct Button Box -->

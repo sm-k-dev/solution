@@ -227,7 +227,7 @@ body {
     }
 }
 </style>
-</head>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/top.css?v=20261002-4"/></head>
 <body>
 <jsp:include page="/inc/top.jsp" />
 <main class="activity-main">
@@ -254,7 +254,7 @@ body {
                     작성 댓글
                 </a>
                 <a
-                    href="<%=contextPath%>/member/activity.do?tab=inquiries"
+                    href="<%=contextPath%>/inquiry/my"
                     class="activity-tab <%="inquiries".equals(tab) ? "active" : ""%>">
                     문의 내역
                 </a>
