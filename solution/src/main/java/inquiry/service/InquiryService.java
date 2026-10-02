@@ -37,6 +37,37 @@ public class InquiryService {
     public List<InquiryDTO> findRecentInquirySummaries(int limit) throws SQLException { return inquiryDAO.findRecentInquirySummaries(limit); }
     public Map<String, Integer> countDashboardStatuses() throws SQLException { return inquiryDAO.countDashboardStatuses(); }
     public List<InquiryDTO> findInquiriesByMember(long memberId) throws SQLException { return inquiryDAO.findInquiriesByMember(memberId); }
+
+    public int countByMemberId(long memberId) throws SQLException {
+
+        if(memberId < 1) {
+        	
+            return 0;
+        }
+
+        return inquiryDAO.countByMemberId(memberId);
+    }// === countByMemberId Method
+    
+    public int countCompletedByMemberId(long memberId) throws SQLException {
+
+        if(memberId < 1) {
+        	
+            return 0;
+        }
+
+        return inquiryDAO.countCompletedByMemberId(memberId);
+    }// === countCompletedByMemberId Method
+    
+    public int countInProgressByMemberId(long memberId) throws SQLException {
+
+        if(memberId < 1) {
+
+            return 0;
+        }
+
+        return inquiryDAO.countInProgressByMemberId(memberId);
+    }// === countInProgressByMemberId Method
+    
     public InquiryDTO findInquiryById(long inquiryId) throws SQLException { return inquiryDAO.findInquiryById(inquiryId); }
 
     public boolean answerInquiry(long inquiryId, long adminId, String answer, String status) throws SQLException {

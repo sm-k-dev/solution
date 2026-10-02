@@ -13,6 +13,7 @@ public class BoardDTO {
     private int viewCount;
     private Timestamp createdAt;
     private Timestamp updatedAt;
+    private int commentCount;
 
     public long getBoardId() { return boardId; }
     public void setBoardId(long boardId) { this.boardId = boardId; }
@@ -34,4 +35,6 @@ public class BoardDTO {
     public void setCreatedAt(Timestamp createdAt) { this.createdAt = createdAt; }
     public Timestamp getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(Timestamp updatedAt) { this.updatedAt = updatedAt; }
+    public int getCommentCount() { return commentCount; }
+    public void setCommentCount(int commentCount) { this.commentCount = commentCount; }
 }
