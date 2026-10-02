@@ -28,7 +28,16 @@
 <span class="font-body-sm text-body-sm text-secondary font-semibold whitespace-nowrap">* 표시는 필수 입력 항목입니다.</span>
 </div>
 </div>
-<form class="flex flex-col gap-10" onsubmit="event.preventDefault();">
+<form class="flex flex-col gap-10" action="<%=request.getContextPath()%>/member/signupPro.do" method="post">
+<%
+	String signupMessage = (String) request.getAttribute("signupMessage");
+	
+	if(signupMessage != null && !signupMessage.isEmpty()) {
+%>
+<div class="p-4 rounded-xl bg-red-50 text-red-600 text-sm font-semibold"><%=signupMessage%></div>
+<%
+	}
+%>
 <!-- SECTION 01: 기본 정보 -->
 <section class="flex flex-col gap-6">
 <div class="flex items-center gap-3">
@@ -44,7 +53,8 @@
 <div class="flex flex-col sm:flex-row gap-2">
 <div class="relative flex-1">
 <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-outline text-[20px] pointer-events-none">person</span>
-<input class="w-full h-12 pl-11 pr-4 bg-surface-container-low rounded-lg text-on-surface font-body-md text-body-md placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:shadow-[0_0_0_2px_#1c4fd7] transition-all" id="userId" placeholder="영문 소문자, 숫자 조합 6~20자" type="text" value="nexora_admin"/>
+<input class="w-full h-12 pl-11 pr-4 bg-surface-container-low rounded-lg text-on-surface font-body-md text-body-md placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:shadow-[0_0_0_2px_#1c4fd7] transition-all" 
+	id="userId" name="loginId" value="<%=request.getAttribute("loginId") != null ? request.getAttribute("loginId") : ""%>" placeholder="영문 소문자, 숫자 조합 6~20자" type="text"/>
 </div>
 <button class="h-12 px-5 bg-surface-container text-primary-container font-body-md text-body-md font-semibold rounded-lg hover:bg-surface-container-high transition-colors whitespace-nowrap flex items-center justify-center gap-1.5" type="button">
 <span>중복확인</span>
@@ -62,7 +72,7 @@
 </label>
 <div class="relative">
 <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-outline text-[20px] pointer-events-none">lock</span>
-<input class="w-full h-12 pl-11 pr-11 bg-surface-container-low rounded-lg text-on-surface font-body-md text-body-md placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:shadow-[0_0_0_2px_#1c4fd7] transition-all" id="userPw" placeholder="영문, 숫자, 특수문자 조합 8자 이상" type="password" value="Enterprise@2025#"/>
+<input class="w-full h-12 pl-11 pr-11 bg-surface-container-low rounded-lg text-on-surface font-body-md text-body-md placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:shadow-[0_0_0_2px_#1c4fd7] transition-all" id="userPw" name="password" placeholder="영문, 숫자, 특수문자 조합 8자 이상" type="password"/>
 <button class="absolute right-3.5 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface transition-colors" onclick="const p = document.getElementById('userPw'); p.type = p.type === 'password' ? 'text' : 'password'; this.firstElementChild.textContent = p.type === 'password' ? 'visibility' : 'visibility_off';" type="button">
 <span class="material-symbols-outlined text-[20px]">visibility</span>
 </button>
@@ -87,7 +97,7 @@
 </label>
 <div class="relative">
 <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-outline text-[20px] pointer-events-none">lock_clock</span>
-<input class="w-full h-12 pl-11 pr-11 bg-surface-container-low rounded-lg text-on-surface font-body-md text-body-md placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:shadow-[0_0_0_2px_#1c4fd7] transition-all" id="userPwConfirm" placeholder="비밀번호를 재입력하세요" type="password" value="Enterprise@2025#"/>
+<input class="w-full h-12 pl-11 pr-11 bg-surface-container-low rounded-lg text-on-surface font-body-md text-body-md placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:shadow-[0_0_0_2px_#1c4fd7] transition-all" id="userPwConfirm" name="passwordConfirm" placeholder="비밀번호를 재입력하세요" type="password"/>
 <span class="material-symbols-outlined absolute right-3.5 top-1/2 -translate-y-1/2 text-secondary text-[20px]">check</span>
 </div>
 <div class="flex items-center gap-1.5 text-secondary text-xs">
@@ -104,7 +114,8 @@
 </label>
 <div class="relative">
 <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-outline text-[20px] pointer-events-none">badge</span>
-<input class="w-full h-12 pl-11 pr-4 bg-surface-container-low rounded-lg text-on-surface font-body-md text-body-md placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:shadow-[0_0_0_2px_#1c4fd7] transition-all" id="userName" placeholder="홍길동" type="text"/>
+<input class="w-full h-12 pl-11 pr-4 bg-surface-container-low rounded-lg text-on-surface font-body-md text-body-md placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:shadow-[0_0_0_2px_#1c4fd7] transition-all" 
+	id="userName" name="name" value="<%=request.getAttribute("name") != null ? request.getAttribute("name") : ""%>" placeholder="홍길동" type="text"/>
 </div>
 </div>
 <!-- Mobile Phone -->
@@ -114,7 +125,8 @@
 </label>
 <div class="relative">
 <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-outline text-[20px] pointer-events-none">smartphone</span>
-<input class="w-full h-12 pl-11 pr-4 bg-surface-container-low rounded-lg text-on-surface font-body-md text-body-md placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:shadow-[0_0_0_2px_#1c4fd7] transition-all font-code-inline text-code-inline" id="userPhone" placeholder="010-0000-0000" type="tel"/>
+<input class="w-full h-12 pl-11 pr-4 bg-surface-container-low rounded-lg text-on-surface font-body-md text-body-md placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:shadow-[0_0_0_2px_#1c4fd7] transition-all font-code-inline text-code-inline"
+	id="userPhone" name="phone" value="<%=request.getAttribute("phone") != null ? request.getAttribute("phone") : ""%>" placeholder="010-0000-0000" type="tel"/>
 </div>
 </div>
 </div>
@@ -125,7 +137,8 @@
 </label>
 <div class="relative">
 <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-outline text-[20px] pointer-events-none">mail</span>
-<input class="w-full h-12 pl-11 pr-4 bg-surface-container-low rounded-lg text-on-surface font-body-md text-body-md placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:shadow-[0_0_0_2px_#1c4fd7] transition-all" id="userEmail" placeholder="name@company.com" type="email"/>
+<input class="w-full h-12 pl-11 pr-4 bg-surface-container-low rounded-lg text-on-surface font-body-md text-body-md placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:shadow-[0_0_0_2px_#1c4fd7] transition-all" 
+	id="userEmail" name="email" value="<%=request.getAttribute("email") != null ? request.getAttribute("email") : ""%>" placeholder="name@company.com" type="email"/>
 </div>
 <p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1.5">
 <span class="material-symbols-outlined text-[16px] text-outline">info</span>
@@ -147,7 +160,8 @@
                 우편번호
               </label>
 <div class="flex gap-2">
-<input class="w-36 h-12 px-4 bg-surface-container-high rounded-lg text-on-surface font-code-inline text-code-inline font-medium cursor-default focus:outline-none" id="postalCode" readonly="" type="text" value="06164"/>
+<input class="w-36 h-12 px-4 bg-surface-container-high rounded-lg text-on-surface font-code-inline text-code-inline font-medium cursor-default focus:outline-none" 
+	id="postalCode" name="postcode" value="<%=request.getAttribute("postcode") != null ? request.getAttribute("postcode") : ""%>" readonly="" type="text"/>
 <button class="h-12 px-5 bg-surface-container text-primary-container font-body-md text-body-md font-semibold rounded-lg hover:bg-surface-container-high transition-colors whitespace-nowrap flex items-center justify-center gap-1.5" type="button">
 <span class="material-symbols-outlined text-[18px]">search</span>
 <span>우편번호 검색</span>
@@ -159,14 +173,16 @@
 <label class="font-body-sm text-body-sm font-semibold text-on-surface" for="addressMain">
                 기본 주소
               </label>
-<input class="w-full h-12 px-4 bg-surface-container-high rounded-lg text-on-surface font-body-md text-body-md cursor-default focus:outline-none" id="addressMain" readonly="" type="text" value="서울특별시 강남구 영동대로 517 (삼성동)"/>
+<input class="w-full h-12 px-4 bg-surface-container-high rounded-lg text-on-surface font-body-md text-body-md cursor-default focus:outline-none" 
+	id="addressMain" name="address" value="<%=request.getAttribute("address") != null ? request.getAttribute("address") : ""%>" readonly="" type="text"/>
 </div>
 <!-- Detailed Address -->
 <div class="flex flex-col gap-2">
 <label class="font-body-sm text-body-sm font-semibold text-on-surface" for="addressDetail">
                 상세 주소
               </label>
-<input class="w-full h-12 px-4 bg-surface-container-low rounded-lg text-on-surface font-body-md text-body-md placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:shadow-[0_0_0_2px_#1c4fd7] transition-all" id="addressDetail" placeholder="상세 주소 및 건물 동/호수를 입력하세요 (예: 아셈타워 28층)" type="text"/>
+<input class="w-full h-12 px-4 bg-surface-container-low rounded-lg text-on-surface font-body-md text-body-md placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:shadow-[0_0_0_2px_#1c4fd7] transition-all" 
+	id="addressDetail" name="addressDetail" value="<%=request.getAttribute("addressDetail") != null ? request.getAttribute("addressDetail") : ""%>" placeholder="상세 주소 및 건물 동/호수를 입력하세요 (예: 아셈타워 28층)" type="text"/>
 </div>
 </div>
 </section>

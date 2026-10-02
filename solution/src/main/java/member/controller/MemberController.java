@@ -183,9 +183,104 @@ public class MemberController extends HttpServlet {
                 }
 
                 return;
+            } else if("/member/signup.do".equals(action)) {
+
+                request.getRequestDispatcher("/member/signup.jsp").forward(request, response);
+                
+                return;
+                
+            }else if("/member/signupPro.do".equals(action)) {
+
+                String loginIdParam = request.getParameter("loginId");
+                String password = request.getParameter("password");
+                String passwordConfirm = request.getParameter("passwordConfirm");
+                String name = request.getParameter("name");
+                String phone = request.getParameter("phone");
+                String email = request.getParameter("email");
+                String postcode = request.getParameter("postcode");
+                String address = request.getParameter("address");
+                String addressDetail = request.getParameter("addressDetail");
+
+                String result = memberService.signup(
+                        loginIdParam,
+                        password,
+                        passwordConfirm,
+                        name,
+                        phone,
+                        email,
+                        postcode,
+                        address,
+                        addressDetail
+                );
+
+                if("SUCCESS".equals(result)) {
+
+                    response.sendRedirect(request.getContextPath() + "/member/login.do");
+                    return;
+                }
+
+                String signupMessage;
+
+                if("LOGIN_ID_EMPTY".equals(result)) {
+
+                    signupMessage = "아이디를 입력해주세요.";
+                } else if("INVALID_LOGIN_ID".equals(result)) {
+
+                    signupMessage = "아이디는 영문 소문자와 숫자를 조합하여 6~20자로 입력해주세요.";
+                } else if("DUPLICATE_LOGIN_ID".equals(result)) {
+
+                    signupMessage = "이미 사용 중인 아이디입니다.";
+                } else if("PASSWORD_EMPTY".equals(result)) {
+
+                    signupMessage = "비밀번호를 입력해주세요.";
+                } else if("INVALID_PASSWORD_PATTERN".equals(result)) {
+
+                    signupMessage = "비밀번호는 8자 이상 영문, 숫자, 특수문자를 포함해야 합니다.";
+                } else if("PASSWORD_CONFIRM_EMPTY".equals(result)) {
+
+                    signupMessage = "비밀번호 확인을 입력해주세요.";
+                } else if("PASSWORD_NOT_MATCH".equals(result)) {
+
+                    signupMessage = "비밀번호가 일치하지 않습니다.";
+                } else if("NAME_EMPTY".equals(result)) {
+
+                    signupMessage = "이름을 입력해주세요.";
+                } else if("PHONE_EMPTY".equals(result)) {
+
+                    signupMessage = "휴대폰 번호를 입력해주세요.";
+                } else if("INVALID_PHONE".equals(result)) {
+
+                    signupMessage = "올바른 휴대폰 번호 형식으로 입력해주세요.";
+                } else if("EMAIL_EMPTY".equals(result)) {
+
+                    signupMessage = "이메일을 입력해주세요.";
+                } else if("INVALID_EMAIL".equals(result)) {
+
+                    signupMessage = "올바른 이메일 형식으로 입력해주세요.";
+                } else if("INVALID_POSTCODE".equals(result)) {
+
+                    signupMessage = "올바른 우편번호를 입력해주세요.";
+                } else {
+
+                    signupMessage = "회원가입 처리 중 오류가 발생했습니다.";
+                }
+
+                request.setAttribute("signupMessage", signupMessage);
+                request.setAttribute("loginId", loginIdParam);
+                request.setAttribute("name", name);
+                request.setAttribute("phone", phone);
+                request.setAttribute("email", email);
+                request.setAttribute("postcode", postcode);
+                request.setAttribute("address", address);
+                request.setAttribute("addressDetail", addressDetail);
+
+                request.getRequestDispatcher("/member/signup.jsp").forward(request, response);
+                
+                return;
             } else if ("/member/login.do".equals(action)) {
 
                 request.getRequestDispatcher("/member/login.jsp").forward(request, response);
+                
                 return;
             } else if ("/member/loginAction.do".equals(action)) {
 
