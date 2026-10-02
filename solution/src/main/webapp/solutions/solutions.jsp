@@ -1,8 +1,8 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 
-<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_blank" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/pages/solutions_solutions.css"/></head><body class="bg-background font-body-md text-body-md text-on-surface antialiased min-h-screen">
+<html lang="ko"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_blank" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/pages/solutions_solutions.css?v=20261002-3"/><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"/><link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/top.css?v=20261002-4"/></head><body class="bg-background font-body-md text-body-md text-on-surface antialiased min-h-screen">
 <jsp:include page="/inc/top.jsp" /><main class="w-full bg-background"><div class="max-w-[1200px] mx-auto px-gutter-mobile md:px-gutter lg:px-gutter-desktop py-space-xl"><div class="flex flex-col w-full">
 <!-- Top Breadcrumb & Hero Header -->
 <section class="w-full mb-space-xl">
@@ -24,7 +24,7 @@
           기업의 IT 환경을 위한 솔루션
         </h1>
 <p class="font-body-lg text-body-lg text-on-surface-variant mt-space-xs">
-          인프라부터 보안, 결제, 시스템 모니터링까지 전방위 미션 크리티컬 아키텍처를 제공합니다.
+          Web + Network + AI Security와 SentinelOps 두 가지 보안 API를 무료 및 유료 구독 플랜으로 제공합니다.
         </p>
 </div>
 <!-- Key Proof Status Badge -->
@@ -33,7 +33,7 @@
 <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
 <span class="relative inline-flex rounded-full h-2 w-2 bg-secondary"></span>
 </span>
-<span class="font-code-inline text-code-inline text-on-surface-variant font-semibold">ALL CLUSTERS OPERATIONAL</span>
+<span class="font-code-inline text-code-inline text-on-surface-variant font-semibold">2 SECURITY APIS</span>
 </div>
 </div>
 <!-- Proof Value Metrics Bar -->
@@ -43,8 +43,8 @@
 <span class="material-symbols-outlined text-[20px]">verified_user</span>
 </div>
 <div>
-<div class="font-headline-sm text-headline-sm text-on-surface font-semibold">SLA 99.99%</div>
-<div class="font-body-sm text-body-sm text-on-surface-variant">엔터프라이즈 고가용성 무중단 보증</div>
+<div class="font-headline-sm text-headline-sm text-on-surface font-semibold">Free / Paid API</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">필요한 사용량에 맞춘 구독 플랜</div>
 </div>
 </div>
 <div class="flex items-center gap-space-md px-space-sm py-1 md:border-l border-outline-variant/40">
@@ -52,8 +52,8 @@
 <span class="material-symbols-outlined text-[20px]">speed</span>
 </div>
 <div>
-<div class="font-headline-sm text-headline-sm text-on-surface font-semibold">3.2Tbps</div>
-<div class="font-body-sm text-body-sm text-on-surface-variant">글로벌 Anycast 스크러빙 &amp; 디도스 방어</div>
+<div class="font-headline-sm text-headline-sm text-on-surface font-semibold">Threat API</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">네트워크·웹앱·AI 보안 분석</div>
 </div>
 </div>
 <div class="flex items-center gap-space-md px-space-sm py-1 md:border-l border-outline-variant/40">
@@ -67,168 +67,25 @@
 </div>
 </div>
 </section>
-<!-- 4-Column Solution Cards -->
+<!-- Two Security Subscription Product Cards -->
 <section class="w-full mb-space-xl">
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-<!-- 01 Web Hosting -->
-<div class="group flex flex-col justify-between bg-surface-container-lowest rounded-xl p-space-lg shadow-sm border border-outline-variant/30 hover:border-secondary hover:shadow-md transition-all duration-300">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<div id="security-detail" class="flex flex-col justify-between bg-surface-container-lowest rounded-xl p-space-lg shadow-sm border border-outline-variant/30 hover:border-secondary hover:shadow-md transition-all duration-300">
 <div>
-<div class="flex items-center justify-between mb-space-md">
-<span class="font-code-inline text-code-inline text-on-surface-variant font-semibold tracking-wider">01 // INFRA</span>
-<div class="w-10 h-10 rounded-lg bg-surface-container-low text-secondary flex items-center justify-center group-hover:bg-secondary group-hover:text-on-secondary transition-colors">
-<span class="material-symbols-outlined text-[22px]">dns</span>
+<div class="flex items-center justify-between mb-space-md"><span class="font-code-inline text-code-inline text-on-surface-variant font-semibold tracking-wider">01 // WEB SECURITY API</span><div class="w-10 h-10 rounded-lg bg-surface-container-low text-secondary flex items-center justify-center"><span class="material-symbols-outlined text-[22px]">security</span></div></div>
+<h2 class="font-headline-md text-headline-md text-on-surface font-bold mb-space-xs">Web + Network + AI Security</h2>
+<p class="font-body-sm text-body-sm font-semibold text-secondary mb-space-sm">네트워크·웹앱·AI 서비스 보안을 위한 구독형 API</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed mb-space-md">보안 이벤트를 API로 수집·분석하고, 웹 애플리케이션과 AI 서비스에 필요한 위협 탐지 및 대응 기능을 제공합니다.</p>
+<div class="space-y-space-xs py-space-sm border-t border-outline-variant/20 mb-space-md"><div class="flex items-start gap-2"><span class="material-symbols-outlined text-[16px] text-secondary mt-0.5 shrink-0">check_circle</span><span class="font-body-sm text-body-sm text-on-surface">네트워크 및 웹 애플리케이션 위협 탐지</span></div><div class="flex items-start gap-2"><span class="material-symbols-outlined text-[16px] text-secondary mt-0.5 shrink-0">check_circle</span><span class="font-body-sm text-body-sm text-on-surface">AI 입력·출력 보안 점검 및 정책 적용</span></div><div class="flex items-start gap-2"><span class="material-symbols-outlined text-[16px] text-secondary mt-0.5 shrink-0">check_circle</span><span class="font-body-sm text-body-sm text-on-surface">무료 사용량으로 시작, 유료 구독으로 한도 확장</span></div></div>
+</div><a class="inline-flex items-center justify-between w-full px-4 py-2.5 rounded-lg bg-surface-container-low text-on-surface font-body-sm font-semibold hover:bg-secondary hover:text-on-secondary transition-all" href="${pageContext.request.contextPath}/solutions/web-security.jsp"><span>자세히 보기</span><span class="material-symbols-outlined text-[18px]">arrow_forward</span></a>
 </div>
-</div>
-<h2 class="font-headline-md text-headline-md text-on-surface font-bold mb-space-xs">Web Hosting</h2>
-<p class="font-body-sm text-body-sm font-semibold text-secondary mb-space-sm">안정적인 웹 서비스를 위한 서버 및 인프라 환경</p>
-<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed mb-space-md">
-            Tier-IV 무중단 규격의 고성능 NVMe SAN 스토리지와 다중 전력 이중화망을 완비하여 대규모 워크로드를 안정적으로 지탱합니다.
-          </p>
-<div class="space-y-space-xs py-space-sm border-t border-outline-variant/20 mb-space-md">
-<div class="flex items-start gap-2">
-<span class="material-symbols-outlined text-[16px] text-secondary mt-0.5 shrink-0">check_circle</span>
-<span class="font-body-sm text-body-sm text-on-surface">Tier-IV 무중단 고가용성 환경</span>
-</div>
-<div class="flex items-start gap-2">
-<span class="material-symbols-outlined text-[16px] text-secondary mt-0.5 shrink-0">check_circle</span>
-<span class="font-body-sm text-body-sm text-on-surface">오토스케일링 및 하이브리드 연동</span>
-</div>
-<div class="flex items-start gap-2">
-<span class="material-symbols-outlined text-[16px] text-secondary mt-0.5 shrink-0">check_circle</span>
-<span class="font-body-sm text-body-sm text-on-surface">24/7/365 하드웨어 리소스 관제</span>
-</div>
-</div>
-</div>
-<a class="inline-flex items-center justify-between w-full px-4 py-2.5 rounded-lg bg-surface-container-low text-on-surface font-body-sm font-semibold hover:bg-secondary hover:text-on-secondary transition-all" href="#infra-detail">
-<span>자세히 보기</span>
-<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
-</a>
-</div>
-<!-- 02 Web Security -->
-<div class="group flex flex-col justify-between bg-surface-container-lowest rounded-xl p-space-lg shadow-sm border border-outline-variant/30 hover:border-secondary hover:shadow-md transition-all duration-300">
-<div>
-<div class="flex items-center justify-between mb-space-md">
-<span class="font-code-inline text-code-inline text-on-surface-variant font-semibold tracking-wider">02 // DEFENSE</span>
-<div class="w-10 h-10 rounded-lg bg-surface-container-low text-secondary flex items-center justify-center group-hover:bg-secondary group-hover:text-on-secondary transition-colors">
-<span class="material-symbols-outlined text-[22px]">security</span>
-</div>
-</div>
-<h2 class="font-headline-md text-headline-md text-on-surface font-bold mb-space-xs">Web Security</h2>
-<p class="font-body-sm text-body-sm font-semibold text-secondary mb-space-sm">웹 서비스와 데이터 자산을 보호하는 방어망</p>
-<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed mb-space-md">
-            OWASP Top 10 공격 차단 및 3.2Tbps 대용량 DDoS 유입을 실시간 격리하며 가상 패칭으로 제로데이 위협을 무력화합니다.
-          </p>
-<div class="space-y-space-xs py-space-sm border-t border-outline-variant/20 mb-space-md">
-<div class="flex items-start gap-2">
-<span class="material-symbols-outlined text-[16px] text-secondary mt-0.5 shrink-0">check_circle</span>
-<span class="font-body-sm text-body-sm text-on-surface">Zero-Trust ID 및 세분화 ACL</span>
-</div>
-<div class="flex items-start gap-2">
-<span class="material-symbols-outlined text-[16px] text-secondary mt-0.5 shrink-0">check_circle</span>
-<span class="font-body-sm text-body-sm text-on-surface">실시간 L7 패킷 심층 분석 (DPI)</span>
-</div>
-<div class="flex items-start gap-2">
-<span class="material-symbols-outlined text-[16px] text-secondary mt-0.5 shrink-0">check_circle</span>
-<span class="font-body-sm text-body-sm text-on-surface">침해 긴급 자동 격리 및 가상 패치</span>
-</div>
-</div>
-</div>
-<a class="inline-flex items-center justify-between w-full px-4 py-2.5 rounded-lg bg-surface-container-low text-on-surface font-body-sm font-semibold hover:bg-secondary hover:text-on-secondary transition-all" href="#security-detail">
-<span>자세히 보기</span>
-<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
-</a>
-</div>
-<!-- 03 Web Payment -->
-<div class="group flex flex-col justify-between bg-surface-container-lowest rounded-xl p-space-lg shadow-sm border border-outline-variant/30 hover:border-secondary hover:shadow-md transition-all duration-300">
-<div>
-<div class="flex items-center justify-between mb-space-md">
-<span class="font-code-inline text-code-inline text-on-surface-variant font-semibold tracking-wider">03 // GATEWAY</span>
-<div class="w-10 h-10 rounded-lg bg-surface-container-low text-secondary flex items-center justify-center group-hover:bg-secondary group-hover:text-on-secondary transition-colors">
-<span class="material-symbols-outlined text-[22px]">credit_card</span>
-</div>
-</div>
-<h2 class="font-headline-md text-headline-md text-on-surface font-bold mb-space-xs">Web Payment</h2>
-<p class="font-body-sm text-body-sm font-semibold text-secondary mb-space-sm">안전하고 중단 없는 엔터프라이즈 결제 엔진</p>
-<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed mb-space-md">
-            글로벌 최고 권위 PCI-DSS Level 1 인증 환경과 하드웨어 HSM 토큰화 체계로 국내외 결제 인프라를 신속하게 통합합니다.
-          </p>
-<div class="space-y-space-xs py-space-sm border-t border-outline-variant/20 mb-space-md">
-<div class="flex items-start gap-2">
-<span class="material-symbols-outlined text-[16px] text-secondary mt-0.5 shrink-0">check_circle</span>
-<span class="font-body-sm text-body-sm text-on-surface">10,000 TPS 대용량 동시 트랜잭션</span>
-</div>
-<div class="flex items-start gap-2">
-<span class="material-symbols-outlined text-[16px] text-secondary mt-0.5 shrink-0">check_circle</span>
-<span class="font-body-sm text-body-sm text-on-surface">실시간 정산 및 불변 감사 추적</span>
-</div>
-<div class="flex items-start gap-2">
-<span class="material-symbols-outlined text-[16px] text-secondary mt-0.5 shrink-0">check_circle</span>
-<span class="font-body-sm text-body-sm text-on-surface">E2E 하드웨어 암호화 토큰화</span>
-</div>
-</div>
-</div>
-<a class="inline-flex items-center justify-between w-full px-4 py-2.5 rounded-lg bg-surface-container-low text-on-surface font-body-sm font-semibold hover:bg-secondary hover:text-on-secondary transition-all" href="#payment-detail">
-<span>자세히 보기</span>
-<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
-</a>
-</div>
-<!-- 04 SentinelOps (Prominent Distinguishing Style) -->
-<div class="relative flex flex-col justify-between bg-primary-container text-on-primary rounded-xl p-space-lg shadow-xl ring-1 ring-tertiary-fixed-dim/40 overflow-hidden">
-<!-- Subtle Glow Background Accent -->
-<div class="absolute -top-12 -right-12 w-32 h-32 bg-secondary-container/20 rounded-full blur-2xl pointer-events-none"></div>
-<div>
-<!-- Top Badge & Number -->
-<div class="flex items-center justify-between mb-space-sm">
-<div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-tertiary-container/80 text-tertiary-fixed font-label-caps text-label-caps border border-tertiary-fixed-dim/30">
-<span class="w-1.5 h-1.5 rounded-full bg-tertiary-fixed-dim animate-pulse"></span>
-              AI-Assisted Monitoring
-            </div>
-<span class="font-code-inline text-code-inline text-on-primary-container font-semibold">04 // AI-OPS</span>
-</div>
-<!-- Icon & Header -->
-<div class="flex items-center gap-3 mt-space-sm mb-space-xs">
-<div class="w-10 h-10 rounded-lg bg-tertiary-container text-tertiary-fixed-dim flex items-center justify-center border border-tertiary-fixed-dim/40">
-<span class="material-symbols-outlined text-[24px]">radar</span>
-</div>
-<div>
-<h2 class="font-headline-md text-headline-md text-on-primary font-bold tracking-tight">SentinelOps™</h2>
-</div>
-</div>
-<p class="font-body-sm text-body-sm text-tertiary-fixed mb-space-sm font-medium">지능형 런타임 이상 탐지 및 자동 대응</p>
-<p class="font-body-sm text-body-sm text-on-primary-container leading-relaxed mb-space-md">
-            시스템 오류를 1초 내 식별하고 수만 줄의 로그를 3줄 요약하여 운영자가 원인과 솔루션을 즉각 도출하도록 지원합니다.
-          </p>
-<!-- SentinelOps Key Specialized Points -->
-<div class="space-y-2 py-space-sm border-t border-on-primary-container/20 mb-space-md text-[13px]">
-<div class="flex items-start gap-2">
-<span class="material-symbols-outlined text-[16px] text-tertiary-fixed-dim mt-0.5 shrink-0">check_circle</span>
-<span class="text-on-primary"><strong class="text-tertiary-fixed font-medium">Error Detection:</strong> 분산 환경 1초 내 감지</span>
-</div>
-<div class="flex items-start gap-2">
-<span class="material-symbols-outlined text-[16px] text-tertiary-fixed-dim mt-0.5 shrink-0">check_circle</span>
-<span class="text-on-primary"><strong class="text-tertiary-fixed font-medium">Severity:</strong> 비즈니스 영향도 P1~P4 자동 분류</span>
-</div>
-<div class="flex items-start gap-2">
-<span class="material-symbols-outlined text-[16px] text-tertiary-fixed-dim mt-0.5 shrink-0">check_circle</span>
-<span class="text-on-primary"><strong class="text-tertiary-fixed font-medium">AI Summary:</strong> 스택트레이스 3줄 핵심 요약</span>
-</div>
-<div class="flex items-start gap-2">
-<span class="material-symbols-outlined text-[16px] text-tertiary-fixed-dim mt-0.5 shrink-0">check_circle</span>
-<span class="text-on-primary"><strong class="text-tertiary-fixed font-medium">Slack Alert:</strong> 웹훅 채널 실시간 긴급 전파</span>
-</div>
-<div class="flex items-start gap-2">
-<span class="material-symbols-outlined text-[16px] text-tertiary-fixed-dim mt-0.5 shrink-0">check_circle</span>
-<span class="text-on-primary"><strong class="text-tertiary-fixed font-medium">Post-Mortem:</strong> 장애 타임라인 자동 리포트</span>
-</div>
-</div>
-</div>
-<a class="inline-flex items-center justify-between w-full px-4 py-2.5 rounded-lg bg-secondary text-on-secondary font-body-sm font-semibold hover:bg-secondary-container shadow-md transition-all" href="#sentinelops">
-<span>SentinelOps 보기</span>
-<span class="material-symbols-outlined text-[18px]">terminal</span>
-</a>
-</div>
-</div>
-</section>
+<div id="sentinelops-detail" class="relative flex flex-col justify-between bg-primary-container text-on-primary rounded-xl p-space-lg shadow-xl ring-1 ring-tertiary-fixed-dim/40 overflow-hidden"><div class="absolute -top-12 -right-12 w-32 h-32 bg-secondary-container/20 rounded-full blur-2xl pointer-events-none"></div><div>
+<div class="flex items-center justify-between mb-space-sm"><div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-tertiary-container/80 text-tertiary-fixed font-label-caps text-label-caps border border-tertiary-fixed-dim/30"><span class="w-1.5 h-1.5 rounded-full bg-tertiary-fixed-dim animate-pulse"></span>AI-ASSISTED OPERATIONS</div><span class="font-code-inline text-code-inline text-on-primary-container font-semibold">02 // SENTINELOPS API</span></div>
+<div class="flex items-center gap-3 mt-space-sm mb-space-xs"><div class="w-10 h-10 rounded-lg bg-tertiary-container text-tertiary-fixed-dim flex items-center justify-center border border-tertiary-fixed-dim/40"><span class="material-symbols-outlined text-[24px]">radar</span></div><h2 class="font-headline-md text-headline-md text-on-primary font-bold tracking-tight">SentinelOps</h2></div>
+<p class="font-body-sm text-body-sm text-tertiary-fixed mb-space-sm font-medium">오류 탐지와 장애 대응을 위한 구독형 API</p><p class="font-body-sm text-body-sm text-on-primary-container leading-relaxed mb-space-md">애플리케이션 오류와 운영 이벤트를 모아 우선순위를 정하고, 원인 분석과 대응에 필요한 정보를 제공합니다.</p>
+<div class="space-y-2 py-space-sm border-t border-on-primary-container/20 mb-space-md text-[13px]"><div class="flex items-start gap-2"><span class="material-symbols-outlined text-[16px] text-tertiary-fixed-dim mt-0.5 shrink-0">check_circle</span><span class="text-on-primary">오류 이벤트 수집 및 심각도 분류</span></div><div class="flex items-start gap-2"><span class="material-symbols-outlined text-[16px] text-tertiary-fixed-dim mt-0.5 shrink-0">check_circle</span><span class="text-on-primary">로그 요약과 장애 원인 분석 지원</span></div><div class="flex items-start gap-2"><span class="material-symbols-outlined text-[16px] text-tertiary-fixed-dim mt-0.5 shrink-0">check_circle</span><span class="text-on-primary">무료 사용량 제공, 유료 구독으로 보존·알림 확장</span></div></div>
+</div><a class="inline-flex items-center justify-between w-full px-4 py-2.5 rounded-lg bg-secondary text-on-secondary font-body-sm font-semibold hover:bg-secondary-container shadow-md transition-all" href="${pageContext.request.contextPath}/solutions/sentinelops.jsp"><span>SentinelOps 보기</span><span class="material-symbols-outlined text-[18px]">terminal</span></a></div>
+</div></section>
 <!-- Interactive Live Telemetry Demonstration Preview -->
 <section class="w-full mb-space-xl p-space-lg bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/30">
 <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-space-md mb-space-lg pb-space-sm border-b border-outline-variant/20">
@@ -236,11 +93,11 @@
 <div class="inline-flex items-center gap-1 font-code-inline text-code-inline text-secondary font-semibold uppercase">
 <span class="material-symbols-outlined text-[15px]">sensors</span> Realtime Matrix
         </div>
-<h3 class="font-headline-lg text-headline-lg text-on-surface font-bold">통합 인프라 관제 가용 지표</h3>
+<h3 class="font-headline-lg text-headline-lg text-on-surface font-bold">보안 API 서비스 지표</h3>
 </div>
 <div class="flex items-center gap-space-sm">
 <span class="px-2.5 py-1 rounded bg-surface-container text-on-surface-variant font-code-inline text-[11px]">Sync Rate: 500ms</span>
-<span class="px-2.5 py-1 rounded bg-surface-container text-secondary font-code-inline text-[11px] font-semibold">Edge-Nodes: 48 Active</span>
+<span class="px-2.5 py-1 rounded bg-surface-container text-secondary font-code-inline text-[11px] font-semibold">APIs: 2 Products</span>
 </div>
 </div>
 <!-- Telemetry Metric Strip -->
@@ -251,9 +108,9 @@
 <div class="text-code-inline text-[11px] text-secondary mt-1 font-semibold">▲ +4.2% (정상 변동폭)</div>
 </div>
 <div class="p-4 rounded-lg bg-surface-container-low">
-<div class="text-on-surface-variant font-label-caps text-label-caps uppercase">Global Packet Latency</div>
+<div class="text-on-surface-variant font-label-caps text-label-caps uppercase">Security Events</div>
 <div class="text-metric-val font-metric-val text-on-surface mt-1" id="metric-latency">1.84 <span class="text-body-sm font-normal text-on-surface-variant">ms</span></div>
-<div class="text-code-inline text-[11px] text-secondary mt-1 font-semibold">Anycast 최적 경로 유지</div>
+<div class="text-code-inline text-[11px] text-secondary mt-1 font-semibold">위협 이벤트 실시간 분석</div>
 </div>
 <div class="p-4 rounded-lg bg-surface-container-low">
 <div class="text-on-surface-variant font-label-caps text-label-caps uppercase">Threat Filter Ratio</div>
@@ -267,76 +124,14 @@
 </div>
 </div>
 </section>
-<!-- Objective Solution Comparison Table -->
-<section class="w-full mb-space-xl">
-<div class="mb-space-md">
-<div class="inline-flex items-center gap-1 font-code-inline text-code-inline text-secondary font-semibold uppercase">
-<span class="material-symbols-outlined text-[15px]">compare_arrows</span> Architectural Comparison
-      </div>
-<h2 class="font-headline-lg text-headline-lg text-on-surface font-bold">
-        솔루션별 핵심 스펙 및 영역 비교
-      </h2>
-<p class="font-body-md text-body-md text-on-surface-variant mt-1">
-        주관적 평가나 단순 순위를 배제하고, 비즈니스 요건에 부합하는 객관적 아키텍처 기준을 제시합니다.
-      </p>
-</div>
-<!-- Comparison Table Container -->
-<div class="w-full overflow-x-auto rounded-xl shadow-sm border border-outline-variant/30 bg-surface-container-lowest">
-<table class="w-full text-left border-collapse min-w-[760px]">
-<thead>
-<tr class="bg-surface-container-high/60 border-b border-outline-variant/30">
-<th class="p-4 font-label-caps text-label-caps text-on-surface uppercase w-1/5">항목 및 비교 기준</th>
-<th class="p-4 font-label-caps text-label-caps text-secondary uppercase w-1/5">인프라 (Web Hosting)</th>
-<th class="p-4 font-label-caps text-label-caps text-secondary uppercase w-1/5">보안 (Web Security)</th>
-<th class="p-4 font-label-caps text-label-caps text-secondary uppercase w-1/5">결제 (Web Payment)</th>
-<th class="p-4 font-label-caps text-label-caps text-on-surface uppercase w-1/5 bg-surface-container-high">모니터링 (SentinelOps)</th>
-</tr>
-</thead>
-<tbody class="divide-y divide-outline-variant/20 font-body-sm text-body-sm text-on-surface">
-<!-- Row 1 -->
-<tr class="hover:bg-surface-container-low/50 transition-colors">
-<td class="p-4 font-semibold text-on-surface bg-surface-container-low/30">주요 적용 대상</td>
-<td class="p-4 text-on-surface-variant">엔터프라이즈 포털, 대규모 웹 애플리케이션, 고성능 API 백본</td>
-<td class="p-4 text-on-surface-variant">금융권 웹앱, 공공 포털, 디도스 노출 빈도가 높은 공용 엔드포인트</td>
-<td class="p-4 text-on-surface-variant">이커머스, 구독 서비스, 정기 자동 과금 체계 보유 플랫폼</td>
-<td class="p-4 text-on-surface bg-surface-container-low/40 font-medium">분산 마이크로서비스(MSA), 쿠버네티스 클러스터, 미션 크리티컬 DB</td>
-</tr>
-<!-- Row 2 -->
-<tr class="hover:bg-surface-container-low/50 transition-colors">
-<td class="p-4 font-semibold text-on-surface bg-surface-container-low/30">핵심 아키텍처</td>
-<td class="p-4 text-on-surface-variant">베어메탈 전용 노드 + All-NVMe SAN + 다중 그리드 전력 회선</td>
-<td class="p-4 text-on-surface-variant">글로벌 Anycast BGP 라우팅 + WAF + 실시간 DPI 엔진</td>
-<td class="p-4 text-on-surface-variant">PCI-DSS L1 인증 HSM + 다중 PG 스마트 폴백 라우터</td>
-<td class="p-4 text-on-surface bg-surface-container-low/40 font-medium">비동기 eBPF 커널 에이전트 + 시계열 Vector DB + AI 분석 엔진</td>
-</tr>
-<!-- Row 3 -->
-<tr class="hover:bg-surface-container-low/50 transition-colors">
-<td class="p-4 font-semibold text-on-surface bg-surface-container-low/30">가용성 &amp; 규격</td>
-<td class="p-4 text-on-surface-variant">SLA 99.99% 보증, K-ISMS 관리체계 준수</td>
-<td class="p-4 text-on-surface-variant">3.2Tbps 스크러빙 케파, OWASP Top 10 완벽 대응</td>
-<td class="p-4 text-on-surface-variant">PCI-DSS v4.0 최상위 적격성, 전자금융감독규정 충족</td>
-<td class="p-4 text-on-surface bg-surface-container-low/40 font-medium">장애 인지 지연 1초 이내, 비즈니스 P1~P4 자동 라벨링</td>
-</tr>
-<!-- Row 4 -->
-<tr class="hover:bg-surface-container-low/50 transition-colors">
-<td class="p-4 font-semibold text-on-surface bg-surface-container-low/30">운영 지원 체계</td>
-<td class="p-4 text-on-surface-variant">24/7/365 전담 엔지니어 On-Site 상주 관제</td>
-<td class="p-4 text-on-surface-variant">보안관제센터(SOC) 전문 분석가 위협 인텔리전스</td>
-<td class="p-4 text-on-surface-variant">결제 장애 전용 핫라인 및 일일 자동 정산 리포트</td>
-<td class="p-4 text-on-surface bg-surface-container-low/40 font-medium">Slack / Teams 즉시 웹훅 알림 + 포스트모텀 리포트 자동 생성</td>
-</tr>
-<!-- Row 5 -->
-<tr class="hover:bg-surface-container-low/50 transition-colors">
-<td class="p-4 font-semibold text-on-surface bg-surface-container-low/30">연동 및 배포 방식</td>
-<td class="p-4 text-on-surface-variant">물리 전용선 구성, VPN 터널링, 프라이빗 클라우드 피어링</td>
-<td class="p-4 text-on-surface-variant">DNS CNAME 전환 방식 (무중단 5분 적용 가능)</td>
-<td class="p-4 text-on-surface-variant">RESTful API / SDK (JavaScript, Java, Python, Go)</td>
-<td class="p-4 text-on-surface bg-surface-container-low/40 font-medium">원클릭 데몬셋(DaemonSet) 에이전트 및 OpenTelemetry 호환</td>
-</tr>
-</tbody>
-</table>
-</div>
-</section>
+<!-- Security API Subscription Comparison -->
+<section id="subscription-overview" class="w-full mb-space-xl"><div class="mb-space-md"><div class="inline-flex items-center gap-1 font-code-inline text-code-inline text-secondary font-semibold uppercase"><span class="material-symbols-outlined text-[15px]">compare_arrows</span> Subscription Overview</div><h2 class="font-headline-lg text-headline-lg text-on-surface font-bold">필요한 기능부터 시작하는 구독 플랜</h2><p class="font-body-md text-body-md text-on-surface-variant mt-1">두 API 모두 무료 사용량으로 시작할 수 있으며, 사용량과 운영 요구에 따라 유료 플랜으로 확장할 수 있습니다.</p></div>
+<div class="w-full overflow-x-auto rounded-xl shadow-sm border border-outline-variant/30 bg-surface-container-lowest"><table class="w-full text-left border-collapse min-w-[640px]"><thead><tr class="bg-surface-container-high/60 border-b border-outline-variant/30"><th class="p-4 font-label-caps text-label-caps text-on-surface uppercase">구분</th><th class="p-4 font-label-caps text-label-caps text-secondary uppercase">Web + Network + AI Security API</th><th class="p-4 font-label-caps text-label-caps text-secondary uppercase">SentinelOps API</th></tr></thead><tbody class="divide-y divide-outline-variant/20 font-body-sm text-body-sm text-on-surface">
+<tr><td class="p-4 font-semibold bg-surface-container-low/30">핵심 기능</td><td class="p-4 text-on-surface-variant">네트워크·웹앱·AI 서비스 위협 탐지와 보안 정책 적용</td><td class="p-4 text-on-surface-variant">오류 이벤트 수집, 심각도 분류, 원인 분석 지원</td></tr>
+<tr><td class="p-4 font-semibold bg-surface-container-low/30">무료 플랜</td><td class="p-4 text-on-surface-variant">기본 API 사용량과 핵심 탐지 기능 제공</td><td class="p-4 text-on-surface-variant">기본 이벤트 수집과 대시보드 제공</td></tr>
+<tr><td class="p-4 font-semibold bg-surface-container-low/30">유료 구독</td><td class="p-4 text-on-surface-variant">사용량·정책·분석 기능 확장</td><td class="p-4 text-on-surface-variant">이벤트·보존 기간·알림 및 분석 기능 확장</td></tr>
+<tr><td class="p-4 font-semibold bg-surface-container-low/30">연동 방식</td><td class="p-4 text-on-surface-variant">REST API 및 보안 이벤트 웹훅</td><td class="p-4 text-on-surface-variant">REST API, SDK 및 운영 알림 웹훅</td></tr>
+</tbody></table></div></section>
 <!-- Architecture Consultation CTA Section -->
 <section class="w-full">
 <div class="relative bg-primary-container text-on-primary rounded-2xl p-space-lg md:p-space-xl overflow-hidden shadow-xl">

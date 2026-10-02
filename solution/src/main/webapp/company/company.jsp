@@ -4,7 +4,7 @@
 <html lang="ko"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Nexura Systems - 엔터프라이즈 미션 크리티컬 IT 인프라 &amp; 보안 솔루션</title>
+<title>NEXORA - 기업 보안 API 구독 서비스</title>
 <!-- Tailwind CSS v3 CDN with forms and container-queries -->
 
 <!-- Tailwind Custom Configuration -->
@@ -22,7 +22,7 @@
       animation: pulseGlow 3s ease-in-out infinite;
     }
   </style>
-<meta content="web_blank" name="shell-type"/><link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/pages/company_company.css"/></head>
+<meta content="web_blank" name="shell-type"/><link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/pages/company_company.css"/><link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/top.css?v=20261002-4"/></head>
 <body class="bg-[#f8f9ff]">
 <jsp:include page="/inc/top.jsp" />
 <!-- BEGIN: MainContent -->
@@ -48,7 +48,7 @@ ABOUT NEXORA SYSTEMS
 기술로 더 안정적인 디지털 환경을 만듭니다.
 </h1>
 <p class="text-body-lg font-body-lg text-on-surface-variant max-w-3xl leading-relaxed">
-기업의 IT 인프라와 미션 크리티컬 서비스를 위한 신뢰할 수 있는 기술 파트너. 고성능 인프라 엔지니어링과 자율형 보안 텔레메트리로 무중단 비즈니스를 보증합니다.
+기업의 웹·네트워크·AI 보안과 서비스 오류 대응을 돕는 API를 구독형으로 제공합니다. 무료 플랜으로 시작해 필요한 기능과 사용량을 확장할 수 있습니다.
 </p>
 </div>
 <!-- Trust Metrics Strip -->
@@ -58,8 +58,8 @@ ABOUT NEXORA SYSTEMS
 <span class="material-symbols-outlined text-headline-md" style="font-variation-settings: 'FILL' 1;">verified</span>
 </div>
 <div>
-<div class="text-metric-val font-metric-val text-on-background text-xl font-bold">SLA 99.99%</div>
-<div class="text-body-sm font-body-sm text-on-surface-variant mt-1">무중단 인프라 가용성 보장</div>
+<div class="text-metric-val font-metric-val text-on-background text-xl font-bold">Security API</div>
+<div class="text-body-sm font-body-sm text-on-surface-variant mt-1">유연한 API 구독 모델</div>
 </div>
 </div>
 <div class="flex items-center gap-5 p-6 rounded-2xl bg-surface-container-lowest shadow-sm hover:shadow-md transition-shadow border border-outline-variant/30">
@@ -104,7 +104,7 @@ NEXORA는 예측 불가능한 분산 환경에서도 비즈니스가 언제나 �
 </div>
 <div class="flex-1">
 <strong class="text-body-md font-semibold text-on-background block mb-1">IT Infrastructure</strong>
-<p class="text-body-sm font-body-sm text-on-surface-variant leading-relaxed">고성능 Tier-IV 데이터센터 및 맞춤형 베어메탈 고밀도 인프라 운영</p>
+<p class="text-body-sm font-body-sm text-on-surface-variant leading-relaxed">네트워크·웹앱·AI 서비스 보안 API와 위협 분석 기능 제공</p>
 </div>
 </div>
 <div class="flex items-start gap-4 p-4 rounded-xl bg-surface-container-lowest shadow-sm border border-outline-variant/30 hover:border-secondary/40 transition-colors">
@@ -122,7 +122,7 @@ NEXORA는 예측 불가능한 분산 환경에서도 비즈니스가 언제나 �
 </div>
 <div class="flex-1">
 <strong class="text-body-md font-semibold text-on-background block mb-1">Financial Payment</strong>
-<p class="text-body-sm font-body-sm text-on-surface-variant leading-relaxed">금융보안원 가이드라인 및 PCI-DSS Level 1 공인 하드웨어 암호화 결제 엔진</p>
+<p class="text-body-sm font-body-sm text-on-surface-variant leading-relaxed">무료 플랜부터 시작해 사용량에 따라 확장하는 보안 API 구독 모델</p>
 </div>
 </div>
 <div class="flex items-start gap-4 p-4 rounded-xl bg-surface-container-lowest shadow-sm border border-outline-variant/30 hover:border-secondary/40 transition-colors">
@@ -198,7 +198,7 @@ NEXORA의 핵심 가치
 <span class="text-label-caps font-label-caps text-secondary uppercase tracking-wider block mb-4">Trust</span>
 <p class="text-body-sm font-semibold text-on-surface mb-2">안정적인 서비스를 최우선으로 생각합니다.</p>
 <p class="text-body-sm font-body-sm text-on-surface-variant leading-relaxed">
-99.99% 가용성 보장 및 전문 선임 엔지니어 24시간 실시간 책임 관제로 무중단 운영을 실현합니다.
+무료 플랜으로 기능을 시작하고 필요한 사용량에 맞춰 구독을 확장할 수 있습니다.
 </p>
 </div>
 <div class="mt-6 pt-3 text-code-inline font-code-inline text-on-surface-variant flex items-center gap-1.5 border-t border-outline-variant/20">
@@ -249,7 +249,7 @@ Zero-Trust 철학 기반의 다중 암호화 레이어 및 글로벌 컴플라�
 <span class="text-label-caps font-label-caps text-secondary uppercase tracking-wider block mb-4">Sustainability</span>
 <p class="text-body-sm font-semibold text-on-surface mb-2">장기적인 관점의 시스템을 설계합니다.</p>
 <p class="text-body-sm font-body-sm text-on-surface-variant leading-relaxed">
-엔터프라이즈 레거시 호환성과 클라우드 네이티브 확장을 유연하게 아우르는 고효율 친환경 인프라.
+기존 서비스 환경과 연동할 수 있는 API 중심의 유연한 보안 구조를 지향합니다.
 </p>
 </div>
 <div class="mt-6 pt-3 text-code-inline font-code-inline text-on-surface-variant flex items-center gap-1.5 border-t border-outline-variant/20">
@@ -259,7 +259,7 @@ Zero-Trust 철학 기반의 다중 암호화 레이어 및 글로벌 컴플라�
 </div>
 </div>
 </section>
-<!-- SECTION 4: Business Areas (4 Solution Cards) -->
+<!-- SECTION 4: Business Areas (Two Security API Products) -->
 <section class="w-full bg-surface-container-low py-20">
 <div class="max-w-[1200px] mx-auto px-gutter-mobile md:px-gutter lg:px-gutter-desktop">
 <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-4">
@@ -270,61 +270,32 @@ Zero-Trust 철학 기반의 다중 암호화 레이어 및 글로벌 컴플라�
 </h2>
 </div>
 <p class="text-body-sm font-body-sm text-on-surface-variant max-w-md leading-relaxed">
-NEXORA의 핵심 기술력으로 완성된 4대 엔터프라이즈 솔루션 스위트를 확인하십시오.
+NEXORA의 보안 기술을 담은 두 가지 구독형 API 솔루션을 확인하십시오.
 </p>
 </div>
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-<!-- Solution 1: Web Hosting -->
-<div class="flex flex-col justify-between p-7 rounded-2xl bg-surface-container-lowest shadow-sm hover:shadow-md transition-all border border-outline-variant/30">
-<div>
-<div class="flex items-center justify-between mb-6">
-<div class="w-12 h-12 rounded-xl bg-surface-container flex items-center justify-center text-secondary">
-<span class="material-symbols-outlined text-headline-sm">cloud_done</span>
-</div>
-<span class="px-2.5 py-1 rounded-full bg-surface-container text-on-surface text-label-caps font-label-caps">Tier-IV</span>
-</div>
-<h3 class="text-headline-sm font-headline-sm text-on-background mb-3">Web Hosting</h3>
-<p class="text-body-sm font-body-sm text-on-surface-variant mb-6 leading-relaxed">
-안정적인 웹 서비스 운영을 위한 Tier-IV 엔터프라이즈 인프라 및 전용 베어메탈 고성능 서버 클러스터.
-</p>
-<ul class="space-y-2.5 text-body-sm font-body-sm text-on-surface mb-8">
-<li class="flex items-center gap-2">
-<span class="material-symbols-outlined text-secondary text-sm">check</span> 베어메탈 단독 격리 노드
-</li>
-<li class="flex items-center gap-2">
-<span class="material-symbols-outlined text-secondary text-sm">check</span> NVMe 초고속 스토리지 레이드
-</li>
-<li class="flex items-center gap-2">
-<span class="material-symbols-outlined text-secondary text-sm">check</span> 10Gbps+ 다중 회선 이중화
-</li>
-</ul>
-</div>
-<button class="inline-flex items-center gap-1.5 text-body-sm font-semibold text-secondary hover:text-secondary-container transition-colors pt-2" type="button">
-솔루션 자세히 보기 <span class="material-symbols-outlined text-body-sm">arrow_forward</span>
-</button>
-</div>
-<!-- Solution 2: Web Security -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Solution 1: Web + Network + AI Security -->
 <div class="flex flex-col justify-between p-7 rounded-2xl bg-surface-container-lowest shadow-sm hover:shadow-md transition-all border border-outline-variant/30">
 <div>
 <div class="flex items-center justify-between mb-6">
 <div class="w-12 h-12 rounded-xl bg-surface-container flex items-center justify-center text-secondary">
 <span class="material-symbols-outlined text-headline-sm">shield</span>
 </div>
-<span class="px-2.5 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed text-label-caps font-label-caps">3.2 Tbps</span>
+<span class="px-2.5 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed text-label-caps font-label-caps">무료 플랜</span>
 </div>
-<h3 class="text-headline-sm font-headline-sm text-on-background mb-3">Web Security</h3>
+<h3 class="text-headline-sm font-headline-sm text-on-background mb-3">Web + Network + AI Security</h3>
 <p class="text-body-sm font-body-sm text-on-surface-variant mb-6 leading-relaxed">
-대용량 분산 DDoS 방어, 지능형 WAF, 봇 차단 및 실시간 웹 애플리케이션 보안 완화 체계.
+네트워크·웹 애플리케이션·AI 서비스의 위협을 탐지하고 정책 기반 대응을 지원하는 보안 API.
 </p>
 <ul class="space-y-2.5 text-body-sm font-body-sm text-on-surface mb-8">
 <li class="flex items-center gap-2">
-<span class="material-symbols-outlined text-secondary text-sm">check</span> 3.2Tbps 글로벌 스크러빙 센터
+<span class="material-symbols-outlined text-secondary text-sm">check</span> 네트워크 및 웹 애플리케이션 위협 분석
 </li>
 <li class="flex items-center gap-2">
-<span class="material-symbols-outlined text-secondary text-sm">check</span> OWASP Top 10 실시간 차단
+<span class="material-symbols-outlined text-secondary text-sm">check</span> AI 서비스 입력·출력 보안 점검
 </li>
 <li class="flex items-center gap-2">
-<span class="material-symbols-outlined text-secondary text-sm">check</span> 제로데이 취약점 패치 가상화
+<span class="material-symbols-outlined text-secondary text-sm">check</span> 무료 사용량에서 유료 구독까지 단계별 확장
 </li>
 </ul>
 </div>
@@ -332,36 +303,7 @@ NEXORA의 핵심 기술력으로 완성된 4대 엔터프라이즈 솔루션 스
 솔루션 자세히 보기 <span class="material-symbols-outlined text-body-sm">arrow_forward</span>
 </button>
 </div>
-<!-- Solution 3: Web Payment -->
-<div class="flex flex-col justify-between p-7 rounded-2xl bg-surface-container-lowest shadow-sm hover:shadow-md transition-all border border-outline-variant/30">
-<div>
-<div class="flex items-center justify-between mb-6">
-<div class="w-12 h-12 rounded-xl bg-surface-container flex items-center justify-center text-secondary">
-<span class="material-symbols-outlined text-headline-sm">account_balance_wallet</span>
-</div>
-<span class="px-2.5 py-1 rounded-full bg-surface-container text-on-surface text-label-caps font-label-caps">PCI-DSS L1</span>
-</div>
-<h3 class="text-headline-sm font-headline-sm text-on-background mb-3">Web Payment</h3>
-<p class="text-body-sm font-body-sm text-on-surface-variant mb-6 leading-relaxed">
-글로벌 최고 권위 PCI-DSS Level 1 인증 준수, E2E 하드웨어 토큰 암호화 PG 연동 게이트웨이.
-</p>
-<ul class="space-y-2.5 text-body-sm font-body-sm text-on-surface mb-8">
-<li class="flex items-center gap-2">
-<span class="material-symbols-outlined text-secondary text-sm">check</span> 초당 10,000 TPS 트랜잭션
-</li>
-<li class="flex items-center gap-2">
-<span class="material-symbols-outlined text-secondary text-sm">check</span> HSM 기반 토큰 암호화
-</li>
-<li class="flex items-center gap-2">
-<span class="material-symbols-outlined text-secondary text-sm">check</span> 금융망 연계 전용선 인터페이스
-</li>
-</ul>
-</div>
-<button class="inline-flex items-center gap-1.5 text-body-sm font-semibold text-secondary hover:text-secondary-container transition-colors pt-2" type="button">
-솔루션 자세히 보기 <span class="material-symbols-outlined text-body-sm">arrow_forward</span>
-</button>
-</div>
-<!-- Solution 4: SentinelOps -->
+<!-- Solution 2: SentinelOps -->
 <div class="flex flex-col justify-between p-7 rounded-2xl bg-surface-container-lowest shadow-sm hover:shadow-md transition-all border border-outline-variant/30">
 <div>
 <div class="flex items-center justify-between mb-6">
@@ -372,17 +314,17 @@ NEXORA의 핵심 기술력으로 완성된 4대 엔터프라이즈 솔루션 스
 </div>
 <h3 class="text-headline-sm font-headline-sm text-on-background mb-3">SentinelOps</h3>
 <p class="text-body-sm font-body-sm text-on-surface-variant mb-6 leading-relaxed">
-시스템 병목과 잠재적 오류를 머신러닝으로 사전에 감지하고 진단하는 AI 자율 모니터링 플랫폼.
+애플리케이션 오류와 운영 이벤트를 수집하고 분석해 장애 대응을 돕는 구독형 API.
 </p>
 <ul class="space-y-2.5 text-body-sm font-body-sm text-on-surface mb-8">
 <li class="flex items-center gap-2">
-<span class="material-symbols-outlined text-secondary text-sm">check</span> 사전 이상 징후 조기 경보
+<span class="material-symbols-outlined text-secondary text-sm">check</span> 오류 이벤트 수집과 심각도 분류
 </li>
 <li class="flex items-center gap-2">
-<span class="material-symbols-outlined text-secondary text-sm">check</span> L7 분산 트레이싱 가시성
+<span class="material-symbols-outlined text-secondary text-sm">check</span> 로그 요약 및 장애 원인 분석 지원
 </li>
 <li class="flex items-center gap-2">
-<span class="material-symbols-outlined text-secondary text-sm">check</span> 자동 롤백 및 자가 치유(Self-heal)
+<span class="material-symbols-outlined text-secondary text-sm">check</span> 무료 사용량 제공과 유료 플랜 확장
 </li>
 </ul>
 </div>
@@ -440,7 +382,7 @@ NEXORA의 핵심 기술력으로 완성된 4대 엔터프라이즈 솔루션 스
 <span class="text-code-inline font-code-inline px-2 py-0.5 rounded bg-surface-container text-on-surface text-xs">Interface</span>
 </div>
 <p class="text-body-sm font-body-sm text-on-surface-variant leading-relaxed">
-보안 토큰(JWT/HMAC) 기반 서비스 연계 및 외부 결제 기관과의 무결성 통신 규격.
+보안 토큰(JWT/HMAC) 기반 서비스 연계 및 보안 이벤트 수집 및 운영 시스템 연동 규격.
 </p>
 </div>
 </div>

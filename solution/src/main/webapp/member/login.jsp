@@ -43,7 +43,7 @@ main>:last-child {
 </style>
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/assets/css/pages/member_login.css" />
-</head>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"/><link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/top.css?v=20261002-4"/></head>
 <body
 	class="bg-surface font-body-md text-body-md text-on-surface min-h-screen flex flex-col justify-center items-center">
 	<jsp:include page="/inc/top.jsp" /><main
@@ -137,10 +137,9 @@ main>:last-child {
 						</div>
 						<div
 							class="pt-2 flex items-center justify-between font-code-inline text-code-inline text-on-primary-container opacity-80">
-							<span>GATEWAY: KR-SEOUL-01</span> <span
+							<span>SECURITY API</span> <span
 								class="flex items-center gap-1"> <span
-								class="w-2 h-2 rounded-full bg-secondary-fixed"></span> 99.99%
-								UP
+								class="w-2 h-2 rounded-full bg-secondary-fixed"></span> ACTIVE
 							</span>
 						</div>
 					</div>
