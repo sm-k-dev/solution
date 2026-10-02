@@ -81,6 +81,77 @@ public class InquiryDAO {
             }
         }
     }
+    
+    public int countByMemberId(long memberId) throws SQLException {
+
+        String sql = "SELECT COUNT(*) FROM inquiry "
+                   + "WHERE member_id = ? "
+                   + "AND is_deleted = FALSE";
+
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setLong(1, memberId);
+
+            try (ResultSet result = statement.executeQuery()) {
+
+                if(result.next()) {
+                	
+                    return result.getInt(1);
+                }
+            }
+        }
+
+        return 0;
+    }// === countByMemberId Method
+    
+    public int countCompletedByMemberId(long memberId) throws SQLException {
+
+        String sql = "SELECT COUNT(*) FROM inquiry "
+                   + "WHERE member_id = ? "
+                   + "AND status = 'COMPLETED' "
+                   + "AND is_deleted = FALSE";
+
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setLong(1, memberId);
+
+            try (ResultSet result = statement.executeQuery()) {
+
+                if(result.next()) {
+                	
+                    return result.getInt(1);
+                }
+            }
+        }
+
+        return 0;
+    }// === countCompletedByMemberId
+    
+    public int countInProgressByMemberId(long memberId) throws SQLException {
+
+        String sql = "SELECT COUNT(*) FROM inquiry "
+                   + "WHERE member_id = ? "
+                   + "AND status = 'IN_PROGRESS' "
+                   + "AND is_deleted = FALSE";
+
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setLong(1, memberId);
+
+            try (ResultSet result = statement.executeQuery()) {
+
+                if(result.next()) {
+
+                    return result.getInt(1);
+                }
+            }
+        }
+
+        return 0;
+    }// === countInProgressByMemberId
 
     public List<InquiryDTO> findInquiriesByMember(long memberId) throws SQLException {
         String sql = "SELECT inquiry_id, member_id, assigned_admin_id, contact_name, contact_email, company_name, "

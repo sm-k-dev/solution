@@ -3,6 +3,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="board.dto.BoardDTO" %>
 <%@ page import="board.dto.BoardCommentDTO" %>
+<%@ page import="inquiry.dto.InquiryDTO" %>
 
 <%
 	String contextPath = request.getContextPath();
@@ -16,6 +17,8 @@
 	List<BoardDTO> postList = (List<BoardDTO>) request.getAttribute("postList");
 	
 	List<BoardCommentDTO> commentList = (List<BoardCommentDTO>) request.getAttribute("commentList");
+	
+	List<InquiryDTO> inquiryList = (List<InquiryDTO>) request.getAttribute("inquiryList");
 %>
 
 <!DOCTYPE html>
@@ -165,6 +168,30 @@ body {
     color: #1c4fd7;
     font-weight: 700;
 }
+.status-completed, .status-progress, .status-waiting {
+    display: inline-block;
+    min-width: 64px;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    text-align: center;
+}
+.status-completed {
+    color: #15803d;
+    background-color: #dcfce7;
+}
+
+.status-progress {
+    color: #1d4ed8;
+    background-color: #dbeafe;
+}
+
+.status-waiting {
+    color: #64748b;
+    background-color: #f1f5f9;
+}
+
 .activity-empty {
     padding: 70px 20px !important;
     text-align: center;
@@ -234,97 +261,140 @@ body {
             </div>
             <div class="activity-table-wrapper">
                 <table class="activity-table">
-                    <thead>
-                        <tr>
-						    <th class="title-column">
-						        게시글 제목
-						    </th>
-						    <th class="comment-column">
-						        <% if("comments".equals(tab)) { %>
-						            작성 댓글
-						        <% } else { %>
-						            댓글 수
-						        <% } %>
-						    </th>
-						    <th class="date-column">
-						        작성일자
-						    </th>
-						</tr>
-                    </thead>
+                   <thead>
+					    <tr>
+					        <th class="title-column">
+					            <% if("inquiries".equals(tab)) { %>
+					                문의 제목
+					            <% } else { %>
+					                게시글 제목
+					            <% } %>
+					        </th>
+					        <th class="comment-column">
+					            <% if("comments".equals(tab)) { %>
+					                작성 댓글
+					            <% } else if("inquiries".equals(tab)) { %>
+					                처리 상태
+					            <% } else { %>
+					                댓글 수
+					            <% } %>
+					        </th>
+					        <th class="date-column">
+					            <% if("inquiries".equals(tab)) { %>
+					                문의일자
+					            <% } else { %>
+					                작성일자
+					            <% } %>
+					        </th>
+					    </tr>
+					</thead>
                     <tbody>
-						<%
-							if("posts".equals(tab)) {
-							    if(postList != null && !postList.isEmpty()) {
-							        for(BoardDTO board : postList) {
-						%>
-						    <tr class="activity-row">
-						        <td class="title-column">
-						            <a
-						                class="board-title"
-						                href="<%=contextPath%>/board/detail?id=<%=board.getBoardId()%>">
-						                <%=board.getTitle()%>
-						            </a>
-						        </td>
-						        <td class="comment-column">
-						            <span class="comment-count"><%=board.getCommentCount()%></span>
-						        </td>
-						        <td class="date-column">
-						            <%=board.getCreatedAt()%>
-						        </td>
-						    </tr>
-						<%
-						        }
-						    } else {
-						%>
-						    <tr>
-						        <td colspan="3" class="activity-empty">
-						            <span class="empty-icon">description</span>
-						            <p class="empty-text">작성한 게시글이 없습니다.</p>
-						        </td>
-						    </tr>
-						<%
-						    }
-						} else if("comments".equals(tab)) {
-						    if(commentList != null && !commentList.isEmpty()) {
-						        for(BoardCommentDTO comment : commentList) {
-						%>
-						    <tr class="activity-row">
-						        <td class="title-column">
-						            <a
-						                class="board-title"
-						                href="<%=contextPath%>/board/detail?id=<%=comment.getBoardId()%>#comments">
-						                <%=comment.getBoardTitle()%>
-						            </a>
-						        </td>
-						        <td class="comment-column">
-						            <%=comment.getContent()%>
-						        </td>
-						        <td class="date-column">
-						            <%=comment.getCreatedAt()%>
-						        </td>
-						    </tr>
-						<%
-						        }
-						    } else {
-						%>
-						    <tr>
-						        <td colspan="3" class="activity-empty">
-						            <span class="empty-icon">chat</span>
-						            <p class="empty-text">작성한 댓글이 없습니다.</p>
-						        </td>
-						    </tr>
-						<%
-						    }
-						} else {
-						%>
-						    <tr>
-						        <td colspan="3" class="activity-empty">
-						            <span class="empty-icon">contact_support</span>
-						            <p class="empty-text">문의 내역이 없습니다.</p>
-						        </td>
-						    </tr>
-						<% } %>
-                    </tbody>
+					<%
+					    if("posts".equals(tab)) {
+					
+					        if(postList != null && !postList.isEmpty()) {
+					
+					            for(BoardDTO board : postList) {
+					%>
+					<tr class="activity-row">
+					    <td class="title-column">
+					        <a class="board-title" href="<%=contextPath%>/board/detail?id=<%=board.getBoardId()%>"><%=board.getTitle()%></a>
+					    </td>
+					    <td class="comment-column">
+					        <span class="comment-count"><%=board.getCommentCount()%></span>
+					    </td>
+					    <td class="date-column">
+					        <%=board.getCreatedAt() != null ? board.getCreatedAt().toLocalDateTime().toLocalDate() : ""%>
+					    </td>
+					</tr>
+					<%
+					            }
+					        } else {
+					%>
+					<tr>
+					    <td colspan="3" class="activity-empty">
+					        <span class="empty-icon">description</span>
+					        <p class="empty-text">작성한 게시글이 없습니다.</p>
+					    </td>
+					</tr>
+					<%
+					        }
+					    } else if("comments".equals(tab)) {
+					
+					        if(commentList != null && !commentList.isEmpty()) {
+					
+					            for(BoardCommentDTO comment : commentList) {
+					%>
+					<tr class="activity-row">
+					    <td class="title-column">
+					        <a class="board-title" href="<%=contextPath%>/board/detail?id=<%=comment.getBoardId()%>#comments"><%=comment.getBoardTitle()%></a>
+					    </td>
+					    <td class="comment-column">
+					        <%=comment.getContent()%>
+					    </td>
+					    <td class="date-column">
+					        <%=comment.getCreatedAt() != null ? comment.getCreatedAt().toLocalDateTime().toLocalDate() : ""%>
+					    </td>
+					</tr>
+					<%
+					            }
+					        } else {
+					%>
+					<tr>
+					    <td colspan="3" class="activity-empty">
+					        <span class="empty-icon">comment</span>
+					        <p class="empty-text">작성한 댓글이 없습니다.</p>
+					    </td>
+					</tr>
+					<%
+					        }
+					    } else if("inquiries".equals(tab)) {
+					
+					        if(inquiryList != null && !inquiryList.isEmpty()) {
+					
+					            for(InquiryDTO inquiry : inquiryList) {
+					%>
+					<tr class="activity-row">
+					    <td class="title-column">
+					        <a class="board-title" href="<%=contextPath%>/inquiry/detail?id=<%=inquiry.getInquiryId()%>"><%=inquiry.getTitle()%></a>
+					    </td>
+					    <td class="comment-column">
+					<%
+					        String status = inquiry.getStatus();
+					        if("COMPLETED".equals(status)) {
+					%>
+					        <span class="status-completed">답변 완료</span>
+					<%
+					        } else if("IN_PROGRESS".equals(status)) {
+					%>
+					        <span class="status-progress">처리 중</span>
+					<%
+					        } else {
+					%>
+					        <span class="status-waiting">접수</span>
+					<%
+					        }
+					%>
+					    </td>
+					    <td class="date-column">
+					        <%=inquiry.getCreatedAt() != null ? inquiry.getCreatedAt().toLocalDateTime().toLocalDate() : ""%>
+					    </td>
+					</tr>
+					<%
+					            }
+					        } else {
+					%>
+					<tr>
+					    <td colspan="3" class="activity-empty">
+					        <span class="empty-icon">contact_support</span>
+					        <p class="empty-text">문의 내역이 없습니다.</p>
+					    </td>
+					</tr>
+					<%
+					        }
+					    }
+					%>
+					</tbody>
                 </table>
             </div>
         </div>

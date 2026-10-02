@@ -238,10 +238,10 @@ main>:last-child {
 										class="h-2 w-2 rounded-full bg-secondary-container"></span>
 								</div>
 								<span
-									class="font-metric-val text-headline-lg text-on-surface mt-1">3<span
+									class="font-metric-val text-headline-lg text-on-surface mt-1"><%=request.getAttribute("inquiryCount")%><span
 									class="text-body-md font-body-md text-on-surface-variant ml-0.5">건</span></span>
 								<p class="font-body-sm text-body-sm text-outline mt-1 truncate">처리
-									완료 2건 · 처리 중 1건</p>
+									완료 <%=request.getAttribute("completedInquiryCount")%>건 · 처리 중 <%=request.getAttribute("inProgressInquiryCount")%>건</p>
 							</div>
 							<div
 								class="w-10 h-10 rounded-lg bg-surface-container-low text-secondary flex items-center justify-center">
@@ -251,7 +251,7 @@ main>:last-child {
 						<div class="pt-4 mt-2 flex items-center justify-between">
 							<a
 								class="inline-flex items-center text-body-sm font-body-sm text-secondary font-medium hover:underline"
-								href="<%=request.getContextPath()%>/member/activity.do?tab=inquiries"> 문의 내역 보기 <span
+								href="<%=request.getContextPath()%>/inquiry/my"> 문의 내역 보기 <span
 								class="material-symbols-outlined text-[16px] ml-0.5">arrow_forward</span>
 							</a> <span
 								class="font-label-caps text-label-caps text-outline bg-surface-container px-1.5 py-0.5 rounded">SentinelOps

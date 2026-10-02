@@ -2,7 +2,9 @@ package member.controller;
 
 import java.io.IOException;
 import java.util.List;
-
+import inquiry.dao.InquiryDAO;
+import inquiry.service.InquiryService;
+import inquiry.dto.InquiryDTO;
 import board.dao.BoardDAO;
 import board.dto.BoardDTO;
 import board.service.BoardService;
@@ -83,20 +85,27 @@ public class MemberController extends HttpServlet {
                 }
 
                 long memberId = member.getMemberId();
-
                 int boardCount = boardService.countByMemberId(memberId);
                 int commentCount = boardService.countCommentsByMemberId(memberId);
-
+                InquiryDAO inquiryDAO = new InquiryDAO();
+                InquiryService inquiryService = new InquiryService(inquiryDAO);
+                int inquiryCount = inquiryService.countByMemberId(memberId);
+                int completedInquiryCount = inquiryService.countCompletedByMemberId(memberId);
+                int inProgressInquiryCount = inquiryService.countInProgressByMemberId(memberId);
+               
                 request.setAttribute("boardCount", boardCount);
                 request.setAttribute("commentCount", commentCount);
-                
+                request.setAttribute("inquiryCount", inquiryCount);
+                request.setAttribute("completedInquiryCount", completedInquiryCount);
+                request.setAttribute("inProgressInquiryCount", inProgressInquiryCount);
                 request.setAttribute("member", member);
                 request.getRequestDispatcher("/member/member.jsp").forward(request, response);
+                
                 return;
-
             } else if("/member/activity.do".equals(action)) {
 
                 if(loginId == null) {
+                	
                     response.sendRedirect(request.getContextPath() + "/member/login.do");
                     return;
                 }
@@ -104,6 +113,7 @@ public class MemberController extends HttpServlet {
                 MemberDTO member = memberService.getMember(loginId);
 
                 if(member == null) {
+                	
                     response.sendRedirect(request.getContextPath() + "/member/login.do");
                     return;
                 }
@@ -111,6 +121,7 @@ public class MemberController extends HttpServlet {
                 String tab = request.getParameter("tab");
 
                 if(tab == null || tab.trim().isEmpty()) {
+                	
                     tab = "posts";
                 }
 
@@ -128,11 +139,21 @@ public class MemberController extends HttpServlet {
                     List<BoardDTO> postList = boardService.findByMemberId(memberId);
 
                     request.setAttribute("postList", postList);
+
                 } else if("comments".equals(tab)) {
 
                     List<BoardCommentDTO> commentList = boardService.findCommentsByMemberId(memberId);
 
                     request.setAttribute("commentList", commentList);
+
+                } else if("inquiries".equals(tab)) {
+
+                    InquiryDAO inquiryDAO = new InquiryDAO();
+                    InquiryService inquiryService = new InquiryService(inquiryDAO);
+
+                    List<InquiryDTO> inquiryList = inquiryService.findInquiriesByMember(memberId);
+
+                    request.setAttribute("inquiryList", inquiryList);
                 }
 
                 request.setAttribute("tab", tab);
