@@ -148,4 +148,31 @@ public class MemberDAO {
         return result;
     }
     
+    public int withdrawMember(String loginId) {
+
+        int result = 0;
+
+        String sql = "UPDATE member "
+                   + "SET status = 'WITHDRAWN', "
+                   + "withdrawn_at = NOW(), "
+                   + "updated_at = NOW() "
+                   + "WHERE login_id = ? "
+                   + "AND status = 'ACTIVE'";
+
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, loginId);
+
+            result = pstmt.executeUpdate();
+
+        } catch (Exception e) {
+
+            System.out.println("[MemberDAO] 회원 탈퇴 오류");
+            e.printStackTrace();
+        }
+
+        return result;
+    }// 회원 상태 변경(탈퇴)
+    
 }

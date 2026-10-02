@@ -294,6 +294,7 @@ public class MemberController extends HttpServlet {
             } else if("/member/passwordUpdate.do".equals(action)) {
 
                 if(loginId == null) {
+                	
                     response.sendRedirect(request.getContextPath() + "/member/login.do");
                     return;
                 }
@@ -342,8 +343,42 @@ public class MemberController extends HttpServlet {
                 request.getRequestDispatcher("/member/member.jsp").forward(request, response);
                 
                 return;
-                
-            } else if ("/member/logout.do".equals(action)) {
+            } else if("/member/memberDelete.do".equals(action)) {
+
+                if(!"POST".equalsIgnoreCase(request.getMethod())) {
+
+                    response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                    return;
+                }
+
+                if(loginId == null) {
+
+                    response.sendRedirect(request.getContextPath() + "/member/login.do");
+                    return;
+                }
+
+                String result = memberService.withdrawMember(loginId);
+
+                if("SUCCESS".equals(result)) {
+
+                    if(session != null) {
+
+                        session.invalidate();
+                    }
+
+                    response.sendRedirect(request.getContextPath() + "/index.jsp");
+                    return;
+                }
+
+                request.setAttribute("memberDeleteMessage", "회원 탈퇴 중 오류가 발생했습니다.");
+
+                MemberDTO member = memberService.getMember(loginId);
+
+                request.setAttribute("member", member);
+                request.getRequestDispatcher("/member/member.jsp").forward(request, response);
+
+                return;
+            }else if ("/member/logout.do".equals(action)) {
 
                 if (session != null) {
                     session.invalidate();
@@ -351,7 +386,6 @@ public class MemberController extends HttpServlet {
 
                 response.sendRedirect(request.getContextPath() + "/index.jsp");
                 return;
-
             } else {
 
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);

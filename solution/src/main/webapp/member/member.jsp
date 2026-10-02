@@ -589,8 +589,9 @@ main>:last-child {
 								class="h-10 px-4 rounded-lg bg-surface-container-lowest text-error hover:bg-error-container font-body-sm text-body-sm font-semibold transition-colors flex items-center justify-center gap-1.5 shadow-sm"
 								onclick="confirmAccountTermination()" type="button">
 								<span class="material-symbols-outlined text-[18px]">person_remove</span>
-								회원 탈퇴 신청
+								회원 탈퇴
 							</button>
+							<form id="memberDeleteForm" action="<%=request.getContextPath()%>/member/memberDelete.do" method="post"></form>
 						</div>
 					</div>
 				</section>
@@ -637,10 +638,13 @@ main>:last-child {
 				}
 			
 				function confirmAccountTermination() {
-			    	if (confirm('엔터프라이즈 마스터 계정 탈퇴 신청 시 기업 연계 서비스가 중단될 수 있습니다. 탈퇴 절차를 진행하시겠습니까?')) {
-			    		
-						alert('본인 확인 및 기업 대표자 확인 절차를 위해 고객지원센터로 연결됩니다.');
-			    	}
+
+				    const confirmed = confirm("정말로 탈퇴하시겠습니까?");
+
+				    if(confirmed) {
+
+				        document.getElementById("memberDeleteForm").submit();
+				    }
 				}
 			  
 				document.getElementById("currentPassword").addEventListener("blur", function() {

@@ -102,7 +102,7 @@ public class MemberService {
         }
 
         return currentPassword.equals(dbPassword);
-    }// === checkCurrentPassword Method
+    }// 비밀번호 변경 시 조건 확인
     
     public String updatePassword(String loginId, String currentPassword, String newPassword, String confirmPassword) {
 
@@ -161,7 +161,7 @@ public class MemberService {
         }
 
         return "FAIL";
-    }// === updatePassword Method
+    }// 비밀번호 변경
     
     public String updateMember(String loginId, String name, String email, String phone, String postcode, String address, String addressDetail) {
 
@@ -227,6 +227,23 @@ public class MemberService {
         }
 
         return "FAIL";
-    }// === updateMember Method
+    }// 회원 정보 수정
+    
+    public String withdrawMember(String loginId) {
+
+        if(loginId == null || loginId.trim().isEmpty()) {
+
+            return "LOGIN_REQUIRED";
+        }
+
+        int result = memberDAO.withdrawMember(loginId.trim());
+
+        if(result == 1) {
+
+            return "SUCCESS";
+        }
+
+        return "FAIL";
+    }// 회원 상태 변경(탈퇴)
     
 }// --- MemberService Class
