@@ -22,7 +22,7 @@
       animation: pulseGlow 3s ease-in-out infinite;
     }
   </style>
-<meta content="web_blank" name="shell-type"/><link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/pages/solutions_sentinelops.css"/></head>
+<meta content="web_blank" name="shell-type"/><link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/pages/solutions_sentinelops.css"/><link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/top.css?v=20261002-4"/></head>
 <body class="bg-[#f8f9ff]">
 <jsp:include page="/inc/top.jsp" />
 <!-- BEGIN: MainContent -->
@@ -62,7 +62,7 @@
 <span class="material-symbols-outlined text-[20px]">play_circle</span>
 <span>데모 보기</span>
 </a>
-<a class="inline-flex items-center justify-center space-x-2 px-6 py-3 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-headline-sm text-headline-sm transition-colors" href="#contact">
+<a class="inline-flex items-center justify-center space-x-2 px-6 py-3 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-headline-sm text-headline-sm transition-colors" href="${pageContext.request.contextPath}/inquiry/new">
 <span class="material-symbols-outlined text-[20px]">contact_support</span>
 <span>문의하기</span>
 </a>
@@ -530,7 +530,7 @@
 <td class="py-2.5 px-3">
 <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-error text-on-error">CRITICAL</span>
 </td>
-<td class="py-2.5 px-3 text-on-surface">Payment API</td>
+<td class="py-2.5 px-3 text-on-surface">Authentication API</td>
 <td class="py-2.5 px-3 text-right">
 <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-error-container text-on-error-container">OPEN</span>
 </td>
@@ -687,7 +687,7 @@
 <div class="flex items-center justify-between">
 <div class="font-headline-sm text-headline-sm text-error font-bold flex items-center space-x-1.5">
 <span class="material-symbols-outlined text-[20px]">warning</span>
-<span>[CRITICAL] Payment Service Error</span>
+<span>[CRITICAL] Authentication Service Error</span>
 </div>
 <span class="font-code-inline text-xs text-on-surface-variant">Cluster: Prod-KR</span>
 </div>
@@ -695,7 +695,7 @@
 <div class="grid grid-cols-2 gap-2 text-body-sm font-code-inline text-code-inline">
 <div>
 <span class="text-on-surface-variant block text-[11px]">SERVICE</span>
-<span class="font-semibold text-on-surface">Payment API</span>
+<span class="font-semibold text-on-surface">Authentication API</span>
 </div>
 <div>
 <span class="text-on-surface-variant block text-[11px]">TIMESTAMP</span>
@@ -717,7 +717,7 @@
 <span>AI QUICK DIAGNOSIS</span>
 </div>
 <p class="text-on-surface text-[13px] leading-relaxed">
-                  결제 게이트웨이 핸드셰이크 타임아웃 감지. PG사 통신망 응답 지연 가능성.
+                  인증 API 응답 지연 감지. 토큰 검증 서비스의 처리 상태를 확인하세요.
                 </p>
 </div>
 <!-- Slack Action Buttons -->
@@ -754,7 +754,7 @@
 <div class="p-3 rounded-lg bg-surface-container-low flex flex-col items-center">
 <span class="w-8 h-8 rounded-full bg-secondary text-on-secondary flex items-center justify-center font-bold text-xs mb-2">1</span>
 <div class="font-headline-sm text-[14px] font-semibold text-on-surface mb-1">User Reports Problem</div>
-<p class="font-body-sm text-[11px] text-on-surface-variant">고객센터 결제/로그인 오류 문의 등록</p>
+<p class="font-body-sm text-[11px] text-on-surface-variant">고객센터 보안/API 오류 문의 등록</p>
 </div>
 <div class="p-3 rounded-lg bg-surface-container-low flex flex-col items-center">
 <span class="w-8 h-8 rounded-full bg-secondary text-on-secondary flex items-center justify-center font-bold text-xs mb-2">2</span>
@@ -804,7 +804,7 @@
           </p>
 </div>
 <div class="flex flex-wrap items-center gap-4">
-<a class="inline-flex items-center justify-center space-x-2 px-6 py-3 rounded-xl bg-secondary hover:bg-secondary-container text-on-secondary font-headline-sm text-headline-sm transition-all shadow-md" href="#contact">
+<a class="inline-flex items-center justify-center space-x-2 px-6 py-3 rounded-xl bg-secondary hover:bg-secondary-container text-on-secondary font-headline-sm text-headline-sm transition-all shadow-md" href="${pageContext.request.contextPath}/inquiry/new">
 <span>문의하기</span>
 <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
 </a>

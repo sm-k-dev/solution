@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/pages/index.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/pages/board_board.css">
 <style>.community-content{white-space:pre-wrap;overflow-wrap:anywhere;min-height:16rem}.community-title{overflow-wrap:anywhere}</style>
-</head>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"/><link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/top.css?v=20261002-4"/></head>
 <body class="bg-background font-body-md text-on-surface min-h-screen">
 <jsp:include page="/inc/top.jsp" />
 <main class="w-full max-w-[1200px] mx-auto px-4 md:px-8 py-space-xl">

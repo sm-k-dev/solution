@@ -4,7 +4,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="ko">
 <head>
 <meta charset="utf-8" />
 <meta content="width=device-width, initial-scale=1.0" name="viewport" />
@@ -39,8 +39,8 @@ main>:last-child {
 }
 </style>
 <link rel="stylesheet"
-	href="${pageContext.request.contextPath}/assets/css/pages/member_member.css" />
-</head>
+	href="${pageContext.request.contextPath}/assets/css/pages/member_member.css?v=20261002-1" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"/><link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/top.css?v=20261002-4"/></head>
 <body class="bg-background font-body-md text-on-surface antialiased">
 	<jsp:include page="/inc/top.jsp" /><main
 		class="min-h-screen w-full flex flex-col justify-center items-center py-space-xl px-gutter-mobile md:px-gutter lg:px-gutter-desktop">
@@ -57,6 +57,10 @@ main>:last-child {
 								<%
 									MemberDTO member = (MemberDTO) request.getAttribute("member"); 
 									String passwordUpdateMessage = (String) request.getAttribute("passwordUpdateMessage");
+									String memberDisplayName = member.getName();
+									if (memberDisplayName != null) {
+										memberDisplayName = memberDisplayName.replaceFirst("\\s*\\([A-Za-z][A-Za-z .'-]*\\)\\s*$", "").trim();
+									}
 									long membershipDays = 0;
 
 									if(member != null && member.getCreatedAt() != null) {
@@ -112,7 +116,7 @@ main>:last-child {
 							</div>
 							<div class="flex flex-col min-w-0">
 								<div class="flex flex-wrap items-center gap-2">
-									<h2 class="font-headline-sm text-headline-sm text-on-surface"><%=member.getName()%></h2>
+									<h2 class="font-headline-sm text-headline-sm text-on-surface"><%=memberDisplayName%></h2>
 									<span
 										class="bg-surface-container text-on-secondary-fixed-variant text-label-caps font-label-caps px-2 py-0.5 rounded">
 										기업 마스터 계정 </span>
@@ -123,8 +127,7 @@ main>:last-child {
 							</div>
 						</div>
 						<!-- Quick Metrics Grid / Badge Data -->
-						<div
-							class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-4 lg:pt-0">
+						<div class="member-quick-metrics-grid">
 							<div
 								class="bg-surface-container-low px-3.5 py-2.5 rounded-lg flex flex-col justify-center">
 								<span
@@ -155,18 +158,6 @@ main>:last-child {
 									class="font-body-sm text-body-sm text-on-surface font-medium mt-0.5">
 									<%=member.getCreatedAt()%> <span class="text-on-surface-variant text-[11px]">(<%=membershipDays%>일째)</span>
 								</span>
-							</div>
-							<div
-								class="bg-surface-container-low px-3.5 py-2.5 rounded-lg flex flex-col justify-center">
-								<span
-									class="font-label-caps text-label-caps text-on-surface-variant uppercase">최종
-									로그인</span>
-								<div
-									class="font-code-inline text-code-inline text-on-surface mt-0.5 leading-tight">
-									2025-05-18 09:42<br /> <span
-										class="text-on-surface-variant text-[10px]">211.234.12.89
-										(서울)</span>
-								</div>
 							</div>
 						</div>
 					</div>
@@ -306,7 +297,7 @@ main>:last-child {
 											for="memberName"> 담당자 성명 <span class="text-error">*</span>
 										</label> <input
 											class="w-full h-11 px-3.5 bg-surface-container-lowest text-on-surface font-body-md text-body-md rounded-lg shadow-sm focus:outline-none focus:bg-surface-container-lowest"
-											id="memberName" name="name" required="" type="text" value="<%=member.getName()%>" />
+											id="memberName" name="name" required="" type="text" value="<%=memberDisplayName%>" />
 									</div>
 									<!-- Corporate Email with action -->
 									<div>
@@ -580,11 +571,6 @@ main>:last-child {
 						</div>
 						<div
 							class="flex flex-col sm:flex-row lg:flex-col xl:flex-row items-start sm:items-center gap-3 flex-shrink-0">
-							<a
-								class="font-body-sm text-body-sm text-secondary hover:underline inline-flex items-center"
-								href="#corporate-transfer"> 기업 계정 양도 및 대표자 변경 문의 <span
-								class="material-symbols-outlined text-[16px] ml-0.5">open_in_new</span>
-							</a>
 							<button
 								class="h-10 px-4 rounded-lg bg-surface-container-lowest text-error hover:bg-error-container font-body-sm text-body-sm font-semibold transition-colors flex items-center justify-center gap-1.5 shadow-sm"
 								onclick="confirmAccountTermination()" type="button">

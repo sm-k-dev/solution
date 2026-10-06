@@ -4,7 +4,7 @@
 <html lang="ko"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Nexura Systems - 엔터프라이즈 미션 크리티컬 IT 인프라 &amp; 보안 솔루션</title>
+<title>NEXORA - 기업 보안 API 구독 서비스</title>
 <!-- Tailwind CSS v3 CDN with forms and container-queries -->
 
 <!-- Tailwind Custom Configuration -->
@@ -21,7 +21,7 @@
       animation: pulseGlow 3s ease-in-out infinite;
     }
   </style>
-<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/pages/index.css"/></head>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/pages/index.css"/><link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/top.css?v=20261002-4"/></head>
 <body class="bg-[#f8f9ff]">
 <jsp:include page="/inc/top.jsp" />
 <!-- BEGIN: MainContent -->
@@ -42,7 +42,7 @@
 <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
 <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
 </span>
-              엔터프라이즈 미션 크리티컬 인프라 &amp; 보안 플랫폼
+              기업 보안 API 구독 서비스
             </div>
 <!-- Main Headline -->
 <h1 class="text-4xl sm:text-5xl lg:text-[48px] xl:text-[54px] font-bold text-[#0a192f] leading-[1.2] tracking-tight">
@@ -50,8 +50,8 @@
             </h1>
 <!-- Subtitle -->
 <p class="text-slate-600 text-base sm:text-lg leading-relaxed max-w-xl font-normal">
-              웹 인프라부터 보안, 결제, 시스템 모니터링까지<br class="hidden sm:inline"/>
-              기업의 안정적인 디지털 환경을 지원합니다.
+              네트워크·웹앱·AI 보안과 시스템 오류 대응 API를<br class="hidden sm:inline"/>
+              구독형 서비스로 제공합니다.
             </p>
 <!-- CTA Action Buttons -->
 <div class="flex flex-wrap items-center gap-3.5 pt-2 w-full sm:w-auto">
@@ -174,8 +174,8 @@
 <!-- Node 4 (Bottom Left - Payment HSM Enclave) -->
 <g transform="translate(130, 260)">
 <rect fill="#0b172a" height="70" rx="8" stroke="#0284c7" stroke-width="1.5" width="140"></rect>
-<text fill="#38bdf8" font-family="sans-serif" font-size="10" font-weight="bold" x="16" y="25">PCI-DSS Level 1</text>
-<text fill="#94a3b8" font-family="sans-serif" font-size="9" x="16" y="42">Hardware Token HSM</text>
+<text fill="#38bdf8" font-family="sans-serif" font-size="10" font-weight="bold" x="16" y="25">AI Threat Guard</text>
+<text fill="#94a3b8" font-family="sans-serif" font-size="9" x="16" y="42">Policy & Risk Engine</text>
 <rect fill="#1e293b" height="4" rx="2" width="80" x="16" y="50"></rect>
 <rect fill="#10b981" height="4" rx="2" width="60" x="16" y="50"></rect>
 </g>
@@ -193,7 +193,7 @@
 <g transform="translate(60, 380)">
 <rect fill="#07111e" height="44" rx="8" stroke="#1e293b" stroke-width="1" width="520"></rect>
 <circle cx="24" cy="22" fill="#10b981" r="4"></circle>
-<text fill="#f8fafc" font-family="sans-serif" font-size="11" font-weight="bold" x="36" y="26">SLA 99.99% Guaranteed</text>
+<text fill="#f8fafc" font-family="sans-serif" font-size="11" font-weight="bold" x="36" y="26">Subscription API</text>
 <path d="M190 12v20" stroke="#1e293b" stroke-width="1"></path>
 <text fill="#94a3b8" font-family="sans-serif" font-size="11" x="208" y="26">Scrubbing: <tspan fill="#38bdf8" font-weight="bold">3.2 Tbps</tspan></text>
 <path d="M340 12v20" stroke="#1e293b" stroke-width="1"></path>
@@ -204,7 +204,7 @@
 <!-- Live Floating Badge 2 (Bottom Left) -->
 <div class="absolute -bottom-4 -left-2 sm:-left-4 z-20 flex items-center gap-2 bg-[#071326]/95 border border-emerald-500/40 text-emerald-300 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold shadow-xl backdrop-blur-md">
 <span class="h-2 w-2 rounded-full bg-emerald-400"></span>
-<span>99.99% 가용성 보장</span>
+<span>보안 API 구독</span>
 </div>
 </div>
 </div>
@@ -219,72 +219,32 @@
 <div class="text-center max-w-3xl mx-auto mb-14">
 <h2 class="text-3xl sm:text-4xl font-bold text-[#0a192f] tracking-tight">기업을 위한 IT 솔루션</h2>
 <p class="mt-3.5 text-base sm:text-lg text-slate-600 font-normal">
-            클라우드 인프라부터 보안, 결제, 자율 관제까지 원스톱으로 지원하는 엔터프라이즈 솔루션 라인업입니다.
+            필요한 만큼 시작하고, 더 많은 보호와 운영 기능이 필요할 때 확장하는 보안 API 구독 서비스입니다.
           </p>
 </div>
-<!-- Solutions 4-Column Grid -->
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-<!-- Card 1: Web Hosting -->
-<div class="group relative flex flex-col justify-between p-7 rounded-2xl bg-[#f8faff] border border-slate-200/90 hover:border-blue-300 hover:shadow-xl transition-all duration-300">
-<div>
-<div class="w-13 h-13 w-12 h-12 rounded-xl bg-blue-100/70 text-blue-700 flex items-center justify-center mb-5 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-200">
-<span class="material-symbols-outlined text-2xl">dns</span>
-</div>
-<h3 class="text-xl font-bold text-[#0a192f] mb-2.5">Web Hosting</h3>
-<p class="text-slate-600 text-sm leading-relaxed mb-4">
-                안정적인 웹 서비스 운영을 위한 인프라
-              </p>
-<p class="text-xs text-slate-500 bg-white/80 p-2.5 rounded-lg border border-slate-200">
-                Tier-IV 무중단 서버 및 고성능 NVMe SAN 스토리지 기본 탑재
-              </p>
-</div>
-<div class="pt-6 mt-6 border-t border-slate-200/60">
-<a class="inline-flex items-center text-sm font-semibold text-blue-600 group-hover:text-blue-700" href="#contact">
-                자세히 보기 <span class="ml-1 transition-transform duration-200 group-hover:translate-x-1">→</span>
-</a>
-</div>
-</div>
-<!-- Card 2: Web Security -->
+<!-- Two Security Subscription Products -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Card 2: Web + Network + AI Security -->
 <div class="group relative flex flex-col justify-between p-7 rounded-2xl bg-[#f8faff] border border-slate-200/90 hover:border-blue-300 hover:shadow-xl transition-all duration-300">
 <div>
 <div class="w-12 h-12 rounded-xl bg-emerald-100/70 text-emerald-700 flex items-center justify-center mb-5 group-hover:bg-emerald-600 group-hover:text-white transition-colors duration-200">
 <span class="material-symbols-outlined text-2xl">shield</span>
 </div>
-<h3 class="text-xl font-bold text-[#0a192f] mb-2.5">Web Security</h3>
+<h3 class="text-xl font-bold text-[#0a192f] mb-2.5">Web + Network + AI Security</h3>
 <p class="text-slate-600 text-sm leading-relaxed mb-4">
                 기업의 서비스와 데이터를 보호하는 보안 솔루션
               </p>
 <p class="text-xs text-slate-500 bg-white/80 p-2.5 rounded-lg border border-slate-200">
-                3.2Tbps 대용량 DDoS 방어 및 AI 기반 지능형 웹 애플리케이션 방화벽(WAF)
+                무료 플랜으로 시작하고, 유료 구독으로 더 많은 트래픽과 고급 보안 기능을 이용하세요
               </p>
 </div>
 <div class="pt-6 mt-6 border-t border-slate-200/60">
-<a class="inline-flex items-center text-sm font-semibold text-blue-600 group-hover:text-blue-700" href="#contact">
-                자세히 보기 <span class="ml-1 transition-transform duration-200 group-hover:translate-x-1">→</span>
+<a class="inline-flex items-center text-sm font-semibold text-blue-600 group-hover:text-blue-700" href="${pageContext.request.contextPath}/solutions/web-security.jsp">
+                보안 API 자세히 보기 <span class="ml-1 transition-transform duration-200 group-hover:translate-x-1">→</span>
 </a>
 </div>
 </div>
-<!-- Card 3: Web Payment -->
-<div class="group relative flex flex-col justify-between p-7 rounded-2xl bg-[#f8faff] border border-slate-200/90 hover:border-blue-300 hover:shadow-xl transition-all duration-300">
-<div>
-<div class="w-12 h-12 rounded-xl bg-indigo-100/70 text-indigo-700 flex items-center justify-center mb-5 group-hover:bg-indigo-600 group-hover:text-white transition-colors duration-200">
-<span class="material-symbols-outlined text-2xl">credit_card</span>
-</div>
-<h3 class="text-xl font-bold text-[#0a192f] mb-2.5">Web Payment</h3>
-<p class="text-slate-600 text-sm leading-relaxed mb-4">
-                안전하고 편리한 온라인 결제 시스템
-              </p>
-<p class="text-xs text-slate-500 bg-white/80 p-2.5 rounded-lg border border-slate-200">
-                PCI-DSS Level 1 인증 준수 및 강력한 하드웨어 토큰 암호화 모듈
-              </p>
-</div>
-<div class="pt-6 mt-6 border-t border-slate-200/60">
-<a class="inline-flex items-center text-sm font-semibold text-blue-600 group-hover:text-blue-700" href="#contact">
-                자세히 보기 <span class="ml-1 transition-transform duration-200 group-hover:translate-x-1">→</span>
-</a>
-</div>
-</div>
-<!-- Card 4: SentinelOps (Prominent AI-Powered Card) -->
+<!-- Card 2: SentinelOps (Prominent AI-Powered Card) -->
 <div class="group relative flex flex-col justify-between p-7 rounded-2xl bg-gradient-to-b from-[#0c1e38] to-[#071324] border-2 border-cyan-500/60 shadow-xl shadow-cyan-950/20 text-white transition-all duration-300 transform hover:-translate-y-1">
 <!-- Floating Badge -->
 <div class="absolute -top-3 right-6 bg-cyan-400 text-[#071324] font-extrabold text-[11px] uppercase tracking-wider px-3 py-1 rounded-full shadow-md">
@@ -299,10 +259,10 @@
                 <span class="inline-block w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
 </h3>
 <p class="text-slate-300 text-sm leading-relaxed mb-4">
-                시스템 오류를 탐지하고 분석하는 AI-assisted monitoring solution
+                오류와 이상 징후를 탐지·분석하고 대응을 돕는 운영 API
               </p>
 <p class="text-xs text-cyan-200/80 bg-cyan-950/40 p-2.5 rounded-lg border border-cyan-500/30">
-                장애 사전 감지율 98.4% &amp; 실시간 AI 원클릭 근본원인 분석 지원
+                무료 플랜으로 시작하고, 유료 구독으로 알림·분석·보존 한도를 확장하세요
               </p>
 </div>
 <div class="pt-6 mt-6 border-t border-cyan-500/30">
@@ -511,9 +471,9 @@
 <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center mb-5">
 <span class="material-symbols-outlined text-2xl">verified_user</span>
 </div>
-<h3 class="text-xl font-bold text-[#0a192f] mb-2">안정적인 인프라</h3>
+<h3 class="text-xl font-bold text-[#0a192f] mb-2">확장 가능한 구독</h3>
 <p class="text-slate-600 text-sm leading-relaxed">
-              99.99% 금융권 수준 가용성 SLA를 법적으로 보장하며 국내외 Tier-IV 규격 데이터센터 다중 이중화를 제공합니다.
+              필요한 보호 수준과 운영 규모에 맞춰 API 사용량과 기능을 선택할 수 있습니다.
             </p>
 </div>
 <!-- Card 2 -->
@@ -523,7 +483,7 @@
 </div>
 <h3 class="text-xl font-bold text-[#0a192f] mb-2">보안 중심 설계</h3>
 <p class="text-slate-600 text-sm leading-relaxed">
-              Zero-Trust 철학 기반의 하드웨어 레벨 암호화 모듈 적용 및 ISMS-P, ISO 27001 등 글로벌 컴플라이언스를 상시 준수합니다.
+              네트워크·웹 애플리케이션·AI 서비스의 보안 요구를 API 기반으로 점검하고 대응할 수 있습니다.
             </p>
 </div>
 <!-- Card 3 -->
@@ -533,7 +493,7 @@
 </div>
 <h3 class="text-xl font-bold text-[#0a192f] mb-2">운영 효율성</h3>
 <p class="text-slate-600 text-sm leading-relaxed">
-              복잡한 서버 패치 및 인프라 프로비저닝을 전자동화하여 고객사 개발 인력이 비즈니스 개발에만 전념하도록 지원합니다.
+              무료 플랜으로 기능을 확인하고, 사용량과 필요한 기능에 따라 유료 구독으로 확장할 수 있습니다.
             </p>
 </div>
 <!-- Card 4 -->
@@ -592,7 +552,7 @@
           기업의 IT 운영을 더 안정적으로
         </h2>
 <p class="text-slate-300 text-base sm:text-lg max-w-2xl mx-auto mb-8 font-normal leading-relaxed">
-          지금 Nexura의 클라우드 인프라와 SentinelOps로 안정적인 디지털 비즈니스를 시작하세요.
+          Web + Network + AI Security와 SentinelOps API로 보안과 장애 대응을 시작하세요.
         </p>
 <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
 <a class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-9 py-4 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-bold text-base shadow-xl shadow-cyan-900/30 transition-all" href="${pageContext.request.contextPath}/inquiry/write.jsp">
@@ -601,7 +561,7 @@
 </a>
 </div>
 <p class="mt-5 text-xs sm:text-sm text-cyan-300/80 font-medium">
-          ✓ 초기 아키텍처 진단 컨설팅 및 30일 SentinelOps PoC 무료 제공
+          ✓ 무료 플랜으로 시작하고 필요에 따라 유료 구독으로 확장하세요
         </p>
 </div>
 </section>

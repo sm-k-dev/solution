@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import inquiry.dao.InquiryDAO;
 import inquiry.dto.InquiryDTO;
@@ -33,6 +34,8 @@ public class InquiryService {
     public List<InquiryDTO> findAllInquiries() throws SQLException { return inquiryDAO.findAllInquiries(); }
     public List<InquiryDTO> findRecentInquiries(int limit) throws SQLException { return inquiryDAO.findRecentInquiries(limit); }
     public int countByStatus(String status) throws SQLException { return inquiryDAO.countByStatus(status); }
+    public List<InquiryDTO> findRecentInquirySummaries(int limit) throws SQLException { return inquiryDAO.findRecentInquirySummaries(limit); }
+    public Map<String, Integer> countDashboardStatuses() throws SQLException { return inquiryDAO.countDashboardStatuses(); }
     public List<InquiryDTO> findInquiriesByMember(long memberId) throws SQLException { return inquiryDAO.findInquiriesByMember(memberId); }
 
     public int countByMemberId(long memberId) throws SQLException {

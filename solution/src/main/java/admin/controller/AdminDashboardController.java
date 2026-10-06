@@ -35,18 +35,20 @@ public class AdminDashboardController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            request.setAttribute("recentInquiries", inquiryService.findRecentInquiries(4));
-            request.setAttribute("newInquiryCount", Integer.valueOf(inquiryService.countByStatus("RECEIVED")));
-            request.setAttribute("pendingInquiryCount", Integer.valueOf(
-                    inquiryService.countByStatus("RECEIVED") + inquiryService.countByStatus("IN_PROGRESS")));
+            Map<String, Integer> inquiryCounts = inquiryService.countDashboardStatuses();
+            int received = value(inquiryCounts, "RECEIVED");
+            request.setAttribute("recentInquiries", inquiryService.findRecentInquirySummaries(4));
+            request.setAttribute("newInquiryCount", Integer.valueOf(received));
+            request.setAttribute("pendingInquiryCount", Integer.valueOf(received + value(inquiryCounts, "IN_PROGRESS")));
             request.setAttribute("memberCount", Integer.valueOf(memberDAO.countAll()));
             request.setAttribute("boardCount", Integer.valueOf(boardDAO.countAll()));
-            request.setAttribute("openIncidentCount", Integer.valueOf(incidentDAO.countByStatus("OPEN")));
-            request.setAttribute("criticalIncidentCount", Integer.valueOf(incidentDAO.countBySeverity("CRITICAL")));
-            request.setAttribute("incidentCount", Integer.valueOf(incidentDAO.countAll()));
-            request.setAttribute("recentIncidents", incidentDAO.findIncidentList());
-            int low=incidentDAO.countBySeverity("LOW"),medium=incidentDAO.countBySeverity("MEDIUM"),high=incidentDAO.countBySeverity("HIGH"),critical=incidentDAO.countBySeverity("CRITICAL");
-            int total=low+medium+high+critical;
+            Map<String, Integer> incidentCounts = incidentDAO.findDashboardCounts();
+            int low=value(incidentCounts,"low"), medium=value(incidentCounts,"medium"), high=value(incidentCounts,"high"), critical=value(incidentCounts,"critical");
+            int total=value(incidentCounts,"total");
+            request.setAttribute("openIncidentCount", Integer.valueOf(value(incidentCounts,"open")));
+            request.setAttribute("criticalIncidentCount", Integer.valueOf(critical));
+            request.setAttribute("incidentCount", Integer.valueOf(total));
+            request.setAttribute("recentIncidents", incidentDAO.findRecentIncidentSummaries(5));
             request.setAttribute("lowIncidentCount",Integer.valueOf(low));request.setAttribute("mediumIncidentCount",Integer.valueOf(medium));request.setAttribute("highIncidentCount",Integer.valueOf(high));
             request.setAttribute("lowIncidentPercent",percent(low,total));request.setAttribute("mediumIncidentPercent",percent(medium,total));request.setAttribute("highIncidentPercent",percent(high,total));request.setAttribute("criticalIncidentPercent",percent(critical,total));
             request.setAttribute("dailyIncidentStats",dailyStats(incidentDAO.countByDay(7)));
@@ -56,6 +58,7 @@ public class AdminDashboardController extends HttpServlet {
         }
     }
 
+    private int value(Map<String,Integer> values,String key){Integer value=values.get(key);return value==null?0:value.intValue();}
     private String percent(int count,int total){return total==0?"0.0":String.format(Locale.ROOT,"%.1f",count*100.0/total);}
     private List<Map<String,Object>> dailyStats(Map<String,Integer> counts){
         List<Map<String,Object>> result=new ArrayList<Map<String,Object>>();Calendar day=Calendar.getInstance();day.add(Calendar.DATE,-6);SimpleDateFormat key=new SimpleDateFormat("yyyy-MM-dd",Locale.ROOT);SimpleDateFormat label=new SimpleDateFormat("MM-dd",Locale.ROOT);int max=1;

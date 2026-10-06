@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/pages/index.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/pages/board_write.css">
 <style>.board-error{margin-bottom:1.25rem;border:1px solid #fecaca;border-radius:.5rem;background:#fef2f2;padding:.75rem 1rem;color:#b91c1c;font-size:.875rem}</style>
-</head>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"/><link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/top.css?v=20261002-4"/></head>
 <body class="bg-page text-navy font-sans min-h-screen">
 <jsp:include page="/inc/top.jsp" />
 <main class="w-full max-w-[1200px] mx-auto px-4 md:px-8 py-10">
