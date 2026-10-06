@@ -25,17 +25,14 @@ public class BoardDAO {
         String term = query == null ? "" : query.trim();
         boolean searching = !term.isEmpty();
 
-        String sql =
-                "SELECT b.board_id, b.member_id, b.category, b.title, b.tags, "
+        String sql = "SELECT b.board_id, b.member_id, b.category, b.title, b.tags, "
               + "b.view_count, b.created_at, b.updated_at, "
               + "CASE WHEN m.status = 'WITHDRAWN' THEN '탈퇴한 회원' ELSE m.name END AS name "
               + "FROM board b "
               + "JOIN member m ON m.member_id = b.member_id "
               + "WHERE b.is_deleted = FALSE "
               + "AND b.category = ? "
-              + (searching
-                    ? "AND (b.title LIKE ? OR b.content LIKE ? OR b.tags LIKE ? OR m.name LIKE ?) "
-                    : "")
+              + (searching ? "AND (b.title LIKE ? OR b.content LIKE ? OR b.tags LIKE ? OR m.name LIKE ?) " : "")
               + "ORDER BY b.created_at DESC, b.board_id DESC "
               + "LIMIT ? OFFSET ?";
 
