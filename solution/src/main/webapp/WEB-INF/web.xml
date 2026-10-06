@@ -16,6 +16,16 @@
   	<res-type>javax.sql.DataSource</res-type>
   	<res-auth>Container</res-auth>
   </resource-ref>
+
+  <filter>
+    <filter-name>securityThreatFilter</filter-name>
+    <filter-class>security.controller.SecurityThreatFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>securityThreatFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+    <dispatcher>REQUEST</dispatcher>
+  </filter-mapping>
   
   <filter>
   	<filter-name>incidentFilter</filter-name>
