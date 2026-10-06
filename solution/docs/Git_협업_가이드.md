@@ -8,7 +8,7 @@
 | 이현우 | `hw` |
 | 유승민 | `sm` |
 
-`main`은 통합/제출 브랜치입니다. 개인 작업은 본인 브랜치에서 진행하고 PR로 `main`에 반영합니다.
+`team`은 팀 통합 브랜치이고 `main`은 최종 제출 브랜치입니다. 개인 작업은 본인 브랜치에서 진행하고 PR로 `team`에 반영합니다.
 
 ## 기본 작업
 
@@ -25,12 +25,12 @@ git commit -m "type: 작업 내용"
 git push origin 본인브랜치
 ```
 
-main의 최신 내용을 가져올 때:
+team의 최신 내용을 개인 브랜치에 가져올 때:
 
 ```bash
 git fetch origin
 git checkout 본인브랜치
-git merge origin/main
+git merge origin/team
 ```
 
 팀 프로젝트에서는 특별한 이유 없이 `git push --force`, `git reset --hard`, `git rebase`를 사용하지 않습니다.
@@ -66,7 +66,7 @@ PR에는 최소한 작업 내용과 확인 사항을 작성합니다.
 
 ## DB 변경
 
-공용 DB를 변경했다면 `database/01_schema.sql`, ERD, `데이터베이스_가이드.md`도 함께 갱신합니다.
+공용 DB를 변경했다면 `database/01_schema.sql`, `database/02_sample_data.sql`, ERD, `데이터베이스_가이드.md`도 함께 갱신합니다.
 
 ## 보안
 
