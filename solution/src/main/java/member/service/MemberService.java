@@ -184,6 +184,11 @@ public class MemberService {
         	
             return "INVALID_EMAIL";
         }
+        
+        if(memberDAO.existsEmail(email)) {
+
+            return "DUPLICATE_EMAIL";
+        }
 
         if(phone == null || phone.trim().isEmpty()) {
         	
@@ -229,6 +234,55 @@ public class MemberService {
         return "FAIL";
     }// 회원 정보 수정
     
+    public String checkLoginId(String loginId) {
+
+        if(loginId == null || loginId.trim().isEmpty()) {
+
+            return "EMPTY";
+        }
+
+        loginId = loginId.trim();
+
+        if(!loginId.matches("^(?=.*[a-z])(?=.*\\d)[a-z0-9]{6,20}$")) {
+
+            return "INVALID";
+        }
+
+        if(memberDAO.existsLoginId(loginId)) {
+
+            return "DUPLICATE";
+        }
+
+        return "AVAILABLE";
+    }// 아이디 중복 확인
+    
+    public String checkEmail(String email) {
+
+        if(email == null || email.trim().isEmpty()) {
+
+            return "EMPTY";
+        }
+
+        email = email.trim();
+
+        if(email.length() > 150) {
+
+            return "INVALID_EMAIL_LENGTH";
+        }
+        
+        if(!email.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
+
+            return "INVALID";
+        }
+
+        if(memberDAO.existsEmail(email)) {
+
+            return "DUPLICATE";
+        }
+
+        return "AVAILABLE";
+    }// 이메일 중복 확인
+    
     public String signup(String loginId, String password, String passwordConfirm,
             String name, String phone, String email, String postcode,
             String address, String addressDetail) {
@@ -255,7 +309,7 @@ public class MemberService {
             return "PASSWORD_EMPTY";
         }
 
-        if(!password.matches("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[^A-Za-z0-9]).{8,}$")) {
+        if(!password.matches("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[^A-Za-z0-9]).{8,50}$")) {
 
             return "INVALID_PASSWORD_PATTERN";
         }
@@ -276,6 +330,11 @@ public class MemberService {
         }
 
         name = name.trim();
+
+        if(name.length() > 50) {
+
+            return "INVALID_NAME";
+        }
         
         if(phone == null || phone.trim().isEmpty()) {
 
@@ -287,44 +346,47 @@ public class MemberService {
         if(!phone.matches("^01[016789]-\\d{3,4}-\\d{4}$")) {
 
             return "INVALID_PHONE";
-        }
-        
-        if(!phone.matches("^01[016789]-\\d{3,4}-\\d{4}$")) {
-
-            return "INVALID_PHONE";
-        }
-
-        if(email == null || email.trim().isEmpty()) {
+        } if(email == null || email.trim().isEmpty()) {
 
             return "EMAIL_EMPTY";
         }
 
         email = email.trim();
+        if(email.length() > 150) {
+
+            return "INVALID_EMAIL_LENGTH";
+        }
 
         if(!email.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
 
             return "INVALID_EMAIL";
-        }
-        
-        if(postcode != null) {
+        } if(memberDAO.existsEmail(email)) {
+
+            return "DUPLICATE_EMAIL";
+        } if(postcode != null) {
 
             postcode = postcode.trim();
-        }
-
-        if(postcode != null && !postcode.isEmpty()
-                && !postcode.matches("^\\d{5}$")) {
+        } if(postcode != null && !postcode.isEmpty() && !postcode.matches("^\\d{5}$")) {
 
             return "INVALID_POSTCODE";
-        }
-        
-        if(address != null) {
+        } if(address != null) {
 
             address = address.trim();
+
+            if(address.length() > 255) {
+
+                return "INVALID_ADDRESS_LENGTH";
+            }
         }
 
         if(addressDetail != null) {
 
             addressDetail = addressDetail.trim();
+
+            if(addressDetail.length() > 255) {
+
+                return "INVALID_ADDRESS_DETAIL_LENGTH";
+            }
         }
 
         int result = memberDAO.insertMember(

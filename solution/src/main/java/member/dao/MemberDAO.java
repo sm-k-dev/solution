@@ -55,6 +55,34 @@ public class MemberDAO {
         return exists;
     }// 아이디 중복 확인
     
+    public boolean existsEmail(String email) {
+
+        boolean exists = false;
+
+        String sql = "SELECT member_id FROM member WHERE email = ?";
+
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, email);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+
+                if(rs.next()) {
+
+                    exists = true;
+                }
+            }
+
+        } catch(Exception e) {
+
+            System.out.println("[MemberDAO] 이메일 중복 확인 오류");
+            e.printStackTrace();
+        }
+
+        return exists;
+    }// 이메일 중복 확인
+    
     public int insertMember(String loginId, String password, String name,
             String email, String phone, String postcode,
             String address, String addressDetail) {

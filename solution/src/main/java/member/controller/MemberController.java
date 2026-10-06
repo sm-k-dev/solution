@@ -189,6 +189,28 @@ public class MemberController extends HttpServlet {
                 
                 return;
                 
+            } else if("/member/checkLoginId.do".equals(action)) {
+
+                String loginIdParam = request.getParameter("loginId");
+
+                String result = memberService.checkLoginId(loginIdParam);
+
+                response.setContentType("text/plain; charset=UTF-8");
+                response.getWriter().write(result);
+
+                return;
+                
+            } else if("/member/checkEmail.do".equals(action)) {
+
+                String email = request.getParameter("email");
+
+                String result = memberService.checkEmail(email);
+
+                response.setContentType("text/plain; charset=UTF-8");
+                response.getWriter().write(result);
+
+                return;
+                
             }else if("/member/signupPro.do".equals(action)) {
 
                 String loginIdParam = request.getParameter("loginId");
@@ -200,6 +222,25 @@ public class MemberController extends HttpServlet {
                 String postcode = request.getParameter("postcode");
                 String address = request.getParameter("address");
                 String addressDetail = request.getParameter("addressDetail");
+                String termsService = request.getParameter("termsService");
+                String termsPrivacy = request.getParameter("termsPrivacy");
+                
+                if(!"Y".equals(termsService) || !"Y".equals(termsPrivacy)) {
+
+                    request.setAttribute("signupMessage", "필수 약관에 동의해주세요.");
+
+                    request.setAttribute("loginId", loginIdParam);
+                    request.setAttribute("name", name);
+                    request.setAttribute("phone", phone);
+                    request.setAttribute("email", email);
+                    request.setAttribute("postcode", postcode);
+                    request.setAttribute("address", address);
+                    request.setAttribute("addressDetail", addressDetail);
+
+                    request.getRequestDispatcher("/member/signup.jsp").forward(request, response);
+
+                    return;
+                }
 
                 String result = memberService.signup(
                         loginIdParam,
@@ -245,6 +286,9 @@ public class MemberController extends HttpServlet {
                 } else if("NAME_EMPTY".equals(result)) {
 
                     signupMessage = "이름을 입력해주세요.";
+                }else if("INVALID_NAME".equals(result)) {
+
+                    signupMessage = "담당자 성명은 50자 이하로 입력해주세요.";
                 } else if("PHONE_EMPTY".equals(result)) {
 
                     signupMessage = "휴대폰 번호를 입력해주세요.";
@@ -254,12 +298,24 @@ public class MemberController extends HttpServlet {
                 } else if("EMAIL_EMPTY".equals(result)) {
 
                     signupMessage = "이메일을 입력해주세요.";
+                } else if("INVALID_EMAIL_LENGTH".equals(result)) {
+
+                    signupMessage = "이메일은 150자 이하로 입력해주세요.";
                 } else if("INVALID_EMAIL".equals(result)) {
 
                     signupMessage = "올바른 이메일 형식으로 입력해주세요.";
+                } else if("DUPLICATE_EMAIL".equals(result)) {
+
+                    signupMessage = "이미 사용 중인 이메일입니다.";
                 } else if("INVALID_POSTCODE".equals(result)) {
 
                     signupMessage = "올바른 우편번호를 입력해주세요.";
+                } else if("INVALID_ADDRESS_LENGTH".equals(result)) {
+
+                    signupMessage = "주소는 255자 이하로 입력해주세요.";
+                } else if("INVALID_ADDRESS_DETAIL_LENGTH".equals(result)) {
+
+                    signupMessage = "상세주소는 255자 이하로 입력해주세요.";
                 } else {
 
                     signupMessage = "회원가입 처리 중 오류가 발생했습니다.";
