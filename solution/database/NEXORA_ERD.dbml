@@ -1,6 +1,6 @@
 Project NEXORA {
   database_type: 'MySQL'
-  Note: 'NEXORA v4 - team-friendly naming, JSP requirements, tags/files finalized'
+  Note: 'NEXORA v5 - core, SentinelOps, Security 통합 모델'
 }
 
 Table member {
@@ -160,6 +160,63 @@ Table incident_inquiry {
   }
 }
 
+Table security_event {
+  security_event_id bigint [pk, increment]
+  category varchar(20) [not null, note: 'WEB / AI']
+  threat_type varchar(60) [not null]
+  severity varchar(20) [not null]
+  status varchar(20) [not null, note: 'OPEN / ACKNOWLEDGED / RESOLVED']
+  detection_source varchar(60) [not null]
+  rule_code varchar(80) [not null]
+  evidence_excerpt varchar(500)
+  request_uri varchar(500)
+  http_method varchar(10)
+  source_ip_hash varchar(64)
+  event_fingerprint char(64) [not null]
+  time_bucket bigint [not null]
+  occurrence_count int [not null]
+  first_seen_at timestamp
+  last_seen_at timestamp
+  acknowledged_at timestamp
+  resolved_at timestamp
+  is_deleted boolean
+  indexes {
+    (event_fingerprint, time_bucket) [unique]
+  }
+}
+
+Table security_event_history {
+  history_id bigint [pk, increment]
+  security_event_id bigint [not null]
+  changed_by bigint
+  previous_status varchar(20) [not null]
+  new_status varchar(20) [not null]
+  changed_at timestamp
+}
+
+Table security_analysis {
+  analysis_id bigint [pk, increment]
+  security_event_id bigint [not null]
+  summary varchar(500) [not null]
+  possible_impact varchar(500) [not null]
+  suggested_action varchar(500) [not null]
+  model_name varchar(100) [not null]
+  created_at timestamp
+  is_deleted boolean
+}
+
+Table security_alert {
+  alert_id bigint [pk, increment]
+  security_event_id bigint
+  alert_type varchar(40) [not null]
+  channel_name varchar(30) [not null]
+  message varchar(1000) [not null]
+  send_status varchar(20) [not null]
+  error_message varchar(1000)
+  created_at timestamp
+  sent_at timestamp
+}
+
 Ref: board.member_id > member.member_id
 Ref: board_comment.board_id > board.board_id
 Ref: board_comment.member_id > member.member_id
@@ -176,3 +233,7 @@ Ref: incident_history.changed_by > member.member_id
 Ref: incident_inquiry.incident_id > incident.incident_id
 Ref: incident_inquiry.inquiry_id > inquiry.inquiry_id
 Ref: incident_inquiry.linked_by > member.member_id
+Ref: security_event_history.security_event_id > security_event.security_event_id
+Ref: security_event_history.changed_by > member.member_id
+Ref: security_analysis.security_event_id > security_event.security_event_id
+Ref: security_alert.security_event_id > security_event.security_event_id
