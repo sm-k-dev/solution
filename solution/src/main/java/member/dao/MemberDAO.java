@@ -27,6 +27,67 @@ public class MemberDAO {
         }
     }
 
+    public boolean existsLoginId(String loginId) {
+
+        boolean exists = false;
+
+        String sql = "SELECT member_id FROM member WHERE login_id = ?";
+
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, loginId);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+
+                if(rs.next()) {
+
+                    exists = true;
+                }
+            }
+
+        } catch(Exception e) {
+
+            System.out.println("[MemberDAO] 아이디 중복 확인 오류");
+            e.printStackTrace();
+        }
+
+        return exists;
+    }// 아이디 중복 확인
+    
+    public int insertMember(String loginId, String password, String name,
+            String email, String phone, String postcode,
+            String address, String addressDetail) {
+
+        int result = 0;
+
+        String sql = "INSERT INTO member "
+                   + "(login_id, password_hash, name, email, phone, postcode, address, address_detail) "
+                   + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, loginId);
+            pstmt.setString(2, password);
+            pstmt.setString(3, name);
+            pstmt.setString(4, email);
+            pstmt.setString(5, phone);
+            pstmt.setString(6, postcode);
+            pstmt.setString(7, address);
+            pstmt.setString(8, addressDetail);
+
+            result = pstmt.executeUpdate();
+
+        } catch(Exception e) {
+
+            System.out.println("[MemberDAO] 회원가입 오류");
+            e.printStackTrace();
+        }
+
+        return result;
+    }// 회원가입
+    
     public String getPassword(String loginId) {
 
         String dbPassword = null;
@@ -147,5 +208,32 @@ public class MemberDAO {
 
         return result;
     }
+    
+    public int withdrawMember(String loginId) {
+
+        int result = 0;
+
+        String sql = "UPDATE member "
+                   + "SET status = 'WITHDRAWN', "
+                   + "withdrawn_at = NOW(), "
+                   + "updated_at = NOW() "
+                   + "WHERE login_id = ? "
+                   + "AND status = 'ACTIVE'";
+
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, loginId);
+
+            result = pstmt.executeUpdate();
+
+        } catch (Exception e) {
+
+            System.out.println("[MemberDAO] 회원 탈퇴 오류");
+            e.printStackTrace();
+        }
+
+        return result;
+    }// 회원 상태 변경(탈퇴)
     
 }

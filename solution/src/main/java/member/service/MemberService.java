@@ -102,7 +102,7 @@ public class MemberService {
         }
 
         return currentPassword.equals(dbPassword);
-    }// === checkCurrentPassword Method
+    }// 비밀번호 변경 시 조건 확인
     
     public String updatePassword(String loginId, String currentPassword, String newPassword, String confirmPassword) {
 
@@ -161,7 +161,7 @@ public class MemberService {
         }
 
         return "FAIL";
-    }// === updatePassword Method
+    }// 비밀번호 변경
     
     public String updateMember(String loginId, String name, String email, String phone, String postcode, String address, String addressDetail) {
 
@@ -227,6 +227,140 @@ public class MemberService {
         }
 
         return "FAIL";
-    }// === updateMember Method
+    }// 회원 정보 수정
+    
+    public String signup(String loginId, String password, String passwordConfirm,
+            String name, String phone, String email, String postcode,
+            String address, String addressDetail) {
+
+        if(loginId == null || loginId.trim().isEmpty()) {
+
+            return "LOGIN_ID_EMPTY";
+        }
+        
+        loginId = loginId.trim();
+
+        if(!loginId.matches("^(?=.*[a-z])(?=.*\\d)[a-z0-9]{6,20}$")) {
+
+            return "INVALID_LOGIN_ID";
+        }
+        
+        if(memberDAO.existsLoginId(loginId)) {
+
+            return "DUPLICATE_LOGIN_ID";
+        }
+        
+        if(password == null || password.isEmpty()) {
+
+            return "PASSWORD_EMPTY";
+        }
+
+        if(!password.matches("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[^A-Za-z0-9]).{8,}$")) {
+
+            return "INVALID_PASSWORD_PATTERN";
+        }
+
+        if(passwordConfirm == null || passwordConfirm.isEmpty()) {
+
+            return "PASSWORD_CONFIRM_EMPTY";
+        }
+
+        if(!password.equals(passwordConfirm)) {
+
+            return "PASSWORD_NOT_MATCH";
+        }
+        
+        if(name == null || name.trim().isEmpty()) {
+
+            return "NAME_EMPTY";
+        }
+
+        name = name.trim();
+        
+        if(phone == null || phone.trim().isEmpty()) {
+
+            return "PHONE_EMPTY";
+        }
+
+        phone = phone.trim();
+
+        if(!phone.matches("^01[016789]-\\d{3,4}-\\d{4}$")) {
+
+            return "INVALID_PHONE";
+        }
+        
+        if(!phone.matches("^01[016789]-\\d{3,4}-\\d{4}$")) {
+
+            return "INVALID_PHONE";
+        }
+
+        if(email == null || email.trim().isEmpty()) {
+
+            return "EMAIL_EMPTY";
+        }
+
+        email = email.trim();
+
+        if(!email.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
+
+            return "INVALID_EMAIL";
+        }
+        
+        if(postcode != null) {
+
+            postcode = postcode.trim();
+        }
+
+        if(postcode != null && !postcode.isEmpty()
+                && !postcode.matches("^\\d{5}$")) {
+
+            return "INVALID_POSTCODE";
+        }
+        
+        if(address != null) {
+
+            address = address.trim();
+        }
+
+        if(addressDetail != null) {
+
+            addressDetail = addressDetail.trim();
+        }
+
+        int result = memberDAO.insertMember(
+                loginId,
+                password,
+                name,
+                email,
+                phone,
+                postcode,
+                address,
+                addressDetail
+        );
+
+        if(result == 1) {
+
+            return "SUCCESS";
+        }
+
+        return "FAIL";
+    }// 회원가입
+    
+    public String withdrawMember(String loginId) {
+
+        if(loginId == null || loginId.trim().isEmpty()) {
+
+            return "LOGIN_REQUIRED";
+        }
+
+        int result = memberDAO.withdrawMember(loginId.trim());
+
+        if(result == 1) {
+
+            return "SUCCESS";
+        }
+
+        return "FAIL";
+    }// 회원 상태 변경(탈퇴)
     
 }// --- MemberService Class

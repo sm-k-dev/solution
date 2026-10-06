@@ -24,22 +24,47 @@ public class BoardDAO {
     public List<BoardDTO> findPage(String category, String query, int offset, int pageSize) throws Exception {
         String term = query == null ? "" : query.trim();
         boolean searching = !term.isEmpty();
-        String sql = "SELECT b.board_id,b.member_id,b.category,b.title,b.tags,b.view_count,b.created_at,b.updated_at,m.name "
-                + "FROM board b JOIN member m ON m.member_id=b.member_id WHERE b.is_deleted=FALSE AND b.category=? "
-                + (searching ? "AND (b.title LIKE ? OR b.content LIKE ? OR b.tags LIKE ? OR m.name LIKE ?) " : "")
-                + "ORDER BY b.created_at DESC,b.board_id DESC LIMIT ? OFFSET ?";
+
+        String sql =
+                "SELECT b.board_id, b.member_id, b.category, b.title, b.tags, "
+              + "b.view_count, b.created_at, b.updated_at, "
+              + "CASE WHEN m.status = 'WITHDRAWN' THEN '탈퇴한 회원' ELSE m.name END AS name "
+              + "FROM board b "
+              + "JOIN member m ON m.member_id = b.member_id "
+              + "WHERE b.is_deleted = FALSE "
+              + "AND b.category = ? "
+              + (searching
+                    ? "AND (b.title LIKE ? OR b.content LIKE ? OR b.tags LIKE ? OR m.name LIKE ?) "
+                    : "")
+              + "ORDER BY b.created_at DESC, b.board_id DESC "
+              + "LIMIT ? OFFSET ?";
+
         List<BoardDTO> rows = new ArrayList<BoardDTO>();
-        try (Connection c=dataSource.getConnection(); PreparedStatement p=c.prepareStatement(sql)) {
+
+        try (Connection c = dataSource.getConnection();
+             PreparedStatement p = c.prepareStatement(sql)) {
+
             int index = 1;
             p.setString(index++, category);
+
             if (searching) {
                 String like = "%" + term + "%";
-                p.setString(index++, like); p.setString(index++, like);
-                p.setString(index++, like); p.setString(index++, like);
+                p.setString(index++, like);
+                p.setString(index++, like);
+                p.setString(index++, like);
+                p.setString(index++, like);
             }
-            p.setInt(index++, pageSize); p.setInt(index, offset);
-            try (ResultSet r=p.executeQuery()) { while(r.next()) rows.add(mapBoardSummary(r)); }
+
+            p.setInt(index++, pageSize);
+            p.setInt(index, offset);
+
+            try (ResultSet r = p.executeQuery()) {
+                while (r.next()) {
+                    rows.add(mapBoardSummary(r));
+                }
+            }
         }
+
         return rows;
     }
 
@@ -60,7 +85,11 @@ public class BoardDAO {
     }
 
     public BoardDTO findById(long id, boolean includeDeleted) throws Exception {
-        String sql="SELECT b.board_id,b.member_id,b.category,b.title,b.content,b.tags,b.view_count,b.created_at,b.updated_at,m.name FROM board b JOIN member m ON m.member_id=b.member_id WHERE b.board_id=?"+(includeDeleted?"":" AND b.is_deleted=FALSE");
+    	String sql = "SELECT b.board_id,b.member_id,b.category,b.title,b.content,b.tags,b.view_count,b.created_at,b.updated_at, "
+                + "CASE WHEN m.status = 'WITHDRAWN' THEN '탈퇴한 회원' ELSE m.name END AS name "
+                + "FROM board b JOIN member m ON m.member_id=b.member_id "
+                + "WHERE b.board_id=?"
+                + (includeDeleted ? "" : " AND b.is_deleted=FALSE");
         try(Connection c=dataSource.getConnection();PreparedStatement p=c.prepareStatement(sql)){
             p.setLong(1,id);try(ResultSet r=p.executeQuery()){return r.next()?mapBoard(r):null;}
         }
@@ -135,11 +164,45 @@ public class BoardDAO {
     }// === countCommentsByMemberId Method
     
     public List<BoardCommentDTO> findComments(long boardId) throws Exception {
-        List<BoardCommentDTO> rows=new ArrayList<BoardCommentDTO>();
-        String sql="SELECT c.comment_id,c.member_id,c.parent_comment_id,c.content,c.created_at,m.name FROM board_comment c JOIN member m ON m.member_id=c.member_id WHERE c.board_id=? AND c.is_deleted=FALSE ORDER BY COALESCE(c.parent_comment_id,c.comment_id),c.parent_comment_id,c.created_at";
-        try(Connection c=dataSource.getConnection();PreparedStatement p=c.prepareStatement(sql)){p.setLong(1,boardId);try(ResultSet r=p.executeQuery()){while(r.next()){BoardCommentDTO d=new BoardCommentDTO();d.setCommentId(r.getLong(1));d.setMemberId(r.getLong(2));long parent=r.getLong(3);d.setParentCommentId(r.wasNull()?null:Long.valueOf(parent));d.setContent(r.getString(4));d.setCreatedAt(r.getTimestamp(5));d.setAuthorName(r.getString(6));rows.add(d);}}}
+
+        List<BoardCommentDTO> rows = new ArrayList<BoardCommentDTO>();
+
+        String sql = "SELECT c.comment_id,c.member_id,c.parent_comment_id,c.content,c.created_at, "
+                + "CASE WHEN m.status = 'WITHDRAWN' THEN '탈퇴한 회원' ELSE m.name END AS name "
+                + "FROM board_comment c "
+                + "JOIN member m ON m.member_id=c.member_id "
+                + "WHERE c.board_id=? "
+                + "AND c.is_deleted=FALSE "
+                + "ORDER BY COALESCE(c.parent_comment_id,c.comment_id),c.parent_comment_id,c.created_at";
+
+        try(Connection c=dataSource.getConnection();
+            PreparedStatement p=c.prepareStatement(sql)) {
+
+            p.setLong(1,boardId);
+
+            try(ResultSet r=p.executeQuery()) {
+
+                while(r.next()) {
+
+                    BoardCommentDTO d=new BoardCommentDTO();
+
+                    d.setCommentId(r.getLong(1));
+                    d.setMemberId(r.getLong(2));
+
+                    long parent=r.getLong(3);
+
+                    d.setParentCommentId(r.wasNull()?null:Long.valueOf(parent));
+                    d.setContent(r.getString(4));
+                    d.setCreatedAt(r.getTimestamp(5));
+                    d.setAuthorName(r.getString(6));
+
+                    rows.add(d);
+                }
+            }
+        }
+
         return rows;
-    }
+    }// === findComments Method 수정
     
     public List<BoardCommentDTO> findCommentsByMemberId(long memberId) throws Exception {
 
