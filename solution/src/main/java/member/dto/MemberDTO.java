@@ -4,7 +4,7 @@ import java.sql.Date;
 
 public class MemberDTO {
 
-    private String loginId, pass, name, role, status, email, phone, address, addressDetail, postcode;
+    private String loginId, pass, name, role, status, email, phone, postcode, address, addressDetail;
     private int memberId;
     private Date createdAt, updatedAt, withdrawnAt;
 

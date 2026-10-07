@@ -182,6 +182,7 @@ public class MemberService {
         }
 
         String postcodeValue = postcode == null ? null : postcode.trim();
+
         if (postcodeValue != null && !postcodeValue.isEmpty() && !postcodeValue.matches("^\\d{5}$")) {
             return "INVALID_POSTCODE";
         }

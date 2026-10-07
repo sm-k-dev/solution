@@ -10,10 +10,8 @@
         <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/pages/index.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/pages/inquiry_flow.css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/common-files.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"/>
         <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/top.css?v=20261002-4"/>
-        <script src="${pageContext.request.contextPath}/assets/js/private-page.js" defer></script>
     </head>
     <body>
         <jsp:include page="/inc/top.jsp"/>
@@ -36,19 +34,6 @@
                     <c:out value="${inquiry.content}"/>
                 </p>
             </section>
-            <c:if test="${not empty inquiryFiles}">
-                <section class="detail-card">
-                    <h2>첨부파일</h2>
-                    <ul class="private-file-list">
-                        <c:forEach var="file" items="${inquiryFiles}">
-                            <li>
-                                <a href="${pageContext.request.contextPath}/inquiry/file?id=${file.fileId}">
-                                    <c:out value="${file.originalName}"/>
-                                </a> (<fmt:formatNumber value="${file.fileSize / 1024}" maxFractionDigits="0"/> KB)</li>
-                        </c:forEach>
-                    </ul>
-                </section>
-            </c:if>
             <section class="detail-card answer-card">
                 <h2>관리자 답변</h2>
                 <c:choose>

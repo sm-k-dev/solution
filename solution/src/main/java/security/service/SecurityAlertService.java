@@ -1,11 +1,10 @@
 package security.service;
 
-import common.util.TextUtils;
-
 import java.sql.SQLException;
 import javax.naming.NamingException;
-import security.dao.SecurityAlertDAO;
 import common.notification.SlackWebhookClient;
+import security.dao.SecurityAlertDAO;
+import common.util.TextUtils;
 
 public class SecurityAlertService {
     private final SecurityAlertDAO dao = new SecurityAlertDAO();
@@ -20,8 +19,9 @@ public class SecurityAlertService {
         if (dao.hasSuccessfulCriticalAlert(eventId)) {
             return;
         }
-        String message = "[NEXORA Security] CRITICAL Threat #"     + eventId +
-        " | "     + TextUtils.singleLine(threatType, 80) + " | "     + TextUtils.singleLine(uri, 180);
+        String message = "[NEXORA Security] CRITICAL Threat #" + eventId
+            + " | " + TextUtils.singleLine(threatType, 80)
+            + " | " + TextUtils.singleLine(uri, 180);
         sendAndRecord(Long.valueOf(eventId), "SECURITY_CRITICAL_ALERT", message, webhook);
     }
 
@@ -35,9 +35,9 @@ public class SecurityAlertService {
             return false;
         }
         int[] counts = dao.countPreviousDayEvents();
-        String message = "[NEXORA Security] 어제 위협 요약 | 전체 "     + counts[0] +
-        "건, CRITICAL "     + counts[1] + "건, HIGH "     + counts[2] +
-        "건, AI 프롬프트 "     + counts[3] + "건";
+        String message = "[NEXORA Security] 어제 위협 요약 | 전체 "  + counts[0] +
+        "건, CRITICAL "  + counts[1] + "건, HIGH "  + counts[2] +
+        "건, AI 프롬프트 "  + counts[3] + "건";
         return sendAndRecord(null, "SECURITY_DAILY_SUMMARY", message, webhook);
     }
 

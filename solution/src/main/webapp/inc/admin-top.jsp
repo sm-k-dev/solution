@@ -10,8 +10,6 @@
         <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/pages/admin_admin.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/pages/inquiry_flow.css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/common-files.css">
-        <script src="${pageContext.request.contextPath}/assets/js/private-page.js" defer></script>
     </head>
     <body class="bg-surface font-body-md text-on-surface antialiased">
         <aside class="fixed left-0 top-0 h-full w-72 bg-primary-container text-on-primary z-50 flex flex-col justify-between shadow-[0_1px_8px_rgba(0,0,0,0.04)]">

@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Set;
 import inquiry.dao.InquiryDAO;
 import inquiry.dto.InquiryDTO;
-import inquiry.dto.InquiryFileDTO;
 
 public class InquiryService {
     private static final Set<String> CATEGORIES = new HashSet<String>(Arrays.asList(
@@ -20,16 +19,6 @@ public class InquiryService {
     }
 
     public long createInquiry(InquiryDTO inquiry) throws SQLException {
-        validateInquiry(inquiry);
-        return inquiryDAO.insertInquiry(inquiry);
-    }
-
-    public long createInquiry(InquiryDTO inquiry, List<InquiryFileDTO> files) throws SQLException {
-        validateInquiry(inquiry);
-        return inquiryDAO.insertInquiry(inquiry, files);
-    }
-
-    public void validateInquiry(InquiryDTO inquiry) {
         inquiry.setContactName(required(inquiry.getContactName(), "이름", 100));
         inquiry.setContactEmail(required(inquiry.getContactEmail(), "이메일", 150));
         inquiry.setCompanyName(optional(inquiry.getCompanyName(), 150));
@@ -43,6 +32,7 @@ public class InquiryService {
         if (!inquiry.getContactEmail().matches("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$")) {
             throw new IllegalArgumentException("이메일 주소를 확인해 주세요.");
         }
+        return inquiryDAO.insertInquiry(inquiry);
     }
 
     public List<InquiryDTO> findAllInquiries() throws SQLException {
@@ -104,14 +94,6 @@ public class InquiryService {
         return inquiryDAO.findInquiryById(inquiryId);
     }
 
-    public List<InquiryFileDTO> findFilesByInquiryId(long inquiryId) throws SQLException {
-        return inquiryDAO.findFilesByInquiryId(inquiryId);
-    }
-
-    public InquiryFileDTO findFile(long fileId) throws SQLException {
-        return inquiryDAO.findFile(fileId);
-    }
-
     public boolean answerInquiry(long inquiryId, long adminId, String answer, String status) throws SQLException {
         String normalizedAnswer = required(answer, "답변", 10000);
         if (!"IN_PROGRESS".equals(status) && !"COMPLETED".equals(status)) {
@@ -126,7 +108,7 @@ public class InquiryService {
         }
         String normalized = value.trim();
         if (normalized.length() > maxLength) {
-            throw new IllegalArgumentException(label + "은(는) "     + maxLength + "자 이내로 입력해 주세요.");
+            throw new IllegalArgumentException(label + "은(는) "  + maxLength + "자 이내로 입력해 주세요.");
         }
         return normalized;
     }
@@ -137,7 +119,7 @@ public class InquiryService {
         }
         String normalized = value.trim();
         if (normalized.length() > maxLength) {
-            throw new IllegalArgumentException("회사명은 "     + maxLength + "자 이내로 입력해 주세요.");
+            throw new IllegalArgumentException("회사명은 "  + maxLength + "자 이내로 입력해 주세요.");
         }
         return normalized;
     }

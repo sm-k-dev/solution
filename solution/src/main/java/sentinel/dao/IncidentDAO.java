@@ -1,7 +1,5 @@
 package sentinel.dao;
 
-import common.db.DataSourceProvider;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -9,15 +7,16 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
+import common.db.DataSourceProvider;
 
 public class IncidentDAO {
     private static final String INSERT =
-    "INSERT INTO incident (service_name, error_type, error_message, stack_trace, "      +
+    "INSERT INTO incident (service_name, error_type, error_message, stack_trace, "  +
     "severity, request_uri, http_method, ip_address) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
     public long insertIncident(String type, String message, String trace, String severity,
         String uri, String method, String ip) throws SQLException, NamingException {
-        DataSource source = DataSourceProvider.getDataSource();
+        DataSource source = DataSourceProvider.get();
         try (Connection connection = source.getConnection();
         PreparedStatement statement = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, "NEXORA");

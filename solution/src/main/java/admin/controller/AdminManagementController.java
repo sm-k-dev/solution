@@ -6,11 +6,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import admin.dao.AdminMemberDAO;
 import admin.dto.AdminMemberDTO;
 import board.dao.BoardDAO;
 import common.security.CsrfTokenManager;
+import common.web.SessionUser;
+import common.web.WebRequestSupport;
 
 public class AdminManagementController extends HttpServlet {
     private static final long serialVersionUID = 1L;
@@ -124,8 +125,7 @@ public class AdminManagementController extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
         if (!CsrfTokenManager.isValid(req, req.getParameter("csrfToken"))) {
-            sendMutationError(req, resp, HttpServletResponse.SC_FORBIDDEN,
-                "요청 토큰이 만료되었습니다. 새로고침 후 다시 시도해주세요.");
+            sendMutationError(req, resp, HttpServletResponse.SC_FORBIDDEN, "요청 토큰이 만료되었습니다. 새로고침 후 다시 시도해주세요.");
             return;
         }
         try {
@@ -134,8 +134,7 @@ public class AdminManagementController extends HttpServlet {
             if (path.startsWith("/admin/members")) {
                 long id = positive(req.getParameter("memberId"));
                 if (isSelf(req, id)) {
-                    sendMutationError(req, resp, HttpServletResponse.SC_BAD_REQUEST,
-                        "현재 로그인한 관리자 계정은 직접 변경할 수 없습니다.");
+                    sendMutationError(req, resp, HttpServletResponse.SC_BAD_REQUEST, "현재 로그인한 관리자 계정은 직접 변경할 수 없습니다.");
                     return;
                 }
                 if ("/status".equals(pathInfo)) {
@@ -146,8 +145,7 @@ public class AdminManagementController extends HttpServlet {
                     sendMutationSuccess(req, resp, id, "회원 이용 상태를 변경했습니다.");
                 } else if ("/role".equals(pathInfo)) {
                     if (!memberDAO.updateRole(id, value(req.getParameter("role")))) {
-                        sendMutationError(req, resp, HttpServletResponse.SC_CONFLICT,
-                            "권한을 변경하지 못했습니다. 최소 한 명의 활성 관리자가 필요합니다.");
+                        sendMutationError(req, resp, HttpServletResponse.SC_CONFLICT, "권한을 변경하지 못했습니다. 최소 한 명의 활성 관리자가 필요합니다.");
                         return;
                     }
                     sendMutationSuccess(req, resp, id, "회원 권한을 변경했습니다.");
@@ -161,7 +159,7 @@ public class AdminManagementController extends HttpServlet {
                 if (!board.service.BoardService.isCategory(category)) {
                     category = "FREE";
                 }
-                resp.sendRedirect(req.getContextPath() + "/admin/boards?category="    + category + "&deleted=1");
+                resp.sendRedirect(req.getContextPath() + "/admin/boards?category="  + category + "&deleted=1");
             } else resp.sendError(HttpServletResponse.SC_NOT_FOUND);
         } catch (IllegalArgumentException e) {
             sendMutationError(req, resp, HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
@@ -171,27 +169,27 @@ public class AdminManagementController extends HttpServlet {
     }
 
     private boolean isSelf(HttpServletRequest req, long memberId) {
-        HttpSession session = req.getSession(false);
-        Object self = session == null ? null : session.getAttribute("memberId");
-        return self instanceof Number && ((Number) self).longValue() == memberId;
+        Long self = SessionUser.memberId(req);
+        return self != null && self.longValue() == memberId;
     }
 
     private boolean isAjax(HttpServletRequest req) {
-        return "true".equals(req.getParameter("ajax")) || "XMLHttpRequest".equals(req.getHeader("X-Requested-With"));
+        return "true".equals(req.getParameter("ajax"))
+            || WebRequestSupport.isFetchRequest(req);
     }
 
     private void sendMutationSuccess(HttpServletRequest req, HttpServletResponse resp, long memberId, String message) throws IOException {
         if (isAjax(req)) {
             resp.setContentType("application/json; charset=UTF-8");
-            resp.getWriter().write("{\"ok\":true,\"message\":\""    + message + "\"}");
-        } else resp.sendRedirect(req.getContextPath() + "/admin/members/detail?id="    + memberId + "&updated=1");
+            resp.getWriter().write("{\"ok\":true,\"message\":\""  + message + "\"}");
+        } else resp.sendRedirect(req.getContextPath() + "/admin/members/detail?id="  + memberId + "&updated=1");
     }
 
     private void sendMutationError(HttpServletRequest req, HttpServletResponse resp, int status, String message) throws IOException {
         if (isAjax(req)) {
             resp.setStatus(status);
             resp.setContentType("application/json; charset=UTF-8");
-            resp.getWriter().write("{\"ok\":false,\"message\":\""    + message + "\"}");
+            resp.getWriter().write("{\"ok\":false,\"message\":\""  + message + "\"}");
         } else resp.sendError(status, message);
     }
 

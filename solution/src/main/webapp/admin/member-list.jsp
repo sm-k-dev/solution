@@ -17,28 +17,24 @@
     </div>
     <div class="admin-member-stats admin-member-stats-four">
         <div>
-            <span class="material-symbols-outlined" aria-hidden="true">how_to_reg</span>
             <span>활동 계정</span>
             <strong>
                 <c:out value="${activeMemberCount}"/>
             </strong>
         </div>
         <div>
-            <span class="material-symbols-outlined" aria-hidden="true">person_off</span>
             <span>이용 정지</span>
             <strong>
                 <c:out value="${suspendedMemberCount}"/>
             </strong>
         </div>
         <div>
-            <span class="material-symbols-outlined" aria-hidden="true">admin_panel_settings</span>
             <span>관리자</span>
             <strong>
                 <c:out value="${adminCount}"/>
             </strong>
         </div>
         <div>
-            <span class="material-symbols-outlined" aria-hidden="true">manage_search</span>
             <span>검색 결과</span>
             <strong>
                 <c:out value="${totalCount}"/>
@@ -91,12 +87,12 @@
                                 <fmt:formatDate value="${m.createdAt}" pattern="yyyy-MM-dd"/>
                             </td>
                             <td>
-                                <span class="admin-role-badge role-${m.role eq 'ADMIN' ? 'admin' : 'user'}">
+                                <span class="admin-role-badge role-${m.role}">
                                     <c:out value="${m.role}"/>
                                 </span>
                             </td>
                             <td>
-                                <span class="admin-status ${m.status eq 'ACTIVE'?'status-active':(m.status eq 'SUSPENDED'?'status-suspended':'status-withdrawn')}">
+                                <span class="admin-status ${m.status eq 'ACTIVE'?'status-COMPLETED':(m.status eq 'SUSPENDED'?'status-RECEIVED':'status-IN_PROGRESS')}">
                                     <c:choose>
                                         <c:when test="${m.status eq 'ACTIVE'}">활동</c:when>
                                         <c:when test="${m.status eq 'SUSPENDED'}">정지</c:when>
@@ -106,16 +102,13 @@
                             </td>
                             <td>
                                 <div class="admin-member-actions">
-                                    <a class="admin-row-action admin-member-action-detail" href="${pageContext.request.contextPath}/admin/members/detail?id=${m.memberId}">
-                                        <span class="material-symbols-outlined" aria-hidden="true">visibility</span>상세 보기
-                                    </a>
+                                    <a class="admin-row-action" href="${pageContext.request.contextPath}/admin/members/detail?id=${m.memberId}">상세/관리</a>
                                     <c:if test="${m.role eq 'USER' and m.status ne 'WITHDRAWN'}">
-                                        <button class="admin-row-action ${m.status eq 'ACTIVE'?'admin-member-action-suspend':'admin-member-action-restore'}" type="button"
+                                        <button class="admin-row-action ${m.status eq 'ACTIVE'?'admin-danger-action':''}" type="button"
                                         data-member-action="${pageContext.request.contextPath}/admin/members/status"
                                         data-member-id="${m.memberId}" data-csrf="<c:out value='${csrfToken}'/>"
                                         data-field="status" data-value="${m.status eq 'ACTIVE'?'SUSPENDED':'ACTIVE'}"
                                         data-confirm="${m.status eq 'ACTIVE'?'이 회원의 서비스 이용을 정지할까요?':'이 회원의 이용 정지를 해제할까요?'}">
-                                        <span class="material-symbols-outlined" aria-hidden="true">${m.status eq 'ACTIVE'?'block':'check_circle'}</span>
                                         <c:out value="${m.status eq 'ACTIVE'?'이용 정지':'정지 해제'}"/>
                                     </button>
                                 </c:if>

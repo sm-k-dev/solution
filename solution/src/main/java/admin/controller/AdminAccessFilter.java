@@ -1,8 +1,5 @@
 package admin.controller;
 
-import common.web.SessionUser;
-import common.web.CacheControlSupport;
-
 import java.io.IOException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -12,6 +9,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import common.web.SessionUser;
 
 public class AdminAccessFilter implements Filter {
 
@@ -28,8 +26,7 @@ public class AdminAccessFilter implements Filter {
     throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
-        CacheControlSupport.preventCaching(httpResponse);
-        if (!SessionUser.isLoggedIn(httpRequest)) {
+        if (SessionUser.memberId(httpRequest) == null) {
             httpResponse.sendRedirect(httpRequest.getContextPath() + "/member/login.do");
             return;
         }

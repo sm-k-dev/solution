@@ -1,21 +1,25 @@
 package sentinel.dao;
 
-import common.db.DataSourceProvider;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import javax.naming.NamingException;
+import javax.sql.DataSource;
+import common.db.DataSourceProvider;
 
 public class IncidentAlertDAO {
 
+    private DataSource source() throws NamingException {
+        return DataSourceProvider.get();
+    }
+
     public long insertAlert(Long incidentId, String type, String message)
     throws SQLException, NamingException {
-        String sql = "INSERT INTO incident_alert (incident_id, alert_type, channel_name, message) "      +
+        String sql = "INSERT INTO incident_alert (incident_id, alert_type, channel_name, message) "  +
         "VALUES (?, ?, ?, ?)";
-        try (Connection connection = DataSourceProvider.getDataSource().getConnection();
+        try (Connection connection = source().getConnection();
         PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             if (incidentId == null) {
                 statement.setNull(1, java.sql.Types.BIGINT);
@@ -35,9 +39,9 @@ public class IncidentAlertDAO {
 
     public void updateAlertStatus(long id, boolean success, String error)
     throws SQLException, NamingException {
-        String sql = "UPDATE incident_alert SET send_status = ?, error_message = ?, "      +
+        String sql = "UPDATE incident_alert SET send_status = ?, error_message = ?, "  +
         "sent_at = CASE WHEN ? THEN CURRENT_TIMESTAMP ELSE NULL END WHERE alert_id = ?";
-        try (Connection connection = DataSourceProvider.getDataSource().getConnection();
+        try (Connection connection = source().getConnection();
         PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, success ? "SUCCESS" : "FAILED");
             statement.setString(2, error == null ? null : error.substring(0, Math.min(1000, error.length())));
@@ -48,9 +52,9 @@ public class IncidentAlertDAO {
     }
 
     public boolean hasSuccessfulSummaryToday() throws SQLException, NamingException {
-        String sql = "SELECT 1 FROM incident_alert WHERE alert_type = 'DAILY_SUMMARY' "      +
+        String sql = "SELECT 1 FROM incident_alert WHERE alert_type = 'DAILY_SUMMARY' "  +
         "AND send_status = 'SUCCESS' AND sent_at >= CURRENT_DATE() LIMIT 1";
-        try (Connection connection = DataSourceProvider.getDataSource().getConnection();
+        try (Connection connection = source().getConnection();
         PreparedStatement statement = connection.prepareStatement(sql);
         ResultSet rows = statement.executeQuery()) {
             return rows.next();
@@ -58,12 +62,12 @@ public class IncidentAlertDAO {
     }
 
     public int[] countPreviousDayIncidents() throws SQLException, NamingException {
-        String sql = "SELECT COUNT(*) AS total, "      +
-        "COALESCE(SUM(severity = 'CRITICAL'), 0) AS critical_count, "      +
-        "COALESCE(SUM(severity = 'HIGH'), 0) AS high_count "      +
-        "FROM incident WHERE is_deleted = 0 AND occurred_at >= CURRENT_DATE() - INTERVAL 1 DAY "      +
+        String sql = "SELECT COUNT(*) AS total, "  +
+        "COALESCE(SUM(severity = 'CRITICAL'), 0) AS critical_count, "  +
+        "COALESCE(SUM(severity = 'HIGH'), 0) AS high_count "  +
+        "FROM incident WHERE is_deleted = 0 AND occurred_at >= CURRENT_DATE() - INTERVAL 1 DAY "  +
         "AND occurred_at < CURRENT_DATE()";
-        try (Connection connection = DataSourceProvider.getDataSource().getConnection();
+        try (Connection connection = source().getConnection();
         PreparedStatement statement = connection.prepareStatement(sql);
         ResultSet rows = statement.executeQuery()) {
             rows.next();

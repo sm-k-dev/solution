@@ -30,7 +30,7 @@ public final class PasswordHasher {
         byte[] salt = new byte[SALT_BYTES];
         RANDOM.nextBytes(salt);
         byte[] derived = derive(password.toCharArray(), salt, ITERATIONS);
-        return PREFIX + "$"     + ITERATIONS + "$"
+        return PREFIX + "$"  + ITERATIONS + "$"
              + Base64.getEncoder().encodeToString(salt) + "$"
              + Base64.getEncoder().encodeToString(derived);
     }

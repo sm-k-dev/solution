@@ -1,15 +1,15 @@
 (function () {
     'use strict';
 
-    const errors = {
+    const errorMessages = {
         400: '입력값을 확인해 주세요.',
         403: '로그인 또는 보안 토큰이 만료됐습니다. 새로고침 후 다시 시도해 주세요.',
         404: '대상을 찾을 수 없습니다.',
         409: '다른 요청으로 상태가 변경됐습니다. 새로고침 후 확인해 주세요.',
-        502: '분석 서버가 응답하지 않습니다. 잠시 후 다시 시도해 주세요.'
+        502: 'AI 분석 서버가 응답하지 않습니다. 잠시 후 다시 시도해 주세요.'
     };
 
-    function post(url, parameters) {
+    function postForm(url, parameters) {
         return fetch(url, {
             method: 'POST',
             credentials: 'same-origin',
@@ -21,23 +21,30 @@
         });
     }
 
+    function parameterFromDataset(parameters, button, name) {
+        if (button.dataset[name]) {
+            parameters.set(name, button.dataset[name]);
+        }
+    }
+
     async function runAdminAction(button) {
-        if (button.disabled || (button.dataset.confirm && !window.confirm(button.dataset.confirm))) {
+        if (button.disabled) {
+            return;
+        }
+        if (button.dataset.confirm && !window.confirm(button.dataset.confirm)) {
             return;
         }
 
-        const fields = button.closest('[data-admin-fields]');
-        const inquiryId = fields && fields.querySelector('[name="inquiryId"]');
-        const reason = fields && fields.querySelector('[name="reason"]');
+        const fieldBox = button.closest('[data-admin-fields]');
+        const inquiryId = fieldBox && fieldBox.querySelector('[name="inquiryId"]');
+        const reason = fieldBox && fieldBox.querySelector('[name="reason"]');
         if (inquiryId && !inquiryId.reportValidity()) {
             return;
         }
 
         const parameters = new URLSearchParams();
         ['id', 'expectedStatus', 'newStatus', 'inquiryId'].forEach(function (name) {
-            if (button.dataset[name]) {
-                parameters.set(name, button.dataset[name]);
-            }
+            parameterFromDataset(parameters, button, name);
         });
         if (button.dataset.csrf) {
             parameters.set('csrfToken', button.dataset.csrf);
@@ -47,17 +54,19 @@
             parameters.set('reason', reason ? reason.value : '');
         }
 
+        const originalHtml = button.innerHTML;
         button.disabled = true;
         button.setAttribute('aria-busy', 'true');
         try {
-            const response = await post(button.dataset.adminAction, parameters);
+            const response = await postForm(button.dataset.adminAction, parameters);
             if (!response.ok) {
-                throw new Error(errors[response.status] || '요청 처리 중 오류가 발생했습니다. (HTTP ' + response.status + ')');
+                throw new Error(errorMessages[response.status]
+                    || '요청 처리 중 오류가 발생했습니다. (HTTP ' + response.status + ')');
             }
             if (button.dataset.resultParam) {
-                const header = button.dataset.resultHeader || 'X-Operation-Result';
+                const result = response.headers.get('X-Operation-Result') || 'skipped';
                 const query = new URLSearchParams();
-                query.set(button.dataset.resultParam, response.headers.get(header) || 'skipped');
+                query.set(button.dataset.resultParam, result);
                 window.location.search = query.toString();
                 return;
             }
@@ -66,33 +75,40 @@
             window.alert(error.message);
             button.disabled = false;
             button.removeAttribute('aria-busy');
+            button.innerHTML = originalHtml;
         }
     }
 
     async function runMemberAction(button) {
-        if (button.disabled || (button.dataset.confirm && !window.confirm(button.dataset.confirm))) {
+        if (button.disabled) {
             return;
         }
-        const parameters = new URLSearchParams({
-            memberId: button.dataset.memberId,
-            csrfToken: button.dataset.csrf,
-            ajax: 'true'
-        });
+        if (button.dataset.confirm && !window.confirm(button.dataset.confirm)) {
+            return;
+        }
+
+        const parameters = new URLSearchParams();
+        parameters.set('memberId', button.dataset.memberId);
+        parameters.set('csrfToken', button.dataset.csrf);
+        parameters.set('ajax', 'true');
         parameters.set(button.dataset.field, button.dataset.value);
         button.disabled = true;
+
         try {
-            const response = await post(button.dataset.memberAction, parameters);
+            const response = await postForm(button.dataset.memberAction, parameters);
             const result = await response.json();
             if (!response.ok || !result.ok) {
                 throw new Error(result.message || '회원 관리 요청에 실패했습니다.');
             }
-            const page = button.closest('.admin-inquiry-page');
-            const notice = page && page.querySelector('[data-member-action-notice]');
+            const notice = button.closest('.admin-inquiry-page')
+                .querySelector('[data-member-action-notice]');
             if (notice) {
                 notice.textContent = result.message;
                 notice.hidden = false;
             }
-            window.setTimeout(function () { window.location.reload(); }, 500);
+            window.setTimeout(function () {
+                window.location.reload();
+            }, 500);
         } catch (error) {
             window.alert(error.message || '회원 관리 요청에 실패했습니다.');
             button.disabled = false;
@@ -105,6 +121,7 @@
             runAdminAction(adminButton);
             return;
         }
+
         const memberButton = event.target.closest('[data-member-action]');
         if (memberButton) {
             runMemberAction(memberButton);

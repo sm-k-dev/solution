@@ -1,14 +1,15 @@
 package board.controller;
 
-import common.web.FileDownloadSupport;
-import common.web.SessionUser;
-
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+import java.net.URLEncoder;
 import java.util.List;
 import javax.naming.NamingException;
 import javax.servlet.ServletException;
@@ -17,19 +18,17 @@ import javax.servlet.http.Part;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import board.dao.BoardDAO;
 import board.dto.BoardDTO;
 import board.dto.BoardFileDTO;
 import board.service.BoardService;
 import common.security.CsrfTokenManager;
+import common.web.SessionUser;
 
 @MultipartConfig(maxFileSize = 10485760L, maxRequestSize = 41943040L)
 public class BoardController extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    private static final Set<String> ALLOWED_EXTENSIONS = new HashSet<String>(Arrays.asList(
-        "pdf", "png", "jpg", "jpeg", "gif", "txt", "csv", "doc", "docx", "xls", "xlsx",
-        "ppt", "pptx", "zip"));
+    private static final Set<String> ALLOWED_EXTENSIONS = new HashSet<String>(Arrays.asList("pdf", "png", "jpg", "jpeg", "gif", "txt", "csv", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "zip"));
     private BoardDAO dao;
     private BoardService service;
 
@@ -249,7 +248,7 @@ public class BoardController extends HttpServlet {
         if (SessionUser.isAdmin(req)) {
             dao.softDelete(id);
         } else dao.softDelete(id, memberId);
-        resp.sendRedirect(req.getContextPath() + "/board/list?category="     + board.getCategory() + "#board-list");
+        resp.sendRedirect(req.getContextPath() + "/board/list?category=" + board.getCategory() + "#board-list");
     }
 
     private void comment(HttpServletRequest req, HttpServletResponse resp) throws Exception {
@@ -335,13 +334,13 @@ public class BoardController extends HttpServlet {
             String original = safeFileName(submittedFileName(part));
             int dot = original.lastIndexOf('.');
             String ext = original.substring(dot + 1).toLowerCase(java.util.Locale.ROOT);
-            String saved = UUID.randomUUID().toString() + "."     + ext;
+            String saved = UUID.randomUUID().toString() + "." + ext;
             File destination = new File(directory, saved);
             part.write(destination.getAbsolutePath());
             BoardFileDTO file = new BoardFileDTO();
             file.setOriginalName(original);
             file.setSavedName(saved);
-            file.setFilePath("/WEB-INF/uploads/board/"     + saved);
+            file.setFilePath("/WEB-INF/uploads/board/" + saved);
             file.setFileSize(part.getSize());
             file.setFileType(getServletContext().getMimeType(original));
             dao.addFile(boardId, file);
@@ -378,9 +377,31 @@ public class BoardController extends HttpServlet {
     private void downloadFile(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         long id = parseId(req.getParameter("id"));
         BoardFileDTO file = dao.findFile(id);
-        if (file == null || !FileDownloadSupport.writeAttachment(getServletContext(), resp,
-            "/WEB-INF/uploads/board", file.getSavedName(), file.getOriginalName())) {
-            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+        if (file == null) {
+            resp.sendError(404);
+            return;
+        }
+        String root = getServletContext().getRealPath("/WEB-INF/uploads/board");
+        if (root == null) {
+            resp.sendError(404);
+            return;
+        }
+        File base = new File(root).getCanonicalFile();
+        File target = new File(base, file.getSavedName()).getCanonicalFile();
+        if (!target.getPath().startsWith(base.getPath() + File.separator) || !target.isFile()) {
+            resp.sendError(404);
+            return;
+        }
+        String encoded = URLEncoder.encode(file.getOriginalName(), "UTF-8").replace("+", "%20");
+        resp.setContentType(file.getFileType() == null?"application/octet-stream":file.getFileType());
+        resp.setHeader("Content-Disposition", "attachment; filename*=UTF-8''" + encoded);
+        resp.setContentLength((int) target.length());
+        try (InputStream in = new FileInputStream(target);OutputStream out = resp.getOutputStream()) {
+            byte[] buffer = new byte[8192];
+            int length;
+            while ((length = in.read(buffer)) != -1) {
+                out.write(buffer, 0, length);
+            }
         }
     }
 
@@ -413,12 +434,12 @@ public class BoardController extends HttpServlet {
             resp.sendRedirect(req.getContextPath() + "/member/login.do");
             return -1;
         }
-        Object id = req.getSession(false).getAttribute("memberId");
-        if (!(id instanceof Number)) {
+        Long memberId = SessionUser.memberId(req);
+        if (memberId == null) {
             resp.sendError(403);
             return -1;
         }
-        long value = ((Number) id).longValue();
+        long value = memberId.longValue();
         if (!dao.isMemberActive(value)) {
             req.getSession(false).invalidate();
             resp.sendRedirect(req.getContextPath() + "/member/login.do?status=suspended");
@@ -428,17 +449,18 @@ public class BoardController extends HttpServlet {
     }
 
     private boolean canEdit(HttpServletRequest req, BoardDTO b) {
-        Object id = req.getSession(false) == null ? null : req.getSession(false).getAttribute("memberId");
-        return SessionUser.isAdmin(req) || (id instanceof Number && ((Number) id).longValue() == b.getMemberId());
+        Long memberId = SessionUser.memberId(req);
+        return SessionUser.isAdmin(req)
+            || (memberId != null && memberId.longValue() == b.getMemberId());
     }
 
     private String detailUrl(HttpServletRequest req, long boardId, boolean comments, boolean inline, String category) {
         String path;
         if (SessionUser.isAdmin(req)) {
-            path = "/admin/boards/detail?id="     + boardId;
+            path = "/admin/boards/detail?id=" + boardId;
         } else if (inline) {
-            path = "/board/list?category="     + category + "&id="     + boardId;
-        } else path = "/board/detail?id="     + boardId;
+            path = "/board/list?category=" + category + "&id=" + boardId;
+        } else path = "/board/detail?id=" + boardId;
         return req.getContextPath() + path + (comments?"#comments":"#detail-preview-section");
     }
 

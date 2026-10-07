@@ -16,7 +16,30 @@
         <link
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
         rel="stylesheet" />
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/common-page-reset.css"/>
+        <style>
+            @
+            layer base {
+            html ,body{margin: 0;
+            padding: 0;
+            }
+
+            body {
+            overscroll-behavior: none;
+            }
+
+            main>:first-child {
+            margin-top: 0 !important;
+            }
+
+            main>:last-child {
+            margin-bottom: 0 !important;
+            }
+
+            }
+            ::-webkit-scrollbar {
+            display: none;
+            }
+        </style>
         <link rel="stylesheet"
         href="${pageContext.request.contextPath}/assets/css/pages/member_login.css" />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"/>
@@ -267,6 +290,22 @@ class="font-label-caps text-[11px] leading-relaxed text-on-surface-variant">
     var toggleBtn = document.getElementById('togglePwBtn');
     var pwInput = document.getElementById('userPw');
     var icon = document.getElementById('togglePwIcon');
+    var loginForm = document.getElementById('loginForm');
+    var submitButton = loginForm ? loginForm.querySelector('button[type="submit"]') : null;
+
+    if (pwInput && loginForm) {
+    pwInput.addEventListener('keydown', function(event) {
+    if (event.key === 'Enter' && !event.isComposing) {
+    event.preventDefault();
+
+    if (typeof loginForm.requestSubmit === 'function') {
+    loginForm.requestSubmit(submitButton || undefined);
+    } else {
+    loginForm.submit();
+    }
+    }
+    });
+    }
 
     if (toggleBtn && pwInput && icon) {
     toggleBtn.addEventListener('click', function() {

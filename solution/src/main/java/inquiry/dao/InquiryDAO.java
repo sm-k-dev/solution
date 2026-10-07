@@ -1,6 +1,5 @@
 package inquiry.dao;
 
-import common.db.DataSourceProvider;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,136 +12,38 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
+import common.db.DataSourceProvider;
 import inquiry.dto.InquiryDTO;
-import inquiry.dto.InquiryFileDTO;
 
 public class InquiryDAO {
     private final DataSource dataSource;
 
     public InquiryDAO() throws NamingException {
-        dataSource = DataSourceProvider.getDataSource();
+        dataSource = DataSourceProvider.get();
     }
 
     public long insertInquiry(InquiryDTO inquiry) throws SQLException {
-        return insertInquiry(inquiry, new ArrayList<InquiryFileDTO>());
-    }
-
-    public long insertInquiry(InquiryDTO inquiry, List<InquiryFileDTO> files) throws SQLException {
         String sql = "INSERT INTO inquiry (member_id, contact_name, contact_email, company_name, category, title, content) "
              + "VALUES (?, ?, ?, ?, ?, ?, ?)";
-        try (Connection connection = dataSource.getConnection()) {
-            boolean originalAutoCommit = connection.getAutoCommit();
-            connection.setAutoCommit(false);
-            try {
-                long inquiryId;
-                try (PreparedStatement statement = connection.prepareStatement(
-                    sql, Statement.RETURN_GENERATED_KEYS)) {
-                    if (inquiry.getMemberId() == null) {
-                        statement.setNull(1, Types.BIGINT);
-                    } else {
-                        statement.setLong(1, inquiry.getMemberId().longValue());
-                    }
-                    statement.setString(2, inquiry.getContactName());
-                    statement.setString(3, inquiry.getContactEmail());
-                    statement.setString(4, inquiry.getCompanyName());
-                    statement.setString(5, inquiry.getCategory());
-                    statement.setString(6, inquiry.getTitle());
-                    statement.setString(7, inquiry.getContent());
-                    statement.executeUpdate();
-                    try (ResultSet keys = statement.getGeneratedKeys()) {
-                        if (!keys.next()) {
-                            throw new SQLException("문의 등록 후 생성된 번호를 확인하지 못했습니다.");
-                        }
-                        inquiryId = keys.getLong(1);
-                    }
-                }
-                insertInquiryFiles(connection, inquiryId, files);
-                connection.commit();
-                return inquiryId;
-            } catch (SQLException error) {
-                connection.rollback();
-                throw error;
-            } finally {
-                // The connection is closed immediately after this block and returned to
-                // the pool by the driver. Avoid turning a committed insert into an
-                // apparent failure if restoring pooled connection state throws.
-                try {
-                    connection.setAutoCommit(originalAutoCommit);
-                } catch (SQLException ignored) {
-                    // Closing the connection lets the pool reset or discard it.
-                }
-            }
-        }
-    }
-
-    private void insertInquiryFiles(Connection connection, long inquiryId,
-        List<InquiryFileDTO> files) throws SQLException {
-        if (files == null || files.isEmpty()) {
-            return;
-        }
-        String sql = "INSERT INTO inquiry_file "
-             + "(inquiry_id, original_name, saved_name, file_path, file_size, file_type) "
-             + "VALUES (?, ?, ?, ?, ?, ?)";
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            for (InquiryFileDTO file : files) {
-                statement.setLong(1, inquiryId);
-                statement.setString(2, file.getOriginalName());
-                statement.setString(3, file.getSavedName());
-                statement.setString(4, file.getFilePath());
-                statement.setLong(5, file.getFileSize());
-                statement.setString(6, file.getFileType());
-                statement.addBatch();
-            }
-            statement.executeBatch();
-        }
-    }
-
-    public List<InquiryFileDTO> findFilesByInquiryId(long inquiryId) throws SQLException {
-        String sql = "SELECT f.file_id, f.inquiry_id, i.member_id, f.original_name, f.saved_name, "
-             + "f.file_path, f.file_size, f.file_type "
-             + "FROM inquiry_file f JOIN inquiry i ON i.inquiry_id=f.inquiry_id "
-             + "WHERE f.inquiry_id=? AND f.is_deleted=FALSE AND i.is_deleted=FALSE ORDER BY f.file_id";
-        List<InquiryFileDTO> files = new ArrayList<InquiryFileDTO>();
         try (Connection connection = dataSource.getConnection();
-        PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setLong(1, inquiryId);
-            try (ResultSet result = statement.executeQuery()) {
-                while (result.next()) {
-                    files.add(mapInquiryFile(result));
+        PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            if (inquiry.getMemberId() == null) {
+                statement.setNull(1, Types.BIGINT);
+            } else statement.setLong(1, inquiry.getMemberId());
+            statement.setString(2, inquiry.getContactName());
+            statement.setString(3, inquiry.getContactEmail());
+            statement.setString(4, inquiry.getCompanyName());
+            statement.setString(5, inquiry.getCategory());
+            statement.setString(6, inquiry.getTitle());
+            statement.setString(7, inquiry.getContent());
+            statement.executeUpdate();
+            try (ResultSet keys = statement.getGeneratedKeys()) {
+                if (keys.next()) {
+                    return keys.getLong(1);
                 }
             }
         }
-        return files;
-    }
-
-    public InquiryFileDTO findFile(long fileId) throws SQLException {
-        String sql = "SELECT f.file_id, f.inquiry_id, i.member_id, f.original_name, f.saved_name, "
-             + "f.file_path, f.file_size, f.file_type "
-             + "FROM inquiry_file f JOIN inquiry i ON i.inquiry_id=f.inquiry_id "
-             + "WHERE f.file_id=? AND f.is_deleted=FALSE AND i.is_deleted=FALSE";
-        try (Connection connection = dataSource.getConnection();
-        PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setLong(1, fileId);
-            try (ResultSet result = statement.executeQuery()) {
-                return result.next() ? mapInquiryFile(result) : null;
-            }
-        }
-    }
-
-    private InquiryFileDTO mapInquiryFile(ResultSet result) throws SQLException {
-        InquiryFileDTO file = new InquiryFileDTO();
-        file.setFileId(result.getLong("file_id"));
-        file.setInquiryId(result.getLong("inquiry_id"));
-        long memberId = result.getLong("member_id");
-        if (!result.wasNull()) {
-            file.setMemberId(Long.valueOf(memberId));
-        }
-        file.setOriginalName(result.getString("original_name"));
-        file.setSavedName(result.getString("saved_name"));
-        file.setFilePath(result.getString("file_path"));
-        file.setFileSize(result.getLong("file_size"));
-        file.setFileType(result.getString("file_type"));
-        return file;
+        throw new SQLException("문의 등록 후 생성된 번호를 확인하지 못했습니다.");
     }
 
     public List<InquiryDTO> findAllInquiries() throws SQLException {

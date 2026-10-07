@@ -11,7 +11,8 @@
         </div>
         <button class="admin-primary-button" type="button"
         data-admin-action="${pageContext.request.contextPath}/security/daily-summary"
-        data-csrf="${csrfToken}" data-result-param="summary" data-result-header="X-Security-Summary">
+        data-result-param="summary"
+        data-csrf="${csrfToken}">
         <span class="material-symbols-outlined">send</span> 어제 위협 요약 전송
     </button>
 </div>
@@ -67,25 +68,25 @@
                     <th>위협 유형</th>
                     <th>발생</th>
                     <th>요청 경로</th>
-                    <th>상세</th>
                 </tr>
             </thead>
             <tbody>
                 <c:forEach var="item" items="${securityEvents}">
                     <tr>
                         <td class="admin-ticket-id">
-                            #<c:out value="${item.securityEventId}"/>
+                            <a href="${pageContext.request.contextPath}/security/event?id=${item.securityEventId}">#<c:out value="${item.securityEventId}"/>
+                            </a>
                         </td>
                         <td>
                             <c:out value="${item.lastSeenAt}"/>
                         </td>
                         <td>
-                            <span class="security-category category-${item.category.toLowerCase()}">
+                            <span class="security-category category-${item.category}">
                                 <c:out value="${item.category}"/>
                             </span>
                         </td>
                         <td>
-                            <span class="incident-severity severity-${item.severity.toLowerCase()}">
+                            <span class="incident-severity severity-${item.severity}">
                                 <c:out value="${item.severity}"/>
                             </span>
                         </td>
@@ -102,16 +103,11 @@
                         <td class="incident-path">
                             <c:out value="${item.requestUri}"/>
                         </td>
-                        <td>
-                            <a class="admin-row-action admin-detail-row-link" href="${pageContext.request.contextPath}/security/event?id=${item.securityEventId}">
-                                상세 보기 <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
-                            </a>
-                        </td>
                     </tr>
                 </c:forEach>
                 <c:if test="${empty securityEvents}">
                     <tr>
-                        <td colspan="9" class="admin-empty-row">
+                        <td colspan="8" class="admin-empty-row">
                             <span class="material-symbols-outlined">verified_user</span>
                             <strong>탐지된 보안 위협이 없습니다.</strong>
                         </td>

@@ -12,7 +12,6 @@
         <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/pages/inquiry_flow.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"/>
         <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/top.css?v=20261002-4"/>
-        <script src="${pageContext.request.contextPath}/assets/js/private-page.js" defer></script>
     </head>
     <body>
         <jsp:include page="/inc/top.jsp"/>

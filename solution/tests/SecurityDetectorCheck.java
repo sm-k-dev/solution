@@ -30,6 +30,6 @@ public class SecurityDetectorCheck {
                 return;
             }
         }
-        throw new AssertionError("Expected "   + expectedType + " but found "   + findings.size() + " finding(s)");
+        throw new AssertionError("Expected "  + expectedType + " but found "  + findings.size() + " finding(s)");
     }
 }

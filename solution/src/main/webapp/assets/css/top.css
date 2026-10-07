@@ -1,450 +1,540 @@
 /* Shared NEXORA public header. Keep all rules scoped to the include. */
 :root {
-  --nexora-font-sans: Pretendard, "Noto Sans KR", Arial, sans-serif;
-  --nexora-color-brand: #1c4fd7;
-  --nexora-color-brand-strong: #0a192f;
-  --nexora-color-text: #334155;
-  --nexora-color-border: #e2e8f0;
-  --nexora-color-surface: #ffffff;
-  --nexora-color-surface-soft: #f8fafc;
-  --nexora-shadow-header: 0 2px 12px rgba(15, 23, 42, .04);
-  --nexora-shadow-popover: 0 20px 40px rgba(15, 23, 42, .14);
+	--nexora-font-sans: Pretendard, "Noto Sans KR", Arial, sans-serif;
+	--nexora-color-brand: #1c4fd7;
+	--nexora-color-brand-strong: #0a192f;
+	--nexora-color-text: #334155;
+	--nexora-color-border: #e2e8f0;
+	--nexora-color-surface: #ffffff;
+	--nexora-color-surface-soft: #f8fafc;
+	--nexora-shadow-header: 0 2px 12px rgba(15, 23, 42, .04);
+	--nexora-shadow-popover: 0 20px 40px rgba(15, 23, 42, .14);
 }
+
 html {
-  scrollbar-gutter: stable;
+	scrollbar-gutter: stable;
 }
+
 #nexora-global-header {
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  width: 100%;
-  color: var(--nexora-color-text);
-  background: rgba(255, 255, 255, .97);
-  border-bottom: 1px solid var(--nexora-color-border);
-  box-shadow: var(--nexora-shadow-header);
-  backdrop-filter: blur(12px);
-  font-family: var(--nexora-font-sans);
-  line-height: 1.5;
+	position: sticky;
+	top: 0;
+	z-index: 50;
+	width: 100%;
+	color: var(--nexora-color-text);
+	background: rgba(255, 255, 255, .97);
+	border-bottom: 1px solid var(--nexora-color-border);
+	box-shadow: var(--nexora-shadow-header);
+	backdrop-filter: blur(12px);
+	font-family: var(--nexora-font-sans);
+	line-height: 1.5;
 }
-#nexora-global-header *, #nexora-global-header *::before, #nexora-global-header *::after {
-  box-sizing: border-box;
+
+#nexora-global-header *,
+#nexora-global-header *::before,
+#nexora-global-header *::after {
+	box-sizing: border-box;
 }
+
 #nexora-global-header *:not(.material-symbols-outlined) {
-  font-family: var(--nexora-font-sans);
+	font-family: var(--nexora-font-sans);
 }
+
 #nexora-global-header a {
-  text-decoration: none;
+	text-decoration: none;
 }
+
 #nexora-global-header .nexora-header-inner {
-  width: 100%;
-  max-width: 1200px;
-  height: 72px;
-  min-height: 72px;
-  margin: 0 auto;
-  padding: 0 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  white-space: nowrap;
+	width: 100%;
+	max-width: 1200px;
+	height: 72px;
+	min-height: 72px;
+	margin: 0 auto;
+	padding: 0 16px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+	white-space: nowrap;
 }
+
 #nexora-global-header .nexora-brand-group {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  flex: 0 0 auto;
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	flex: 0 0 auto;
 }
+
 #nexora-global-header .nexora-brand-link {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex: 0 0 auto;
-  padding: 8px 0;
-  color: var(--nexora-color-brand-strong);
-  text-decoration: none;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	flex: 0 0 auto;
+	padding: 8px 0;
+	color: var(--nexora-color-brand-strong);
+	text-decoration: none;
 }
+
 #nexora-global-header .nexora-brand-mark {
-  display: flex;
-  width: 36px;
-  height: 36px;
-  flex: 0 0 36px;
-  align-items: center;
-  justify-content: center;
-  border-radius: 8px;
-  background: var(--nexora-color-brand-strong);
-  color: #fff;
-  box-shadow: 0 1px 3px rgba(15, 23, 42, .12);
+	display: flex;
+	width: 36px;
+	height: 36px;
+	flex: 0 0 36px;
+	align-items: center;
+	justify-content: center;
+	border-radius: 8px;
+	background: var(--nexora-color-brand-strong);
+	color: #fff;
+	box-shadow: 0 1px 3px rgba(15, 23, 42, .12);
 }
+
 #nexora-global-header .nexora-brand-mark svg {
-  width: 20px;
-  height: 20px;
-  color: #38bdf8;
+	width: 20px;
+	height: 20px;
+	color: #38bdf8;
 }
+
 #nexora-global-header .nexora-brand-link:hover .nexora-brand-mark {
-  background: var(--nexora-color-brand);
+	background: var(--nexora-color-brand);
 }
+
 #nexora-global-header .nexora-brand-copy {
-  display: flex;
-  flex-direction: column;
+	display: flex;
+	flex-direction: column;
 }
+
 #nexora-global-header .nexora-brand-title {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  color: var(--nexora-color-brand-strong);
-  font-size: 21px;
-  font-weight: 700;
-  letter-spacing: -.025em;
-  line-height: 1;
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	color: var(--nexora-color-brand-strong);
+	font-size: 21px;
+	font-weight: 700;
+	letter-spacing: -.025em;
+	line-height: 1;
 }
+
 #nexora-global-header .nexora-brand-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--nexora-color-brand);
+	width: 6px;
+	height: 6px;
+	border-radius: 50%;
+	background: var(--nexora-color-brand);
 }
+
 #nexora-global-header .nexora-brand-tagline {
-  margin-top: 2px;
-  color: #94a3b8;
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: .08em;
-  line-height: 1.2;
-  text-transform: uppercase;
+	margin-top: 2px;
+	color: #94a3b8;
+	font-size: 10px;
+	font-weight: 600;
+	letter-spacing: .08em;
+	line-height: 1.2;
+	text-transform: uppercase;
 }
+
 #nexora-global-header .nexora-desktop-nav {
-  display: none;
-  align-items: center;
-  gap: 2px;
-  padding-left: 4px;
+	display: none;
+	align-items: center;
+	gap: 2px;
+	padding-left: 4px;
 }
-#nexora-global-header .nexora-desktop-nav > .nexora-nav-link, #nexora-global-header .nexora-desktop-nav > .relative > a {
-  display: inline-flex;
-  min-height: 40px;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  padding: 8px 10px;
-  border-radius: 6px;
-  color: var(--nexora-color-text);
-  font-size: 14px;
-  font-weight: 500;
-  white-space: nowrap;
-  transition: color .18s ease, background-color .18s ease;
+
+#nexora-global-header .nexora-desktop-nav > .nexora-nav-link,
+#nexora-global-header .nexora-desktop-nav > .relative > a {
+	display: inline-flex;
+	min-height: 40px;
+	align-items: center;
+	justify-content: center;
+	gap: 4px;
+	padding: 8px 10px;
+	border-radius: 6px;
+	color: var(--nexora-color-text);
+	font-size: 14px;
+	font-weight: 500;
+	white-space: nowrap;
+	transition: color .18s ease, background-color .18s ease;
 }
-#nexora-global-header .nexora-desktop-nav > .nexora-nav-link:hover, #nexora-global-header .nexora-desktop-nav > .relative > a:hover, #nexora-global-header .nexora-desktop-nav > .relative:focus-within > a {
-  color: var(--nexora-color-brand);
-  background: var(--nexora-color-surface-soft);
+
+#nexora-global-header .nexora-desktop-nav > .nexora-nav-link:hover,
+#nexora-global-header .nexora-desktop-nav > .relative > a:hover,
+#nexora-global-header .nexora-desktop-nav > .relative:focus-within > a {
+	color: var(--nexora-color-brand);
+	background: var(--nexora-color-surface-soft);
 }
-#nexora-global-header .nexora-desktop-nav > .nexora-nav-link--active, #nexora-global-header .nexora-desktop-nav > .relative > .nexora-nav-link--active {
-  color: var(--nexora-color-brand);
-  background: rgba(28, 79, 215, .06);
+
+#nexora-global-header .nexora-desktop-nav > .nexora-nav-link--active,
+#nexora-global-header .nexora-desktop-nav > .relative > .nexora-nav-link--active {
+	color: var(--nexora-color-brand);
+	background: rgba(28, 79, 215, .06);
 }
+
 #nexora-global-header .nexora-desktop-actions .nexora-action-link--active {
-  color: var(--nexora-color-brand);
-  background: rgba(28, 79, 215, .06);
-  border-color: rgba(28, 79, 215, .24);
+	color: var(--nexora-color-brand);
+	background: rgba(28, 79, 215, .06);
+	border-color: rgba(28, 79, 215, .24);
 }
+
 #nexora-global-header .nexora-desktop-nav > .relative {
-  position: relative;
+	position: relative;
 }
+
 #nexora-global-header .nexora-desktop-nav .dropdown-enter {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  z-index: 60;
-  width: min(680px, calc(100vw - 32px));
-  padding: 20px;
-  border: 1px solid var(--nexora-color-border);
-  border-radius: 12px;
-  background: #fff;
-  box-shadow: var(--nexora-shadow-popover);
-  white-space: normal;
-  opacity: 0;
-  transform: translateY(-8px) scale(.98);
-  pointer-events: none;
-  visibility: hidden;
-  transition: opacity .2s ease, transform .2s ease, visibility .2s ease;
+	position: absolute;
+	top: 100%;
+	left: 0;
+	z-index: 60;
+	width: min(680px, calc(100vw - 32px));
+	padding: 20px;
+	border: 1px solid var(--nexora-color-border);
+	border-radius: 12px;
+	background: #fff;
+	box-shadow: var(--nexora-shadow-popover);
+	white-space: normal;
+	opacity: 0;
+	transform: translateY(-8px) scale(.98);
+	pointer-events: none;
+	visibility: hidden;
+	transition: opacity .2s ease, transform .2s ease, visibility .2s ease;
 }
-#nexora-global-header .nexora-desktop-nav > .relative:hover .dropdown-enter, #nexora-global-header .nexora-desktop-nav > .relative:focus-within .dropdown-enter, #nexora-global-header .nexora-desktop-nav .dropdown-enter:hover {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-  pointer-events: auto;
-  visibility: visible;
+
+#nexora-global-header .nexora-desktop-nav > .relative:hover .dropdown-enter,
+#nexora-global-header .nexora-desktop-nav > .relative:focus-within .dropdown-enter,
+#nexora-global-header .nexora-desktop-nav .dropdown-enter:hover {
+	opacity: 1;
+	transform: translateY(0) scale(1);
+	pointer-events: auto;
+	visibility: visible;
 }
+
 #nexora-global-header .nexora-desktop-nav .dropdown-enter > .grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
 }
+
 #nexora-global-header .nexora-desktop-nav .dropdown-enter a {
-  min-width: 0;
-  white-space: normal;
+	min-width: 0;
+	white-space: normal;
 }
+
 #nexora-global-header .nexora-desktop-nav .dropdown-enter a > div:last-child {
-  min-width: 0;
-  flex: 1 1 0%;
+	min-width: 0;
+	flex: 1 1 0%;
 }
+
 #nexora-global-header .nexora-desktop-nav .dropdown-enter a p {
-  max-width: 100%;
-  white-space: normal;
-  word-break: keep-all;
-  overflow-wrap: anywhere;
-  line-height: 1.5;
+	max-width: 100%;
+	white-space: normal;
+	word-break: keep-all;
+	overflow-wrap: anywhere;
+	line-height: 1.5;
 }
+
 #nexora-global-header .nexora-desktop-actions {
-  display: none;
-  align-items: center;
-  gap: 2px;
-  flex: 0 0 auto;
-  white-space: nowrap;
+	display: none;
+	align-items: center;
+	gap: 2px;
+	flex: 0 0 auto;
+	white-space: nowrap;
 }
-#nexora-global-header .nexora-user-name, #nexora-global-header .nexora-action-link, #nexora-global-header .nexora-action-divider, #nexora-global-header .nexora-cta-link {
-  flex: 0 0 auto;
-  font-family: var(--nexora-font-sans);
-  font-size: 13px;
-  line-height: 20px;
-  white-space: nowrap;
-}
-#nexora-global-header .nexora-user-name {
-  padding: 8px;
-  color: #334155;
-  font-weight: 500;
-}
-#nexora-global-header .nexora-action-link {
-  min-height: 40px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px;
-  border: 1px solid transparent;
-  border-radius: 8px;
-  background: transparent;
-  color: #334155;
-  font-weight: 500;
-  text-decoration: none;
-  transition: color .18s ease, background-color .18s ease, border-color .18s ease;
-}
-#nexora-global-header .nexora-action-link:hover {
-  color: var(--nexora-color-brand);
-  background: #f8fafc;
-}
-#nexora-global-header .nexora-mypage-link {
-  padding-right: 10px;
-  padding-left: 10px;
-  border-color: #cbd5e1;
-  color: var(--nexora-color-brand-strong);
-}
-#nexora-global-header .nexora-mypage-link:hover {
-  border-color: #94a3b8;
-}
-#nexora-global-header .nexora-admin-link {
-  color: var(--nexora-color-brand);
-  font-weight: 600;
-}
-#nexora-global-header .nexora-action-divider {
-  width: 1px;
-  height: 16px;
-  background: #e2e8f0;
-}
+
+#nexora-global-header .nexora-user-name,
+#nexora-global-header .nexora-action-link,
+#nexora-global-header .nexora-action-divider,
 #nexora-global-header .nexora-cta-link {
-  min-height: 40px;
-  margin-left: 4px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  padding: 8px 10px;
-  border-radius: 8px;
-  background: var(--nexora-color-brand-strong);
-  color: #fff;
-  font-weight: 600;
-  text-decoration: none;
-  box-shadow: 0 1px 3px rgba(15, 23, 42, .12);
-  transition: background-color .18s ease, box-shadow .18s ease;
+	flex: 0 0 auto;
+	font-family: var(--nexora-font-sans);
+	font-size: 13px;
+	line-height: 20px;
+	white-space: nowrap;
 }
+
+#nexora-global-header .nexora-user-name {
+	padding: 8px;
+	color: #334155;
+	font-weight: 500;
+}
+
+#nexora-global-header .nexora-action-link {
+	min-height: 40px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 8px;
+	border: 1px solid transparent;
+	border-radius: 8px;
+	background: transparent;
+	color: #334155;
+	font-weight: 500;
+	text-decoration: none;
+	transition: color .18s ease, background-color .18s ease, border-color .18s ease;
+}
+
+#nexora-global-header .nexora-action-link:hover {
+	color: var(--nexora-color-brand);
+	background: #f8fafc;
+}
+
+#nexora-global-header .nexora-mypage-link {
+	padding-right: 10px;
+	padding-left: 10px;
+	border-color: #cbd5e1;
+	color: var(--nexora-color-brand-strong);
+}
+
+#nexora-global-header .nexora-mypage-link:hover {
+	border-color: #94a3b8;
+}
+
+#nexora-global-header .nexora-admin-link {
+	color: var(--nexora-color-brand);
+	font-weight: 600;
+}
+
+#nexora-global-header .nexora-action-divider {
+	width: 1px;
+	height: 16px;
+	background: #e2e8f0;
+}
+
+#nexora-global-header .nexora-cta-link {
+	min-height: 40px;
+	margin-left: 4px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 4px;
+	padding: 8px 10px;
+	border-radius: 8px;
+	background: var(--nexora-color-brand-strong);
+	color: #fff;
+	font-weight: 600;
+	text-decoration: none;
+	box-shadow: 0 1px 3px rgba(15, 23, 42, .12);
+	transition: background-color .18s ease, box-shadow .18s ease;
+}
+
 #nexora-global-header .nexora-cta-link:hover {
-  background: var(--nexora-color-brand);
-  box-shadow: 0 2px 6px rgba(15, 23, 42, .16);
+	background: var(--nexora-color-brand);
+	box-shadow: 0 2px 6px rgba(15, 23, 42, .16);
 }
+
 #nexora-global-header .nexora-cta-link .material-symbols-outlined {
-  font-size: 16px;
-  line-height: 20px;
+	font-size: 16px;
+	line-height: 20px;
 }
-#nexora-global-header .nexora-desktop-actions a, #nexora-global-header .nexora-desktop-actions span {
-  white-space: nowrap;
+
+#nexora-global-header .nexora-desktop-actions a,
+#nexora-global-header .nexora-desktop-actions span {
+	white-space: nowrap;
 }
+
 #nexora-global-header .nexora-action-link--active {
-  color: var(--nexora-color-brand) !important;
-  background: rgba(28, 79, 215, .06);
-  border-color: rgba(28, 79, 215, .24);
+	color: var(--nexora-color-brand) !important;
+	background: rgba(28, 79, 215, .06);
+	border-color: rgba(28, 79, 215, .24);
 }
+
 #nexora-global-header .nexora-mobile-link {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 12px;
-  border-radius: 8px;
-  color: #334155;
-  font-weight: 500;
-  transition: color .18s ease, background-color .18s ease;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 10px 12px;
+	border-radius: 8px;
+	color: #334155;
+	font-weight: 500;
+	transition: color .18s ease, background-color .18s ease;
 }
-#nexora-global-header .nexora-mobile-link:hover, #nexora-global-header .nexora-mobile-link--active {
-  color: var(--nexora-color-brand);
-  background: rgba(28, 79, 215, .06);
+
+#nexora-global-header .nexora-mobile-link:hover,
+#nexora-global-header .nexora-mobile-link--active {
+	color: var(--nexora-color-brand);
+	background: rgba(28, 79, 215, .06);
 }
+
 #nexora-global-header .nexora-mobile-solutions-toggle {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 12px;
-  border: 0;
-  border-radius: 8px;
-  background: transparent;
-  color: #334155;
-  font: inherit;
-  font-weight: 500;
-  text-align: left;
-  transition: color .18s ease, background-color .18s ease;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 10px 12px;
+	border: 0;
+	border-radius: 8px;
+	background: transparent;
+	color: #334155;
+	font: inherit;
+	font-weight: 500;
+	text-align: left;
+	transition: color .18s ease, background-color .18s ease;
 }
-#nexora-global-header .nexora-mobile-solutions-toggle:hover, #nexora-global-header .nexora-mobile-solutions-toggle--active {
-  color: var(--nexora-color-brand);
-  background: rgba(28, 79, 215, .06);
+
+#nexora-global-header .nexora-mobile-solutions-toggle:hover,
+#nexora-global-header .nexora-mobile-solutions-toggle--active {
+	color: var(--nexora-color-brand);
+	background: rgba(28, 79, 215, .06);
 }
+
 #nexora-global-header .nexora-mobile-solution-link {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px;
-  border-radius: 8px;
-  color: #334155;
-  transition: background-color .18s ease;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 8px;
+	border-radius: 8px;
+	color: #334155;
+	transition: background-color .18s ease;
 }
-#nexora-global-header .nexora-mobile-solution-link:hover, #nexora-global-header .nexora-mobile-solution-link--active:not(.nexora-mobile-solution-link--sentinel) {
-  background: #f8fafc;
-}
+
+#nexora-global-header .nexora-mobile-solution-link:hover,
 #nexora-global-header .nexora-mobile-solution-link--active:not(.nexora-mobile-solution-link--sentinel) {
-  color: var(--nexora-color-brand);
+	background: #f8fafc;
 }
+
+#nexora-global-header .nexora-mobile-solution-link--active:not(.nexora-mobile-solution-link--sentinel) {
+	color: var(--nexora-color-brand);
+}
+
 #nexora-global-header .nexora-mobile-solution-link--sentinel {
-  margin-top: 4px;
+	margin-top: 4px;
 }
+
 #nexora-global-header .nexora-mobile-solution-link--sentinel.nexora-mobile-solution-link--active {
-  background: #0f172a;
-  color: #fff;
+	background: #0f172a;
+	color: #fff;
 }
+
 #nexora-global-header .nexora-mobile-solution-link--sentinel:not(.nexora-mobile-solution-link--active) > div > div:first-child {
-  color: #1e293b;
+	color: #1e293b;
 }
+
 #nexora-global-header .nexora-mobile-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex: 0 0 auto;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	flex: 0 0 auto;
 }
+
 #nexora-global-header .nexora-mobile-account-link {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 34px;
-  padding: 6px 12px;
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
-  color: #334155;
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 20px;
-  white-space: nowrap;
-  transition: color .18s ease, background-color .18s ease;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 34px;
+	padding: 6px 12px;
+	border: 1px solid #e2e8f0;
+	border-radius: 6px;
+	color: #334155;
+	font-size: 12px;
+	font-weight: 600;
+	line-height: 20px;
+	white-space: nowrap;
+	transition: color .18s ease, background-color .18s ease;
 }
+
 #nexora-global-header .nexora-mobile-account-link:hover {
-  color: var(--nexora-color-brand);
-  background: #f8fafc;
+	color: var(--nexora-color-brand);
+	background: #f8fafc;
 }
+
 #nexora-global-header .nexora-mobile-account-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 8px;
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	gap: 8px;
 }
+
 #nexora-global-header .nexora-mobile-drawer-account-link {
-  width: 100%;
-  min-height: 42px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 10px 12px;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  background: #fff;
-  color: #1e293b;
-  font-size: 12px;
-  font-weight: 700;
-  text-align: center;
-  transition: background-color .18s ease, color .18s ease;
+	width: 100%;
+	min-height: 42px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 10px 12px;
+	border: 1px solid #e2e8f0;
+	border-radius: 8px;
+	background: #fff;
+	color: #1e293b;
+	font-size: 12px;
+	font-weight: 700;
+	text-align: center;
+	transition: background-color .18s ease, color .18s ease;
 }
+
 #nexora-global-header .nexora-mobile-drawer-account-link:hover {
-  background: #f1f5f9;
-  color: var(--nexora-color-brand);
+	background: #f1f5f9;
+	color: var(--nexora-color-brand);
 }
-#nexora-global-header #mobile-menu-btn, #nexora-global-header #mobile-drawer button {
-  cursor: pointer;
+
+#nexora-global-header #mobile-menu-btn,
+#nexora-global-header #mobile-drawer button {
+	cursor: pointer;
 }
+
 #nexora-global-header #mobile-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 55;
-  background: rgba(15, 23, 42, .5);
-  backdrop-filter: blur(3px);
-  opacity: 1;
-  transition: opacity .3s ease;
+	position: fixed;
+	inset: 0;
+	z-index: 55;
+	background: rgba(15, 23, 42, .5);
+	backdrop-filter: blur(3px);
+	opacity: 1;
+	transition: opacity .3s ease;
 }
-#nexora-global-header #mobile-backdrop.hidden, #nexora-global-header #mobile-drawer.hidden, #nexora-global-header #mobile-sub-menu.hidden {
-  display: none !important;
+
+#nexora-global-header #mobile-backdrop.hidden,
+#nexora-global-header #mobile-drawer.hidden,
+#nexora-global-header #mobile-sub-menu.hidden {
+	display: none !important;
 }
+
 #nexora-global-header #mobile-backdrop.opacity-0 {
-  opacity: 0;
+	opacity: 0;
 }
+
 #nexora-global-header #mobile-drawer {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 60;
-  display: flex;
-  flex-direction: column;
-  width: min(84vw, 360px);
-  max-width: 100%;
-  background: var(--nexora-color-surface);
-  box-shadow: var(--nexora-shadow-popover);
-  transform: translateX(0);
-  transition: transform .3s cubic-bezier(.16, 1, .3, 1);
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 60;
+	display: flex;
+	flex-direction: column;
+	width: min(84vw, 360px);
+	max-width: 100%;
+	background: var(--nexora-color-surface);
+	box-shadow: var(--nexora-shadow-popover);
+	transform: translateX(0);
+	transition: transform .3s cubic-bezier(.16, 1, .3, 1);
 }
+
 #nexora-global-header #mobile-drawer.translate-x-full {
-  transform: translateX(100%);
+	transform: translateX(100%);
 }
+
 #nexora-global-header #mobile-drawer > .h-\[72px\] {
-  min-height: 72px;
-  flex: 0 0 72px;
+	min-height: 72px;
+	flex: 0 0 72px;
 }
+
 #nexora-global-header #mobile-drawer .flex-1.overflow-y-auto {
-  min-height: 0;
-  overscroll-behavior: contain;
+	min-height: 0;
+	overscroll-behavior: contain;
 }
+
 @media (min-width: 640px) {
-  #nexora-global-header .nexora-header-inner {
-    padding-right: 24px;
-    padding-left: 24px;
-  }
+	#nexora-global-header .nexora-header-inner {
+		padding-right: 24px;
+		padding-left: 24px;
+	}
 }
+
 @media (min-width: 1200px) {
-  #nexora-global-header .nexora-header-inner {
-    padding-right: 32px;
-    padding-left: 32px;
-  }
-  #nexora-global-header .nexora-desktop-nav, #nexora-global-header .nexora-desktop-actions {
-    display: flex;
-  }
-  #nexora-global-header .nexora-mobile-actions, #nexora-global-header #mobile-backdrop, #nexora-global-header #mobile-drawer {
-    display: none !important;
-  }
+	#nexora-global-header .nexora-header-inner {
+		padding-right: 32px;
+		padding-left: 32px;
+	}
+
+	#nexora-global-header .nexora-desktop-nav,
+	#nexora-global-header .nexora-desktop-actions {
+		display: flex;
+	}
+
+	#nexora-global-header .nexora-mobile-actions,
+	#nexora-global-header #mobile-backdrop,
+	#nexora-global-header #mobile-drawer {
+		display: none !important;
+	}
 }

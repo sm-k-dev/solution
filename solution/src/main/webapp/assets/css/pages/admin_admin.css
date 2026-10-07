@@ -150,49 +150,6 @@
 }
 
 /* NEXORA member governance additions */
-.admin-member-stats {
-  display: grid;
-  gap: 14px;
-  margin: 0 0 18px;
-}
-.admin-member-stats > div {
-  display: grid;
-  grid-template-columns: 42px minmax(0, 1fr);
-  grid-template-rows: auto auto;
-  align-items: center;
-  column-gap: 12px;
-  min-height: 92px;
-  padding: 16px 18px;
-  border: 1px solid #e1e7f0;
-  border-radius: 14px;
-  background: linear-gradient(145deg, #fff, #f7f9fd);
-  box-shadow: 0 5px 16px rgba(16, 32, 64, .045);
-}
-.admin-member-stats > div > .material-symbols-outlined {
-  grid-column: 1;
-  grid-row: 1 / 3;
-  display: grid;
-  width: 42px;
-  height: 42px;
-  place-items: center;
-  border-radius: 12px;
-  background: #eaf0ff;
-  color: #3158bf;
-  font-size: 21px;
-}
-.admin-member-stats > div > span:not(.material-symbols-outlined) {
-  grid-column: 2;
-  color: #64748b;
-  font-size: 12px;
-  font-weight: 650;
-}
-.admin-member-stats > div > strong {
-  grid-column: 2;
-  color: #14233a;
-  font-size: 26px;
-  line-height: 1.1;
-  font-variant-numeric: tabular-nums;
-}
 .admin-member-stats-four {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
@@ -210,59 +167,6 @@
   flex-wrap: wrap;
   gap: 8px;
 }
-.admin-member-actions .admin-row-action {
-  min-height: 34px;
-  justify-content: center;
-  gap: 5px;
-  padding: 7px 10px;
-  border: 1px solid #dbe3f0;
-  border-radius: 9px;
-  background: #fff;
-  font-size: 11px;
-  transition: background .15s ease, border-color .15s ease, transform .15s ease;
-}
-.admin-member-actions .admin-row-action:hover {
-  transform: translateY(-1px);
-}
-.admin-member-action-detail {
-  color: #3158bf !important;
-}
-.admin-member-action-detail:hover {
-  border-color: #b9c9f4 !important;
-  background: #f2f5ff !important;
-}
-.admin-member-actions button.admin-member-action-suspend {
-  border-color: #fecdd3;
-  background: #fff5f6;
-  color: #b4233b;
-  cursor: pointer;
-}
-.admin-member-actions button.admin-member-action-suspend:hover {
-  border-color: #fda4af;
-  background: #ffe8ec;
-}
-.admin-member-actions button.admin-member-action-restore {
-  border-color: #b7e4d2;
-  background: #f0fbf6;
-  color: #16704e;
-  cursor: pointer;
-}
-.admin-member-actions button.admin-member-action-restore:hover {
-  border-color: #86d4b5;
-  background: #e4f8ef;
-}
-.admin-detail-row-link {
-  min-height: 34px;
-  padding: 7px 10px;
-  border: 1px solid #dbe3f0;
-  border-radius: 9px;
-  background: #fff;
-  color: #3158bf;
-}
-.admin-detail-row-link:hover {
-  border-color: #b9c9f4;
-  background: #f2f5ff;
-}
 .admin-role-badge {
   display: inline-flex;
   align-items: center;
@@ -272,36 +176,13 @@
   font-weight: 800;
   letter-spacing: .04em;
 }
-.admin-role-badge.role-admin {
+.admin-role-badge.role-ADMIN {
   background: #dce1ff;
   color: #173b9b;
 }
-.admin-role-badge.role-user {
+.admin-role-badge.role-USER {
   background: #eef2f7;
   color: #475569;
-}
-.admin-status.status-active {
-  background: #e6f6ef;
-  color: #177b5b;
-}
-.admin-status.status-suspended {
-  background: #fff1e5;
-  color: #b65b18;
-}
-.admin-status.status-withdrawn {
-  background: #edf2f8;
-  color: #4a5c73;
-}
-.admin-info-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 5px 9px;
-  border-radius: 999px;
-  background: #e8efff;
-  color: #3158bf;
-  font-size: 11px;
-  font-weight: 750;
-  white-space: nowrap;
 }
 .admin-member-detail-grid {
   display: grid;
@@ -483,19 +364,6 @@
   .admin-member-profile > div:nth-child(odd) {
     border-right: 0;
     border-bottom: 1px solid #e2e8f0;
-  }
-}
-@media (max-width: 1100px) {
-  .admin-member-stats-four {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-@media (max-width: 560px) {
-  .admin-member-stats-four {
-    grid-template-columns: 1fr;
-  }
-  .admin-member-actions {
-    align-items: stretch;
   }
 }
 @layer base {
@@ -2622,4 +2490,4 @@
   }
 }
 /* Security monitoring console */
-.security-scope-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:0 0 24px}.security-scope-grid article{display:flex;gap:14px;align-items:flex-start;padding:18px 20px;border:1px solid rgba(148,163,184,.22);border-radius:16px;background:linear-gradient(145deg,rgba(255,255,255,.98),rgba(241,245,249,.92));box-shadow:0 8px 24px rgba(15,23,42,.05)}.security-scope-grid .material-symbols-outlined{display:grid;place-items:center;flex:0 0 42px;height:42px;border-radius:12px;background:#e0f2fe;color:#0369a1}.security-scope-grid strong{display:block;margin:1px 0 5px;color:#0f172a;font-size:14px}.security-scope-grid p{margin:0;color:#64748b;font-size:12px;line-height:1.55}.security-category{display:inline-flex;align-items:center;justify-content:center;min-width:46px;padding:4px 9px;border-radius:999px;font-size:11px;font-weight:800;letter-spacing:.04em}.category-web{background:#e0f2fe;color:#075985}.category-ai{background:#ede9fe;color:#5b21b6}.security-event-table td{vertical-align:middle}.security-event-table .incident-path{max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.security-detail-meta{grid-template-columns:repeat(3,minmax(0,1fr))}.security-hash{display:block;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px}.security-console .admin-message-block p{overflow-wrap:anywhere}@media(max-width:1100px){.security-scope-grid{grid-template-columns:1fr}.security-detail-meta{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:720px){.security-detail-meta{grid-template-columns:1fr}}
+.security-scope-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:0 0 24px}.security-scope-grid article{display:flex;gap:14px;align-items:flex-start;padding:18px 20px;border:1px solid rgba(148,163,184,.22);border-radius:16px;background:linear-gradient(145deg,rgba(255,255,255,.98),rgba(241,245,249,.92));box-shadow:0 8px 24px rgba(15,23,42,.05)}.security-scope-grid .material-symbols-outlined{display:grid;place-items:center;flex:0 0 42px;height:42px;border-radius:12px;background:#e0f2fe;color:#0369a1}.security-scope-grid strong{display:block;margin:1px 0 5px;color:#0f172a;font-size:14px}.security-scope-grid p{margin:0;color:#64748b;font-size:12px;line-height:1.55}.security-category{display:inline-flex;align-items:center;justify-content:center;min-width:46px;padding:4px 9px;border-radius:999px;font-size:11px;font-weight:800;letter-spacing:.04em}.category-WEB{background:#e0f2fe;color:#075985}.category-AI{background:#ede9fe;color:#5b21b6}.security-event-table td{vertical-align:middle}.security-event-table .incident-path{max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.security-detail-meta{grid-template-columns:repeat(3,minmax(0,1fr))}.security-hash{display:block;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px}.security-console .admin-message-block p{overflow-wrap:anywhere}@media(max-width:1100px){.security-scope-grid{grid-template-columns:1fr}.security-detail-meta{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:720px){.security-detail-meta{grid-template-columns:1fr}}

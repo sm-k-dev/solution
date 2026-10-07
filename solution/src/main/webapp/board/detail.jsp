@@ -12,8 +12,8 @@
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap" rel="stylesheet">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/pages/index.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/pages/board_board.css">
+        <style>.community-content{white-space:pre-wrap;overflow-wrap:anywhere;min-height:16rem}.community-title{overflow-wrap:anywhere}</style>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"/>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/common-community.css"/>
         <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/top.css?v=20261002-4"/>
     </head>
     <body class="bg-background font-body-md text-on-surface min-h-screen">
@@ -75,7 +75,7 @@
                         </div>
                     </section>
                 </c:if>
-                <div class="px-5 md:px-8 py-8 leading-8 text-on-surface community-content community-content--detail">
+                <div class="px-5 md:px-8 py-8 leading-8 text-on-surface community-content">
                     <c:out value="${board.content}"/>
                 </div>
                 <footer class="flex flex-wrap items-center justify-between gap-3 px-5 md:px-8 py-5 bg-surface-container-low border-t border-surface-container-highest">
@@ -118,7 +118,7 @@
                             </p>
                             <div class="flex gap-3 mt-3">
                                 <c:if test="${not empty sessionScope.loginId}">
-                                    <button class="text-secondary text-sm font-semibold hover:underline" type="button" data-comment-id="${comment.commentId}" data-author="<c:out value='${comment.authorName}'/>" data-board-reply>답글</button>
+                                    <button class="text-secondary text-sm font-semibold hover:underline" type="button" data-comment-id="${comment.commentId}" data-author="<c:out value='${comment.authorName}'/>" onclick="replyTo(this)">답글</button>
                                 </c:if>
                                 <c:if test="${sessionScope.role eq 'ADMIN' or sessionScope.memberId eq comment.memberId}">
                                     <form method="post" action="${pageContext.request.contextPath}/board/comment/delete">
@@ -157,8 +157,7 @@
                 </c:if>
             </section>
         </main>
-        <script src="${pageContext.request.contextPath}/assets/js/board-replies.js"></script>
-<jsp:include page="/inc/bottom.jsp" />
-        
+        <jsp:include page="/inc/bottom.jsp" />
+        <script>function replyTo(button){document.getElementById('parentCommentId').value=button.dataset.commentId;const n=document.getElementById('replyNotice');n.hidden=false;n.textContent='@'+button.dataset.author+' 님에게 답글 작성 중';document.getElementById('commentContent').focus();}</script>
     </body>
 </html>

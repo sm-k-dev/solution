@@ -50,7 +50,7 @@ public class SecurityThreatFilter implements Filter {
             return;
         }
         Set<String> recorded = new HashSet<String>();
-        inspectWeb(request, "REQUEST_TARGET", uri + "?"    + safe(request.getQueryString()), recorded);
+        inspectWeb(request, "REQUEST_TARGET", uri + "?"  + safe(request.getQueryString()), recorded);
 
         int parameters = 0;
         for (Map.Entry<String, String[]> entry : request.getParameterMap().entrySet()) {
@@ -66,9 +66,9 @@ public class SecurityThreatFilter implements Filter {
                 continue;
             }
             for (int index = 0; index < values.length && index < MAX_VALUES_PER_PARAMETER; index++) {
-                inspectWeb(request, "HTTP_PARAMETER:"    + bounded(name, 40), values[index], recorded);
+                inspectWeb(request, "HTTP_PARAMETER:"  + bounded(name, 40), values[index], recorded);
                 if (isAiField(name) || isAiEndpoint(uri)) {
-                    inspectAi(request, "AI_INPUT:"    + bounded(name, 40), values[index], recorded);
+                    inspectAi(request, "AI_INPUT:"  + bounded(name, 40), values[index], recorded);
                 }
             }
         }
@@ -77,7 +77,7 @@ public class SecurityThreatFilter implements Filter {
     private void inspectWeb(HttpServletRequest request, String source, String value, Set<String> recorded) {
         List<ThreatFinding> findings = detector.inspectWeb(value);
         for (ThreatFinding finding : findings) {
-            String key = source + "|"    + finding.getRuleCode();
+            String key = source + "|"  + finding.getRuleCode();
             if (recorded.add(key)) {
                 recorder.recordWeb(request, finding, source);
             }
@@ -87,7 +87,7 @@ public class SecurityThreatFilter implements Filter {
     private void inspectAi(HttpServletRequest request, String source, String value, Set<String> recorded) {
         List<ThreatFinding> findings = detector.inspectAiContent(value);
         for (ThreatFinding finding : findings) {
-            String key = source + "|"    + finding.getRuleCode();
+            String key = source + "|"  + finding.getRuleCode();
             if (recorded.add(key)) {
                 recorder.recordWeb(request, finding, source);
             }

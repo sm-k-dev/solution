@@ -24,7 +24,7 @@
                 </h2>
             </div>
             <div class="incident-badges">
-                <span class="incident-severity severity-${incident.severity.toLowerCase()}">
+                <span class="incident-severity severity-${incident.severity}">
                     <c:out value="${incident.severity}"/>
                 </span>
                 <span class="admin-status">

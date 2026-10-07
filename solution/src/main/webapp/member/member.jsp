@@ -14,12 +14,33 @@
         <link
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
         rel="stylesheet" />
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/common-page-reset.css"/>
+        <style>
+            @
+            layer base {html , body { margin:0;
+            padding: 0;
+            }
+
+            body {
+            overscroll-behavior: none;
+            }
+
+            main>:first-child {
+            margin-top: 0 !important;
+            }
+
+            main>:last-child {
+            margin-bottom: 0 !important;
+            }
+
+            }
+            ::-webkit-scrollbar {
+            display: none;
+            }
+        </style>
         <link rel="stylesheet"
         href="${pageContext.request.contextPath}/assets/css/pages/member_member.css?v=20261002-1" />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"/>
         <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/top.css?v=20261002-4"/>
-        <script src="${pageContext.request.contextPath}/assets/js/private-page.js" defer></script>
     </head>
     <body class="bg-background font-body-md text-on-surface antialiased">
         <jsp:include page="/inc/top.jsp" />
@@ -42,7 +63,19 @@
                 String memberDisplayName = member.getName();
                 if (memberDisplayName != null) {
                 memberDisplayName = memberDisplayName.replaceFirst("\\s*\\([A-Za-z][A-Za-z .'-]*\\)\\s*$", "").trim();
+                } else {
+                memberDisplayName = "";
                 }
+                Object boardCountValue = request.getAttribute("boardCount");
+                Object commentCountValue = request.getAttribute("commentCount");
+                Object inquiryCountValue = request.getAttribute("inquiryCount");
+                Object completedInquiryCountValue = request.getAttribute("completedInquiryCount");
+                Object inProgressInquiryCountValue = request.getAttribute("inProgressInquiryCount");
+                String boardCountDisplay = boardCountValue == null ? "조회 실패" : String.valueOf(boardCountValue);
+                String commentCountDisplay = commentCountValue == null ? "조회 실패" : String.valueOf(commentCountValue);
+                String inquiryCountDisplay = inquiryCountValue == null ? "조회 실패" : String.valueOf(inquiryCountValue);
+                String completedInquiryCountDisplay = completedInquiryCountValue == null ? "조회 실패" : String.valueOf(completedInquiryCountValue);
+                String inProgressInquiryCountDisplay = inProgressInquiryCountValue == null ? "조회 실패" : String.valueOf(inProgressInquiryCountValue);
                 long membershipDays = 0;
 
                 if(member != null && member.getCreatedAt() != null) {
@@ -170,7 +203,7 @@ class="bg-surface-container-lowest p-5 rounded-xl shadow-sm hover:shadow-md tran
         게시글</span>
     <span
     class="font-metric-val text-headline-lg text-on-surface mt-1">
-<%=request.getAttribute("boardCount")%>
+<%=boardCountDisplay%>
     <span
     class="text-body-md font-body-md text-on-surface-variant ml-0.5">건</span>
 </span>
@@ -200,7 +233,7 @@ class="bg-surface-container-lowest p-5 rounded-xl shadow-sm hover:shadow-md tran
         댓글</span>
     <span
     class="font-metric-val text-headline-lg text-on-surface mt-1">
-<%=request.getAttribute("commentCount")%>
+<%=commentCountDisplay%>
     <span
     class="text-body-md font-body-md text-on-surface-variant ml-0.5">건</span>
 </span>
@@ -235,12 +268,12 @@ class="bg-surface-container-lowest p-5 rounded-xl shadow-sm hover:shadow-md tran
 </div>
 <span
 class="font-metric-val text-headline-lg text-on-surface mt-1">
-<%=request.getAttribute("inquiryCount")%>
+<%=inquiryCountDisplay%>
 <span
 class="text-body-md font-body-md text-on-surface-variant ml-0.5">건</span>
 </span>
 <p class="font-body-sm text-body-sm text-outline mt-1 truncate">처리
-    완료 <%=request.getAttribute("completedInquiryCount")%>건 · 처리 중 <%=request.getAttribute("inProgressInquiryCount")%>건</p>
+    완료 <%=completedInquiryCountDisplay%>건 · 처리 중 <%=inProgressInquiryCountDisplay%>건</p>
 </div>
 <div
 class="w-10 h-10 rounded-lg bg-surface-container-low text-secondary flex items-center justify-center">
@@ -353,9 +386,9 @@ id="memberPhone" name="phone" required="" type="tel" value="<%=member.getPhone()
     class="w-32 h-11 px-3.5 bg-surface-container-low text-on-surface font-code-inline text-code-inline rounded-lg focus:outline-none"
     id="postcode" name="postcode" placeholder="우편번호" readonly="" type="text"
     value="<%=member.getPostcode() == null ? "" : member.getPostcode()%>" />
-    <button
+    <button id="searchPostcodeBtn"
     class="h-11 px-4 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-body-sm text-body-sm font-medium transition-colors flex items-center justify-center"
-    id="searchPostcodeBtn" type="button">
+    type="button">
     <span class="material-symbols-outlined text-[18px] mr-1.5">search</span>
     우편번호 검색
 </button>
@@ -778,6 +811,30 @@ onclick="confirmAccountTermination()" type="button">
 </div>
 </main>
 <jsp:include page="/inc/bottom.jsp" />
+<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script>
+    const searchPostcodeBtn = document.getElementById("searchPostcodeBtn");
+
+    if (searchPostcodeBtn) {
+        searchPostcodeBtn.addEventListener("click", function () {
+            if (!window.daum || !daum.Postcode) {
+                alert("우편번호 검색 서비스를 불러오지 못했습니다. 잠시 후 다시 시도해주세요.");
+                return;
+            }
+
+            new daum.Postcode({
+                oncomplete: function (data) {
+                    document.getElementById("postcode").value = data.zonecode || "";
+                    document.getElementById("address").value = data.address || "";
+
+                    const addressDetail = document.getElementById("addressDetail");
+                    addressDetail.value = "";
+                    addressDetail.focus();
+                }
+            }).open();
+        });
+    }
+</script>
 <%
 if(passwordUpdateMessage != null) {
 %>
@@ -796,34 +853,5 @@ if(memberUpdateMessage != null) {
 <%
 }
 %>
-<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-<script>
-    (function () {
-        var searchButton = document.getElementById("searchPostcodeBtn");
-        var postcodeInput = document.getElementById("postcode");
-        var addressInput = document.getElementById("address");
-        var addressDetailInput = document.getElementById("addressDetail");
-
-        if (!searchButton || !postcodeInput || !addressInput || !addressDetailInput) {
-            return;
-        }
-
-        searchButton.addEventListener("click", function () {
-            if (!window.daum || !window.daum.Postcode) {
-                alert("우편번호 검색 서비스를 불러오지 못했습니다. 잠시 후 다시 시도해주세요.");
-                return;
-            }
-
-            new window.daum.Postcode({
-                oncomplete: function (data) {
-                    postcodeInput.value = data.zonecode;
-                    addressInput.value = data.address;
-                    addressDetailInput.value = "";
-                    addressDetailInput.focus();
-                }
-            }).open();
-        });
-    }());
-</script>
 </body>
 </html>

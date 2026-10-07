@@ -2,7 +2,6 @@ package member.controller;
 
 import java.io.IOException;
 import java.util.List;
-import common.web.CacheControlSupport;
 import inquiry.dao.InquiryDAO;
 import inquiry.service.InquiryService;
 import inquiry.dto.InquiryDTO;
@@ -25,7 +24,6 @@ public class MemberController extends HttpServlet {
 
     private MemberService memberService;
     private BoardService boardService;
-    private InquiryService inquiryService;
 
     @Override
     public void init() throws ServletException {
@@ -35,7 +33,6 @@ public class MemberController extends HttpServlet {
 
             BoardDAO boardDAO = new BoardDAO();
             boardService = new BoardService(boardDAO);
-            inquiryService = new InquiryService(new InquiryDAO());
         } catch (Exception e) {
 
             throw new ServletException("게시판 DB 자원을 찾지 못했습니다.", e);
@@ -50,9 +47,7 @@ public class MemberController extends HttpServlet {
 
         String action = request.getServletPath();
 
-        CacheControlSupport.preventCaching(response);
-
-        System.out.println("[MemberController] 요청 주소 : "      + action);
+        System.out.println("[MemberController] 요청 주소 : "  + action);
 
         HttpSession session = request.getSession(false);
 
@@ -84,7 +79,26 @@ public class MemberController extends HttpServlet {
                     return;
                 }
 
-                populateMemberPage(request, member);
+                Object updateMessage = session.getAttribute("memberUpdateMessage");
+                if (updateMessage != null) {
+                    request.setAttribute("memberUpdateMessage", updateMessage);
+                    session.removeAttribute("memberUpdateMessage");
+                }
+
+                long memberId = member.getMemberId();
+                int boardCount = boardService.countByMemberId(memberId);
+                int commentCount = boardService.countCommentsByMemberId(memberId);
+                InquiryDAO inquiryDAO = new InquiryDAO();
+                InquiryService inquiryService = new InquiryService(inquiryDAO);
+                int inquiryCount = inquiryService.countByMemberId(memberId);
+                int completedInquiryCount = inquiryService.countCompletedByMemberId(memberId);
+                int inProgressInquiryCount = inquiryService.countInProgressByMemberId(memberId);
+                request.setAttribute("boardCount", boardCount);
+                request.setAttribute("commentCount", commentCount);
+                request.setAttribute("inquiryCount", inquiryCount);
+                request.setAttribute("completedInquiryCount", completedInquiryCount);
+                request.setAttribute("inProgressInquiryCount", inProgressInquiryCount);
+                request.setAttribute("member", member);
                 request.getRequestDispatcher("/member/member.jsp").forward(request, response);
                 return;
             } else if ("/member/activity.do".equals(action)) {
@@ -373,38 +387,28 @@ public class MemberController extends HttpServlet {
 
                 String result = memberService.updateMember(loginId, name, email, phone, postcode, address, addressDetail);
 
+                String updateMessage;
                 if ("SUCCESS".equals(result)) {
-
-                    request.setAttribute("memberUpdateMessage", "회원정보가 수정되었습니다.");
-
+                    updateMessage = "회원정보가 수정되었습니다.";
                     session.setAttribute("name", name.trim());
                 } else if ("NAME_EMPTY".equals(result)) {
-
-                    request.setAttribute("memberUpdateMessage", "담당자 성명을 입력해주세요.");
+                    updateMessage = "담당자 성명을 입력해주세요.";
                 } else if ("EMAIL_EMPTY".equals(result)) {
-
-                    request.setAttribute("memberUpdateMessage", "기업 담당자 이메일을 입력해주세요.");
+                    updateMessage = "기업 담당자 이메일을 입력해주세요.";
                 } else if ("INVALID_EMAIL".equals(result)) {
-
-                    request.setAttribute("memberUpdateMessage", "올바른 이메일 형식으로 입력해주세요.");
+                    updateMessage = "올바른 이메일 형식으로 입력해주세요.";
                 } else if ("PHONE_EMPTY".equals(result)) {
-
-                    request.setAttribute("memberUpdateMessage", "휴대폰 번호를 입력해주세요.");
+                    updateMessage = "휴대폰 번호를 입력해주세요.";
                 } else if ("INVALID_PHONE".equals(result)) {
-
-                    request.setAttribute("memberUpdateMessage", "올바른 휴대폰 번호 형식으로 입력해주세요.");
+                    updateMessage = "올바른 휴대폰 번호 형식으로 입력해주세요.";
                 } else if ("INVALID_POSTCODE".equals(result)) {
-
-                    request.setAttribute("memberUpdateMessage", "올바른 우편번호를 입력해주세요.");
+                    updateMessage = "올바른 우편번호를 입력해주세요.";
                 } else {
-
-                    request.setAttribute("memberUpdateMessage", "회원정보 수정 중 오류가 발생했습니다.");
+                    updateMessage = "회원정보 수정 중 오류가 발생했습니다.";
                 }
 
-                MemberDTO member = memberService.getMember(loginId);
-
-                populateMemberPage(request, member);
-                request.getRequestDispatcher("/member/member.jsp").forward(request, response);
+                session.setAttribute("memberUpdateMessage", updateMessage);
+                response.sendRedirect(request.getContextPath() + "/member/member.do");
                 return;
 
             } else if ("/member/passwordUpdate.do".equals(action)) {
@@ -444,7 +448,7 @@ public class MemberController extends HttpServlet {
 
                 MemberDTO member = memberService.getMember(loginId);
 
-                populateMemberPage(request, member);
+                request.setAttribute("member", member);
                 request.getRequestDispatcher("/member/member.jsp").forward(request, response);
                 return;
             } else if ("/member/memberDelete.do".equals(action)) {
@@ -478,7 +482,7 @@ public class MemberController extends HttpServlet {
 
                 MemberDTO member = memberService.getMember(loginId);
 
-                populateMemberPage(request, member);
+                request.setAttribute("member", member);
                 request.getRequestDispatcher("/member/member.jsp").forward(request, response);
 
                 return;
@@ -500,17 +504,5 @@ public class MemberController extends HttpServlet {
             e.printStackTrace();
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
-    }
-
-    private void populateMemberPage(HttpServletRequest request, MemberDTO member) throws Exception {
-        long memberId = member.getMemberId();
-        request.setAttribute("member", member);
-        request.setAttribute("boardCount", Integer.valueOf(boardService.countByMemberId(memberId)));
-        request.setAttribute("commentCount", Integer.valueOf(boardService.countCommentsByMemberId(memberId)));
-        request.setAttribute("inquiryCount", Integer.valueOf(inquiryService.countByMemberId(memberId)));
-        request.setAttribute("completedInquiryCount",
-            Integer.valueOf(inquiryService.countCompletedByMemberId(memberId)));
-        request.setAttribute("inProgressInquiryCount",
-            Integer.valueOf(inquiryService.countInProgressByMemberId(memberId)));
     }
 }

@@ -43,9 +43,7 @@ public class SecurityThreatDetector {
             rule("AI", "PROMPT_INJECTION", "AI-JAILBREAK-001",
             "(?i)(?:jailbreak|developer\\s+mode|DAN\\s+mode|bypass\\s+(?:safety|policy|guardrail)|disable\\s+(?:safety|filter))"),
             rule("AI", "SENSITIVE_DATA_IN_PROMPT", "AI-SECRET-001",
-            "(?i)(?:sk-[a-z0-9_-]{16,}|AKIA[0-9A-Z]{16}|"
-             + "(?:api[_ -]?key|password|passwd|secret|token)\\s*[:=]\\s*[^\\s&]{8,}|"
-             + "authorization\\s*:\\s*bearer\\s+[^\\s]{8,}|jdbc:mysql://[^\\s]+)")
+            "(?i)(?:sk-[a-z0-9_-]{16,}|AKIA[0-9A-Z]{16}|(?:api[_ -]?key|password|passwd|secret|token)\\s*[:=]\\s*[^\\s&]{8,}|authorization\\s*:\\s*bearer\\s+[^\\s]{8,}|jdbc:mysql://[^\\s]+)")
     };
 
     public List<ThreatFinding> inspectWeb(String input) {

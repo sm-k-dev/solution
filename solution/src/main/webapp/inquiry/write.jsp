@@ -63,7 +63,7 @@
                             <c:out value="${errorMessage}"/>
                         </p>
                     </c:if>
-                    <form method="post" enctype="multipart/form-data" accept-charset="UTF-8" action="${pageContext.request.contextPath}/inquiry/create" class="grid sm:grid-cols-2 gap-5">
+                    <form method="post" accept-charset="UTF-8" action="${pageContext.request.contextPath}/inquiry/create" class="grid sm:grid-cols-2 gap-5">
                         <input type="hidden" name="csrfToken" value="${csrfToken}">
                         <label class="text-sm font-semibold">이름 / 담당자명<input required class="mt-2 w-full rounded-lg border border-slate-300 px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500" type="text" name="contactName" value="<c:out value='${param.contactName}'/>" maxlength="100" placeholder="홍길동">
                         </label>
@@ -82,11 +82,9 @@
                         </label>
                         <label class="sm:col-span-2 text-sm font-semibold">제목<input required class="mt-2 w-full rounded-lg border border-slate-300 px-4 py-3 outline-none focus:border-blue-500" type="text" name="title" value="<c:out value='${param.title}'/>" maxlength="200" placeholder="문의 제목을 입력하세요">
                         </label>
-                        <label class="sm:col-span-2 text-sm font-semibold">문의 내용<textarea required name="content" maxlength="10000" rows="7" class="mt-2 w-full rounded-lg border border-slate-300 px-4 py-3 outline-none resize-y focus:border-blue-500" placeholder="도입 환경이나 발생한 문제를 작성해 주세요."><c:out value="${param.content}"/></textarea>
-                        </label>
-                        <label class="sm:col-span-2 text-sm font-semibold" for="attachments">첨부파일
-                            <input class="mt-2 block w-full rounded-lg border border-slate-300 px-4 py-3" type="file" id="attachments" name="attachments" multiple accept=".pdf,.png,.jpg,.jpeg,.gif,.txt,.csv,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.zip">
-                            <span class="mt-1 block text-xs font-normal text-slate-500">최대 5개, 파일당 10MB까지 첨부할 수 있습니다. PDF, 이미지, 문서, ZIP 파일을 지원합니다.</span>
+                        <label class="sm:col-span-2 text-sm font-semibold">문의 내용<textarea required name="content" maxlength="10000" rows="7" class="mt-2 w-full rounded-lg border border-slate-300 px-4 py-3 outline-none resize-y focus:border-blue-500" placeholder="도입 환경이나 발생한 문제를 작성해 주세요.">
+                                <c:out value="${param.content}"/>
+                            </textarea>
                         </label>
                         <div class="sm:col-span-2 flex flex-col sm:flex-row justify-between gap-4 pt-2">
                             <a href="${pageContext.request.contextPath}/inquiry/index.jsp" class="px-5 py-3 rounded-lg border border-slate-300 text-center font-semibold hover:bg-slate-50">고객센터로 돌아가기</a>

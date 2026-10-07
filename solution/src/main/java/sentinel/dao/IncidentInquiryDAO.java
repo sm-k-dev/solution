@@ -1,7 +1,5 @@
 package sentinel.dao;
 
-import common.db.DataSourceProvider;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,18 +7,24 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.naming.NamingException;
+import javax.sql.DataSource;
+import common.db.DataSourceProvider;
 import sentinel.dto.IncidentInquiry;
 
 public class IncidentInquiryDAO {
 
+    private DataSource source() throws NamingException {
+        return DataSourceProvider.get();
+    }
+
     public List<IncidentInquiry> findLinkedInquiryList(long incidentId)
     throws SQLException, NamingException {
-        String sql = "SELECT q.inquiry_id, q.title, q.status, x.link_reason, x.linked_by, x.linked_at "      +
-        "FROM incident_inquiry x JOIN inquiry q ON q.inquiry_id = x.inquiry_id "      +
-        "WHERE x.incident_id = ? AND x.is_deleted = 0 AND q.is_deleted = 0 "      +
+        String sql = "SELECT q.inquiry_id, q.title, q.status, x.link_reason, x.linked_by, x.linked_at "  +
+        "FROM incident_inquiry x JOIN inquiry q ON q.inquiry_id = x.inquiry_id "  +
+        "WHERE x.incident_id = ? AND x.is_deleted = 0 AND q.is_deleted = 0 "  +
         "ORDER BY x.linked_at DESC, x.incident_inquiry_id DESC";
         List<IncidentInquiry> result = new ArrayList<>();
-        try (Connection connection = DataSourceProvider.getDataSource().getConnection();
+        try (Connection connection = source().getConnection();
         PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setLong(1, incidentId);
             try (ResultSet rows = statement.executeQuery()) {
@@ -43,7 +47,7 @@ public class IncidentInquiryDAO {
     // 1: linked; 0: incident/inquiry missing; -1: already linked.
     public int insertIncidentInquiry(long incidentId, long inquiryId, long actor, String reason)
     throws SQLException, NamingException {
-        try (Connection connection = DataSourceProvider.getDataSource().getConnection()) {
+        try (Connection connection = source().getConnection()) {
             connection.setAutoCommit(false);
             try {
                 if (!lockActiveRow(connection, "incident", "incident_id", incidentId) ||
@@ -68,8 +72,8 @@ public class IncidentInquiryDAO {
                 }
                 if (Boolean.TRUE.equals(deleted)) {
                     try (PreparedStatement statement = connection.prepareStatement(
-                        "UPDATE incident_inquiry SET is_deleted = 0, deleted_at = NULL, "      +
-                    "linked_by = ?, link_reason = ?, linked_at = CURRENT_TIMESTAMP "      +
+                        "UPDATE incident_inquiry SET is_deleted = 0, deleted_at = NULL, "  +
+                    "linked_by = ?, link_reason = ?, linked_at = CURRENT_TIMESTAMP "  +
                     "WHERE incident_id = ? AND inquiry_id = ? AND is_deleted = 1")) {
                         statement.setLong(1, actor);
                         statement.setString(2, reason);
@@ -79,7 +83,7 @@ public class IncidentInquiryDAO {
                     }
                 } else {
                     try (PreparedStatement statement = connection.prepareStatement(
-                        "INSERT INTO incident_inquiry (incident_id, inquiry_id, linked_by, link_reason) "      +
+                        "INSERT INTO incident_inquiry (incident_id, inquiry_id, linked_by, link_reason) "  +
                     "VALUES (?, ?, ?, ?)")) {
                         statement.setLong(1, incidentId);
                         statement.setLong(2, inquiryId);
@@ -99,9 +103,9 @@ public class IncidentInquiryDAO {
 
     public boolean softDeleteIncidentInquiry(long incidentId, long inquiryId)
     throws SQLException, NamingException {
-        String sql = "UPDATE incident_inquiry SET is_deleted = 1, deleted_at = CURRENT_TIMESTAMP "      +
+        String sql = "UPDATE incident_inquiry SET is_deleted = 1, deleted_at = CURRENT_TIMESTAMP "  +
         "WHERE incident_id = ? AND inquiry_id = ? AND is_deleted = 0";
-        try (Connection connection = DataSourceProvider.getDataSource().getConnection();
+        try (Connection connection = source().getConnection();
         PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setLong(1, incidentId);
             statement.setLong(2, inquiryId);
@@ -111,7 +115,7 @@ public class IncidentInquiryDAO {
 
     private boolean lockActiveRow(Connection connection, String table, String key, long id)
     throws SQLException {
-        String sql = "SELECT 1 FROM "      + table + " WHERE "      + key + " = ? AND is_deleted = 0 FOR UPDATE";
+        String sql = "SELECT 1 FROM "  + table + " WHERE "  + key + " = ? AND is_deleted = 0 FOR UPDATE";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setLong(1, id);
             try (ResultSet rows = statement.executeQuery()) {

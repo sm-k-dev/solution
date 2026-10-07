@@ -10,8 +10,16 @@
 <!-- Google Material Symbols & Web Fonts -->
         <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
         <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet"/>
+        <style data-purpose="custom-animations">
+            @keyframes pulseGlow {
+            0%, 100% { opacity: 0.8; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+            }
+            .animate-pulse-glow {
+            animation: pulseGlow 3s ease-in-out infinite;
+            }
+        </style>
         <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/pages/index.css"/>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/common-animations.css"/>
         <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/top.css?v=20261002-4"/>
     </head>
     <body class="bg-[#f8f9ff]">

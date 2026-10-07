@@ -1,6 +1,5 @@
 package admin.dao;
 
-import common.db.DataSourceProvider;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,20 +9,19 @@ import java.util.List;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 import admin.dto.AdminMemberDTO;
+import common.db.DataSourceProvider;
 
 public class AdminMemberDAO {
     private final DataSource dataSource;
 
     public AdminMemberDAO() throws NamingException {
-        dataSource = DataSourceProvider.getDataSource();
+        dataSource = DataSourceProvider.get();
     }
 
     public List<AdminMemberDTO> findPage(String q, String status, int offset, int limit) throws Exception {
-        String sql = "SELECT member_id,login_id,name,email,phone,role,status,created_at FROM member "
-             + "WHERE (?='' OR login_id LIKE ? OR name LIKE ? OR email LIKE ?) "
-             + "AND (?='ALL' OR status=?) ORDER BY created_at DESC,member_id DESC LIMIT ? OFFSET ?";
+        String sql = "SELECT member_id,login_id,name,email,phone,role,status,created_at FROM member WHERE (?='' OR login_id LIKE ? OR name LIKE ? OR email LIKE ?) AND (?='ALL' OR status=?) ORDER BY created_at DESC,member_id DESC LIMIT ? OFFSET ?";
         List<AdminMemberDTO> rows = new ArrayList<AdminMemberDTO>();
-        String term = q == null?"":q.trim(), like = "%"    + term + "%";
+        String term = q == null?"":q.trim(), like = "%" + term + "%";
         try (Connection c = dataSource.getConnection();PreparedStatement p = c.prepareStatement(sql)) {
             p.setString(1, term);
             p.setString(2, like);
@@ -53,7 +51,7 @@ public class AdminMemberDAO {
 
     public int count(String q, String status) throws Exception {
         String sql = "SELECT COUNT(*) FROM member WHERE (?='' OR login_id LIKE ? OR name LIKE ? OR email LIKE ?) AND (?='ALL' OR status=?)";
-        String term = q == null?"":q.trim(), like = "%"    + term + "%";
+        String term = q == null?"":q.trim(), like = "%" + term + "%";
         try (Connection c = dataSource.getConnection();PreparedStatement p = c.prepareStatement(sql)) {
             p.setString(1, term);
             p.setString(2, like);
@@ -79,9 +77,7 @@ public class AdminMemberDAO {
     }
 
     public int countByRole(String role) throws Exception {
-        String sql = "SELECT COUNT(*) FROM member WHERE role=? AND status='ACTIVE'";
-        try (Connection c = dataSource.getConnection();
-        PreparedStatement p = c.prepareStatement(sql)) {
+        try (Connection c = dataSource.getConnection();PreparedStatement p = c.prepareStatement("SELECT COUNT(*) FROM member WHERE role=? AND status='ACTIVE'")) {
             p.setString(1, role);
             try (ResultSet r = p.executeQuery()) {
                 r.next();
@@ -98,15 +94,11 @@ public class AdminMemberDAO {
     }
 
     public AdminMemberDTO findById(long memberId) throws Exception {
-        String sql = "SELECT m.member_id,m.login_id,m.name,m.email,m.phone,m.postcode,m.address,"
-             + "m.address_detail,m.role,m.status,m.created_at,m.updated_at,m.withdrawn_at,"
-             + "(SELECT COUNT(*) FROM board b WHERE b.member_id=m.member_id "
-             + "AND b.is_deleted=FALSE) board_count,"
-             + "(SELECT COUNT(*) FROM board_comment c WHERE c.member_id=m.member_id "
-             + "AND c.is_deleted=FALSE) comment_count,"
-             + "(SELECT COUNT(*) FROM inquiry i WHERE i.member_id=m.member_id "
-             + "AND i.is_deleted=FALSE) inquiry_count "
-             + "FROM member m WHERE m.member_id=?";
+        String sql = "SELECT m.member_id,m.login_id,m.name,m.email,m.phone,m.postcode,m.address,m.address_detail,m.role,m.status,m.created_at,m.updated_at,m.withdrawn_at," +
+        "(SELECT COUNT(*) FROM board b WHERE b.member_id=m.member_id AND b.is_deleted=FALSE) board_count," +
+        "(SELECT COUNT(*) FROM board_comment c WHERE c.member_id=m.member_id AND c.is_deleted=FALSE) comment_count," +
+        "(SELECT COUNT(*) FROM inquiry i WHERE i.member_id=m.member_id AND i.is_deleted=FALSE) inquiry_count " +
+        "FROM member m WHERE m.member_id=?";
         try (Connection c = dataSource.getConnection();PreparedStatement p = c.prepareStatement(sql)) {
             p.setLong(1, memberId);
             try (ResultSet r = p.executeQuery()) {
@@ -131,10 +123,7 @@ public class AdminMemberDAO {
         if (!"ACTIVE".equals(status) && !"SUSPENDED".equals(status)) {
             return false;
         }
-        String sql = "UPDATE member SET status=? WHERE member_id=? "
-             + "AND role='USER' AND status IN ('ACTIVE','SUSPENDED')";
-        try (Connection c = dataSource.getConnection();
-        PreparedStatement p = c.prepareStatement(sql)) {
+        try (Connection c = dataSource.getConnection();PreparedStatement p = c.prepareStatement("UPDATE member SET status=? WHERE member_id=? AND role='USER' AND status IN ('ACTIVE','SUSPENDED')")) {
             p.setString(1, status);
             p.setLong(2, memberId);
             return p.executeUpdate() == 1;
@@ -150,10 +139,7 @@ public class AdminMemberDAO {
             try {
                 if ("USER".equals(role)) {
                     int activeAdmins = 0;
-                    String sql = "SELECT member_id FROM member "
-                         + "WHERE role='ADMIN' AND status='ACTIVE' FOR UPDATE";
-                    try (PreparedStatement count = c.prepareStatement(sql);
-                    ResultSet r = count.executeQuery()) {
+                    try (PreparedStatement count = c.prepareStatement("SELECT member_id FROM member WHERE role='ADMIN' AND status='ACTIVE' FOR UPDATE");ResultSet r = count.executeQuery()) {
                         while (r.next()) {
                             activeAdmins++;
                         }

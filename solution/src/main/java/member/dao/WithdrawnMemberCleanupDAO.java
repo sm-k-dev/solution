@@ -1,6 +1,5 @@
 package member.dao;
 
-import common.db.DataSourceProvider;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,6 +10,7 @@ import java.util.Collections;
 import java.util.List;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
+import common.db.DataSourceProvider;
 
 /**
  * 보유 기간이 끝난 탈퇴 회원과 회원이 작성한 데이터를 한 트랜잭션으로 정리합니다.
@@ -21,7 +21,7 @@ public class WithdrawnMemberCleanupDAO {
     private final DataSource dataSource;
 
     public WithdrawnMemberCleanupDAO() throws NamingException {
-        dataSource = DataSourceProvider.getDataSource();
+        dataSource = DataSourceProvider.get();
     }
 
     public CleanupResult purgeBatch(Timestamp cutoff) throws SQLException {
@@ -153,7 +153,7 @@ public class WithdrawnMemberCleanupDAO {
             "DELETE FROM member WHERE member_id = ? AND status = 'WITHDRAWN'",
             memberId);
         if (deleted != 1) {
-            throw new SQLException("탈퇴 회원 삭제 대상이 변경되었습니다. memberId="     + memberId);
+            throw new SQLException("탈퇴 회원 삭제 대상이 변경되었습니다. memberId="  + memberId);
         }
     }
 

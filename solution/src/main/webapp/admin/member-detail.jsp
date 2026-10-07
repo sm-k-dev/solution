@@ -24,10 +24,10 @@
                     <h2>계정 기본 정보</h2>
                 </div>
                 <div class="admin-member-badges">
-                    <span class="admin-role-badge role-${managedMember.role eq 'ADMIN' ? 'admin' : 'user'}">
+                    <span class="admin-role-badge role-${managedMember.role}">
                         <c:out value="${managedMember.role}"/>
                     </span>
-                    <span class="admin-status ${managedMember.status eq 'ACTIVE'?'status-active':(managedMember.status eq 'SUSPENDED'?'status-suspended':'status-withdrawn')}">
+                    <span class="admin-status ${managedMember.status eq 'ACTIVE'?'status-COMPLETED':(managedMember.status eq 'SUSPENDED'?'status-RECEIVED':'status-IN_PROGRESS')}">
                         <c:out value="${managedMember.status}"/>
                     </span>
                 </div>
