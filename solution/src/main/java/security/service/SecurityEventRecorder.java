@@ -43,9 +43,9 @@ public class SecurityEventRecorder {
 
     private void persist(SecurityEvent event) {
         try {
-            String fingerprint = hash(safe(event.getCategory()) + "|" + safe(event.getThreatType()) + "|" +
-                safe(event.getRuleCode()) + "|" + safe(event.getRequestUri()) + "|" +
-                safe(event.getSourceIpHash()));
+            String fingerprint = hash(safe(event.getCategory()) + "|"    + safe(event.getThreatType()) + "|"    +
+            safe(event.getRuleCode()) + "|"    + safe(event.getRequestUri()) + "|"    +
+            safe(event.getSourceIpHash()));
             long eventId = dao.insertOrIncrement(event, fingerprint,
                 System.currentTimeMillis() / WINDOW_MILLIS);
             if ("CRITICAL".equals(event.getSeverity())) {
@@ -60,7 +60,9 @@ public class SecurityEventRecorder {
         String forwarded = request.getHeader("X-Forwarded-For");
         if (forwarded != null && !forwarded.trim().isEmpty()) {
             String first = forwarded.split(",", 2)[0].trim();
-            if (isAddress(first)) return first;
+            if (isAddress(first)) {
+                return first;
+            }
         }
         return request.getRemoteAddr();
     }
@@ -69,14 +71,18 @@ public class SecurityEventRecorder {
         return value != null && value.length() <= 45 && value.matches("[0-9a-fA-F:.]+" );
     }
 
-    private String safe(String value) { return value == null ? "" : value; }
+    private String safe(String value) {
+        return value == null ? "" : value;
+    }
 
     private String hash(String value) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] bytes = digest.digest(safe(value).getBytes(StandardCharsets.UTF_8));
             StringBuilder result = new StringBuilder();
-            for (byte item : bytes) result.append(String.format(Locale.ROOT, "%02x", item & 0xff));
+            for (byte item : bytes) {
+                result.append(String.format(Locale.ROOT, "%02x", item & 0xff));
+            }
             return result.toString();
         } catch (Exception error) {
             return "unavailable";

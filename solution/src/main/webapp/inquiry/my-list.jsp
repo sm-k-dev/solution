@@ -1,3 +1,74 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %><%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>내 문의 | NEXORA</title><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"><link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/pages/index.css"><link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/pages/inquiry_flow.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"/><link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/top.css?v=20261002-4"/></head><body><jsp:include page="/inc/top.jsp"/><main class="flow-container"><div class="page-heading"><p class="eyebrow">MY SUPPORT</p><h1>내 문의</h1><p>접수한 문의와 관리자 답변을 확인할 수 있어요.</p></div><div class="table-card"><table><thead><tr><th>접수 번호</th><th>문의 유형</th><th>제목</th><th>접수일</th><th>상태</th></tr></thead><tbody><c:forEach var="item" items="${inquiryList}"><tr><td>#<c:out value="${item.inquiryId}"/></td><td><c:out value="${item.category}"/></td><td><a class="table-link" href="${pageContext.request.contextPath}/inquiry/detail?id=${item.inquiryId}"><c:out value="${item.title}"/></a></td><td><fmt:formatDate value="${item.createdAt}" pattern="yyyy-MM-dd HH:mm"/></td><td><span class="status status-${item.status}"><c:out value="${item.status}"/></span></td></tr></c:forEach><c:if test="${empty inquiryList}"><tr><td colspan="5" class="empty-row">접수한 문의가 없습니다.</td></tr></c:if></tbody></table></div><div class="flow-actions"><a class="button button-primary" href="${pageContext.request.contextPath}/inquiry/new">새 문의 접수</a><a class="button button-secondary" href="${pageContext.request.contextPath}/index.jsp">홈으로</a></div></main><jsp:include page="/inc/bottom.jsp"/></body></html>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>내 문의 | NEXORA</title>
+        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/pages/index.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/pages/inquiry_flow.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"/>
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/top.css?v=20261002-4"/>
+        <script src="${pageContext.request.contextPath}/assets/js/private-page.js" defer></script>
+    </head>
+    <body>
+        <jsp:include page="/inc/top.jsp"/>
+        <main class="flow-container">
+            <div class="page-heading">
+                <p class="eyebrow">MY SUPPORT</p>
+                <h1>내 문의</h1>
+                <p>접수한 문의와 관리자 답변을 확인할 수 있어요.</p>
+            </div>
+            <div class="table-card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>접수 번호</th>
+                            <th>문의 유형</th>
+                            <th>제목</th>
+                            <th>접수일</th>
+                            <th>상태</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <c:forEach var="item" items="${inquiryList}">
+                            <tr>
+                                <td>#<c:out value="${item.inquiryId}"/>
+                                </td>
+                                <td>
+                                    <c:out value="${item.category}"/>
+                                </td>
+                                <td>
+                                    <a class="table-link" href="${pageContext.request.contextPath}/inquiry/detail?id=${item.inquiryId}">
+                                        <c:out value="${item.title}"/>
+                                    </a>
+                                </td>
+                                <td>
+                                    <fmt:formatDate value="${item.createdAt}" pattern="yyyy-MM-dd HH:mm"/>
+                                </td>
+                                <td>
+                                    <span class="status status-${item.status}">
+                                        <c:out value="${item.status}"/>
+                                    </span>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                        <c:if test="${empty inquiryList}">
+                            <tr>
+                                <td colspan="5" class="empty-row">접수한 문의가 없습니다.</td>
+                            </tr>
+                        </c:if>
+                    </tbody>
+                </table>
+            </div>
+            <div class="flow-actions">
+                <a class="button button-primary" href="${pageContext.request.contextPath}/inquiry/new">새 문의 접수</a>
+                <a class="button button-secondary" href="${pageContext.request.contextPath}/index.jsp">홈으로</a>
+            </div>
+        </main>
+        <jsp:include page="/inc/bottom.jsp"/>
+    </body>
+</html>

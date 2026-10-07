@@ -1,4 +1,4 @@
-package sentinel.service;
+package common.notification;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -12,7 +12,7 @@ public class SlackWebhookClient {
     public void send(String webhookUrl, String message) throws IOException {
         URL url = new URL(webhookUrl);
         if (!"https".equalsIgnoreCase(url.getProtocol()) ||
-            !"hooks.slack.com".equalsIgnoreCase(url.getHost())) {
+        !"hooks.slack.com".equalsIgnoreCase(url.getHost())) {
             throw new IOException("Invalid Slack webhook host");
         }
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -28,7 +28,7 @@ public class SlackWebhookClient {
                 output.write(payload.toJSONString().getBytes(StandardCharsets.UTF_8));
             }
             if (connection.getResponseCode() != 200) {
-                throw new IOException("Slack returned HTTP " + connection.getResponseCode());
+                throw new IOException("Slack returned HTTP "     + connection.getResponseCode());
             }
         } finally {
             connection.disconnect();

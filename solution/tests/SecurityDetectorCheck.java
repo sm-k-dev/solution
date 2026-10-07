@@ -3,6 +3,7 @@ import security.dto.ThreatFinding;
 import security.service.SecurityThreatDetector;
 
 public class SecurityDetectorCheck {
+
     public static void main(String[] args) {
         SecurityThreatDetector detector = new SecurityThreatDetector();
         expect(detector.inspectWeb("' OR 1=1 --"), "SQL_INJECTION");
@@ -25,8 +26,10 @@ public class SecurityDetectorCheck {
 
     private static void expect(List<ThreatFinding> findings, String expectedType) {
         for (ThreatFinding finding : findings) {
-            if (expectedType.equals(finding.getThreatType())) return;
+            if (expectedType.equals(finding.getThreatType())) {
+                return;
+            }
         }
-        throw new AssertionError("Expected " + expectedType + " but found " + findings.size() + " finding(s)");
+        throw new AssertionError("Expected "   + expectedType + " but found "   + findings.size() + " finding(s)");
     }
 }

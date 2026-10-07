@@ -15,12 +15,17 @@ import sentinel.service.IncidentRecorder;
 public class IncidentFilter implements Filter {
     private final IncidentRecorder recorder = new IncidentRecorder();
 
-    @Override public void init(FilterConfig config) { }
-    @Override public void destroy() { }
+    @Override
+    public void init(FilterConfig config) {
+    }
+
+    @Override
+    public void destroy() {
+    }
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-            throws IOException, ServletException {
+    throws IOException, ServletException {
         if (!(request instanceof HttpServletRequest) || !(response instanceof HttpServletResponse)) {
             chain.doFilter(request, response);
             return;
@@ -45,15 +50,29 @@ public class IncidentFilter implements Filter {
             super(response);
             status = response.getStatus();
         }
-        @Override public void setStatus(int code) { status = code; super.setStatus(code); }
-        @Override public void sendError(int code) throws IOException { status = code; super.sendError(code); }
-        @Override public void sendError(int code, String message) throws IOException {
-            status = code; super.sendError(code, message);
+        @Override
+        public void setStatus(int code) {
+            status = code;
+            super.setStatus(code);
         }
-        @Override public void sendRedirect(String location) throws IOException {
+        @Override
+        public void sendError(int code) throws IOException {
+            status = code;
+            super.sendError(code);
+        }
+        @Override
+        public void sendError(int code, String message) throws IOException {
+            status = code;
+            super.sendError(code, message);
+        }
+        @Override
+        public void sendRedirect(String location) throws IOException {
             status = HttpServletResponse.SC_FOUND;
             super.sendRedirect(location);
         }
-        @Override public int getStatus() { return status; }
+        @Override
+        public int getStatus() {
+            return status;
+        }
     }
 }

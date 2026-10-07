@@ -47,7 +47,8 @@ CREATE TABLE IF NOT EXISTS member (
     created_at      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '가입일자',
     updated_at      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     withdrawn_at    DATETIME NULL COMMENT '탈퇴일자',
-    INDEX idx_member_role_status (role, status)
+    INDEX idx_member_role_status (role, status),
+    INDEX idx_member_retention (status, withdrawn_at)
 ) ENGINE=InnoDB;
 
 -- 2. BOARD
