@@ -351,11 +351,11 @@ id="memberPhone" name="phone" required="" type="tel" value="<%=member.getPhone()
 <div class="flex gap-2">
     <input
     class="w-32 h-11 px-3.5 bg-surface-container-low text-on-surface font-code-inline text-code-inline rounded-lg focus:outline-none"
-    id="postcode" name=""postcode placeholder="우편번호" readonly="" type="text"
-    value="<%=member.getPostcode() == 0 ? "" : member.getPostcode()%>" />
+    id="postcode" name="postcode" placeholder="우편번호" readonly="" type="text"
+    value="<%=member.getPostcode() == null ? "" : member.getPostcode()%>" />
     <button
     class="h-11 px-4 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-body-sm text-body-sm font-medium transition-colors flex items-center justify-center"
-    type="button">
+    id="searchPostcodeBtn" type="button">
     <span class="material-symbols-outlined text-[18px] mr-1.5">search</span>
     우편번호 검색
 </button>
@@ -796,5 +796,34 @@ if(memberUpdateMessage != null) {
 <%
 }
 %>
+<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script>
+    (function () {
+        var searchButton = document.getElementById("searchPostcodeBtn");
+        var postcodeInput = document.getElementById("postcode");
+        var addressInput = document.getElementById("address");
+        var addressDetailInput = document.getElementById("addressDetail");
+
+        if (!searchButton || !postcodeInput || !addressInput || !addressDetailInput) {
+            return;
+        }
+
+        searchButton.addEventListener("click", function () {
+            if (!window.daum || !window.daum.Postcode) {
+                alert("우편번호 검색 서비스를 불러오지 못했습니다. 잠시 후 다시 시도해주세요.");
+                return;
+            }
+
+            new window.daum.Postcode({
+                oncomplete: function (data) {
+                    postcodeInput.value = data.zonecode;
+                    addressInput.value = data.address;
+                    addressDetailInput.value = "";
+                    addressDetailInput.focus();
+                }
+            }).open();
+        });
+    }());
+</script>
 </body>
 </html>

@@ -181,15 +181,9 @@ public class MemberService {
             return "INVALID_PHONE";
         }
 
-        Integer postcodeValue = null;
-
-        if (postcode != null && !postcode.trim().isEmpty()) {
-
-            try {
-                postcodeValue = Integer.parseInt(postcode.trim());
-            } catch (NumberFormatException e) {
-                return "INVALID_POSTCODE";
-            }
+        String postcodeValue = postcode == null ? null : postcode.trim();
+        if (postcodeValue != null && !postcodeValue.isEmpty() && !postcodeValue.matches("^\\d{5}$")) {
+            return "INVALID_POSTCODE";
         }
 
         name = name.trim();
