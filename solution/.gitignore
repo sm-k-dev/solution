@@ -28,6 +28,7 @@ logs/
 src/main/webapp/upload/*
 !src/main/webapp/upload/.gitkeep
 src/main/webapp/WEB-INF/uploads/board/*
+src/main/webapp/WEB-INF/uploads/inquiry/*
 
 # Local DB / secrets
 .env

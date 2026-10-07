@@ -18,6 +18,11 @@ Table member {
   created_at datetime [note: '가입일자']
   updated_at datetime
   withdrawn_at datetime
+
+  indexes {
+    (role, status) [name: 'idx_member_role_status']
+    (status, withdrawn_at) [name: 'idx_member_retention']
+  }
 }
 
 Table board {

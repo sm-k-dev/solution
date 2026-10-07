@@ -1,6 +1,99 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %><%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<c:set var="adminPageTitle" scope="request" value="고객 문의 관리"/><jsp:include page="/inc/admin-top.jsp"/>
-<div class="admin-inquiry-page"><div class="admin-page-heading"><div><div class="admin-eyebrow">CUSTOMER SUPPORT</div><h1>고객 문의 관리</h1><p>접수된 문의를 확인하고 답변 상태를 관리합니다.</p></div><a class="admin-action-link" href="${pageContext.request.contextPath}/admin/dashboard"><span class="material-symbols-outlined">arrow_back</span> 대시보드</a></div>
-<section class="admin-table-card"><div class="admin-table-heading"><div><h2>문의 접수 목록</h2><p>총 <strong><c:out value="${empty inquiryList ? 0 : inquiryList.size()}"/></strong>건</p></div><span class="admin-live-badge"><i></i> DATABASE CONNECTED</span></div><div class="admin-table-scroll"><table class="admin-inquiry-table"><thead><tr><th>접수번호</th><th>문의자</th><th>문의 유형</th><th>제목</th><th>접수일</th><th>상태</th><th></th></tr></thead><tbody><c:forEach var="item" items="${inquiryList}"><tr><td class="admin-ticket-id">#<c:out value="${item.inquiryId}"/></td><td><strong><c:out value="${item.contactName}"/></strong><span class="admin-subtext"><c:out value="${item.contactEmail}"/></span></td><td><c:out value="${item.category}"/></td><td class="admin-title-cell"><a class="text-secondary font-semibold hover:underline" href="${pageContext.request.contextPath}/admin/inquiry/detail?id=${item.inquiryId}"><c:out value="${item.title}"/></a></td><td><fmt:formatDate value="${item.createdAt}" pattern="yyyy-MM-dd HH:mm"/></td><td><c:choose><c:when test="${item.status eq 'RECEIVED'}"><span class="admin-status status-RECEIVED">접수</span></c:when><c:when test="${item.status eq 'IN_PROGRESS'}"><span class="admin-status status-IN_PROGRESS">처리 중</span></c:when><c:otherwise><span class="admin-status status-COMPLETED">완료</span></c:otherwise></c:choose></td><td><a class="admin-row-action" href="${pageContext.request.contextPath}/admin/inquiry/detail?id=${item.inquiryId}">상세 보기 <span class="material-symbols-outlined">chevron_right</span></a></td></tr></c:forEach><c:if test="${empty inquiryList}"><tr><td colspan="7" class="admin-empty-row"><span class="material-symbols-outlined">inbox</span><strong>접수된 문의가 없습니다.</strong><span>새 문의가 접수되면 이곳에 표시됩니다.</span></td></tr></c:if></tbody></table></div></section></div>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<c:set var="adminPageTitle" scope="request" value="고객 문의 관리"/>
+<jsp:include page="/inc/admin-top.jsp"/>
+<div class="admin-inquiry-page">
+    <div class="admin-page-heading">
+        <div>
+            <div class="admin-eyebrow">CUSTOMER SUPPORT</div>
+            <h1>고객 문의 관리</h1>
+            <p>접수된 문의를 확인하고 답변 상태를 관리합니다.</p>
+        </div>
+        <a class="admin-action-link" href="${pageContext.request.contextPath}/admin/dashboard">
+            <span class="material-symbols-outlined">arrow_back</span> 대시보드</a>
+    </div>
+    <section class="admin-table-card">
+        <div class="admin-table-heading">
+            <div>
+                <h2>문의 접수 목록</h2>
+                <p>총 <strong>
+                        <c:out value="${empty inquiryList ? 0 : inquiryList.size()}"/>
+                    </strong>건</p>
+            </div>
+            <span class="admin-live-badge">
+                <i>
+                </i> DATABASE CONNECTED</span>
+        </div>
+        <div class="admin-table-scroll">
+            <table class="admin-inquiry-table">
+                <thead>
+                    <tr>
+                        <th>접수번호</th>
+                        <th>문의자</th>
+                        <th>문의 유형</th>
+                        <th>제목</th>
+                        <th>접수일</th>
+                        <th>상태</th>
+                        <th>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <c:forEach var="item" items="${inquiryList}">
+                        <tr>
+                            <td class="admin-ticket-id">#<c:out value="${item.inquiryId}"/>
+                            </td>
+                            <td>
+                                <strong>
+                                    <c:out value="${item.contactName}"/>
+                                </strong>
+                                <span class="admin-subtext">
+                                    <c:out value="${item.contactEmail}"/>
+                                </span>
+                            </td>
+                            <td>
+                                <c:out value="${item.category}"/>
+                            </td>
+                            <td class="admin-title-cell">
+                                <a class="text-secondary font-semibold hover:underline" href="${pageContext.request.contextPath}/admin/inquiry/detail?id=${item.inquiryId}">
+                                    <c:out value="${item.title}"/>
+                                </a>
+                            </td>
+                            <td>
+                                <fmt:formatDate value="${item.createdAt}" pattern="yyyy-MM-dd HH:mm"/>
+                            </td>
+                            <td>
+                                <c:choose>
+                                    <c:when test="${item.status eq 'RECEIVED'}">
+                                        <span class="admin-status status-RECEIVED">접수</span>
+                                    </c:when>
+                                    <c:when test="${item.status eq 'IN_PROGRESS'}">
+                                        <span class="admin-status status-IN_PROGRESS">처리 중</span>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <span class="admin-status status-COMPLETED">완료</span>
+                                    </c:otherwise>
+                                </c:choose>
+                            </td>
+                            <td>
+                                <a class="admin-row-action" href="${pageContext.request.contextPath}/admin/inquiry/detail?id=${item.inquiryId}">상세 보기 <span class="material-symbols-outlined">chevron_right</span>
+                                </a>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                    <c:if test="${empty inquiryList}">
+                        <tr>
+                            <td colspan="7" class="admin-empty-row">
+                                <span class="material-symbols-outlined">inbox</span>
+                                <strong>접수된 문의가 없습니다.</strong>
+                                <span>새 문의가 접수되면 이곳에 표시됩니다.</span>
+                            </td>
+                        </tr>
+                    </c:if>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
 <jsp:include page="/inc/admin-bottom.jsp"/>

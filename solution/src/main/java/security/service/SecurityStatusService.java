@@ -9,11 +9,11 @@ public class SecurityStatusService {
 
     public boolean isAllowedTransition(String expected, String next) {
         return ("OPEN".equals(expected) && "ACKNOWLEDGED".equals(next)) ||
-               ("ACKNOWLEDGED".equals(expected) && "RESOLVED".equals(next));
+        ("ACKNOWLEDGED".equals(expected) && "RESOLVED".equals(next));
     }
 
     public boolean update(long id, long actor, String expected, String next)
-            throws SQLException, NamingException {
+    throws SQLException, NamingException {
         return isAllowedTransition(expected, next) && dao.updateStatus(id, actor, expected, next);
     }
 }

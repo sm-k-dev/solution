@@ -11,15 +11,17 @@ public class IncidentRecorder {
     private final IncidentAlertService alerts = new IncidentAlertService();
 
     public void record(HttpServletRequest request, Throwable error, int status) {
-        String type = error == null ? "HTTP_" + status : error.getClass().getName();
-        String message = error == null ? "HTTP " + status + " server error" : error.getMessage();
+        String type = error == null ? "HTTP_"    + status : error.getClass().getName();
+        String message = error == null ? "HTTP "    + status + " server error" : error.getMessage();
         String severity = classifier.classifySeverity(status, error, request.getRequestURI());
         String trace = null;
         if (error != null) {
             StringWriter buffer = new StringWriter();
             error.printStackTrace(new PrintWriter(buffer));
             trace = buffer.toString();
-            if (trace.length() > 16000) trace = trace.substring(0, 16000);
+            if (trace.length() > 16000) {
+                trace = trace.substring(0, 16000);
+            }
         }
         long incidentId;
         try {

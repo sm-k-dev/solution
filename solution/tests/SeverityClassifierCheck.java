@@ -18,6 +18,8 @@ public class SeverityClassifierCheck {
 
     private static void expect(String expected, int status, Throwable error, String uri) {
         String actual = CLASSIFIER.classifySeverity(status, error, uri);
-        if (!expected.equals(actual)) throw new AssertionError(uri + ": " + actual + " != " + expected);
+        if (!expected.equals(actual)) {
+            throw new AssertionError(uri + ": "   + actual + " != "   + expected);
+        }
     }
 }
