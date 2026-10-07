@@ -80,12 +80,12 @@
                             <c:out value="${item.lastSeenAt}"/>
                         </td>
                         <td>
-                            <span class="security-category category-${item.category}">
+                            <span class="security-category category-${item.category.toLowerCase()}">
                                 <c:out value="${item.category}"/>
                             </span>
                         </td>
                         <td>
-                            <span class="incident-severity severity-${item.severity}">
+                            <span class="incident-severity severity-${item.severity.toLowerCase()}">
                                 <c:out value="${item.severity}"/>
                             </span>
                         </td>

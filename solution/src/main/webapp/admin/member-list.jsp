@@ -91,12 +91,12 @@
                                 <fmt:formatDate value="${m.createdAt}" pattern="yyyy-MM-dd"/>
                             </td>
                             <td>
-                                <span class="admin-role-badge role-${m.role}">
+                                <span class="admin-role-badge role-${m.role eq 'ADMIN' ? 'admin' : 'user'}">
                                     <c:out value="${m.role}"/>
                                 </span>
                             </td>
                             <td>
-                                <span class="admin-status ${m.status eq 'ACTIVE'?'status-COMPLETED':(m.status eq 'SUSPENDED'?'status-RECEIVED':'status-IN_PROGRESS')}">
+                                <span class="admin-status ${m.status eq 'ACTIVE'?'status-active':(m.status eq 'SUSPENDED'?'status-suspended':'status-withdrawn')}">
                                     <c:choose>
                                         <c:when test="${m.status eq 'ACTIVE'}">활동</c:when>
                                         <c:when test="${m.status eq 'SUSPENDED'}">정지</c:when>

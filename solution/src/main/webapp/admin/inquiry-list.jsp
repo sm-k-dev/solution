@@ -66,13 +66,13 @@
                             <td>
                                 <c:choose>
                                     <c:when test="${item.status eq 'RECEIVED'}">
-                                        <span class="admin-status status-RECEIVED">접수</span>
+                                        <span class="admin-status status-received">접수</span>
                                     </c:when>
                                     <c:when test="${item.status eq 'IN_PROGRESS'}">
-                                        <span class="admin-status status-IN_PROGRESS">처리 중</span>
+                                        <span class="admin-status status-in-progress">처리 중</span>
                                     </c:when>
                                     <c:otherwise>
-                                        <span class="admin-status status-COMPLETED">완료</span>
+                                        <span class="admin-status status-completed">완료</span>
                                     </c:otherwise>
                                 </c:choose>
                             </td>

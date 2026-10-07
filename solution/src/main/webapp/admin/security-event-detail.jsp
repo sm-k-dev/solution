@@ -24,10 +24,10 @@
                 </h2>
             </div>
             <div class="incident-badges">
-                <span class="security-category category-${securityEvent.category}">
+                <span class="security-category category-${securityEvent.category.toLowerCase()}">
                     <c:out value="${securityEvent.category}"/>
                 </span>
-                <span class="incident-severity severity-${securityEvent.severity}">
+                <span class="incident-severity severity-${securityEvent.severity.toLowerCase()}">
                     <c:out value="${securityEvent.severity}"/>
                 </span>
                 <span class="admin-status">
