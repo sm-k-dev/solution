@@ -34,13 +34,13 @@
             </div>
             <c:choose>
                 <c:when test="${inquiry.status eq 'RECEIVED'}">
-                    <span class="admin-status status-received">접수</span>
+                    <span class="admin-status status-RECEIVED">접수</span>
                 </c:when>
                 <c:when test="${inquiry.status eq 'IN_PROGRESS'}">
-                    <span class="admin-status status-in-progress">처리 중</span>
+                    <span class="admin-status status-IN_PROGRESS">처리 중</span>
                 </c:when>
                 <c:otherwise>
-                    <span class="admin-status status-completed">완료</span>
+                    <span class="admin-status status-COMPLETED">완료</span>
                 </c:otherwise>
             </c:choose>
         </div>
@@ -76,16 +76,6 @@
                 <c:out value="${inquiry.content}"/>
             </p>
         </div>
-        <c:if test="${not empty inquiryFiles}">
-            <div class="admin-message-block">
-                <h3>첨부파일</h3>
-                <ul class="private-file-list">
-                    <c:forEach var="file" items="${inquiryFiles}">
-                        <li><a href="${pageContext.request.contextPath}/inquiry/file?id=${file.fileId}"><c:out value="${file.originalName}"/></a> (<fmt:formatNumber value="${file.fileSize / 1024}" maxFractionDigits="0"/> KB)</li>
-                    </c:forEach>
-                </ul>
-            </div>
-        </c:if>
     </section>
     <section class="admin-detail-card">
         <div class="admin-detail-header">
@@ -98,7 +88,9 @@
             <input type="hidden" name="csrfToken" value="${csrfToken}">
             <input type="hidden" name="inquiryId" value="${inquiry.inquiryId}">
             <label class="admin-form-label" for="adminAnswer">답변 내용</label>
-            <textarea class="admin-answer-input" id="adminAnswer" name="adminAnswer" maxlength="10000" rows="8" required><c:out value="${inquiry.adminAnswer}"/></textarea>
+            <textarea class="admin-answer-input" id="adminAnswer" name="adminAnswer" maxlength="10000" rows="8" required>
+                <c:out value="${inquiry.adminAnswer}"/>
+            </textarea>
             <div class="admin-form-footer">
                 <label class="admin-form-label" for="status">처리 상태</label>
                 <select class="admin-status-select" id="status" name="status">

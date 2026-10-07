@@ -1,7 +1,5 @@
 package sentinel.dao;
 
-import common.db.DataSourceProvider;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,10 +10,16 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.HashMap;
 import javax.naming.NamingException;
+import javax.sql.DataSource;
+import common.db.DataSourceProvider;
 import sentinel.dto.Incident;
 import sentinel.dto.IncidentHistory;
 
 public class IncidentManagementDAO {
+
+    private DataSource source() throws NamingException {
+        return DataSourceProvider.get();
+    }
 
     public int countByStatus(String status) throws SQLException, NamingException {
         return count("status", status);
@@ -26,7 +30,7 @@ public class IncidentManagementDAO {
     }
 
     public int countAll() throws SQLException, NamingException {
-        try (Connection connection = DataSourceProvider.getDataSource().getConnection();
+        try (Connection connection = source().getConnection();
         PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) FROM incident WHERE is_deleted=0");
         ResultSet rows = statement.executeQuery()) {
             rows.next();
@@ -43,7 +47,7 @@ public class IncidentManagementDAO {
              + "COALESCE(SUM(severity='MEDIUM'),0) AS medium_count, "
              + "COALESCE(SUM(severity='HIGH'),0) AS high_count "
              + "FROM incident WHERE is_deleted=0";
-        try (Connection connection = DataSourceProvider.getDataSource().getConnection(); PreparedStatement statement = connection.prepareStatement(sql);
+        try (Connection connection = source().getConnection(); PreparedStatement statement = connection.prepareStatement(sql);
         ResultSet rows = statement.executeQuery()) {
             if (rows.next()) {
                 counts.put("total", Integer.valueOf(rows.getInt("total_count")));
@@ -61,7 +65,7 @@ public class IncidentManagementDAO {
         String sql = "SELECT incident_id,service_name,error_type,error_message,severity,status,request_uri,http_method,occurred_at "
              + "FROM incident WHERE is_deleted=0 ORDER BY occurred_at DESC,incident_id DESC LIMIT ?";
         List<Incident> incidents = new ArrayList<Incident>();
-        try (Connection connection = DataSourceProvider.getDataSource().getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = source().getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, Math.max(1, limit));
             try (ResultSet rows = statement.executeQuery()) {
                 while (rows.next()) {
@@ -84,10 +88,8 @@ public class IncidentManagementDAO {
 
     public Map<String, Integer> countByDay(int days) throws SQLException, NamingException {
         Map<String, Integer> counts = new LinkedHashMap<String, Integer>();
-        String sql = "SELECT DATE_FORMAT(occurred_at,'%Y-%m-%d') AS incident_day,COUNT(*) AS incident_count "
-             + "FROM incident WHERE is_deleted=0 "
-             + "AND occurred_at >= CURRENT_DATE - INTERVAL ? DAY GROUP BY DATE(occurred_at)";
-        try (Connection connection = DataSourceProvider.getDataSource().getConnection();PreparedStatement statement = connection.prepareStatement(sql)) {
+        String sql = "SELECT DATE_FORMAT(occurred_at,'%Y-%m-%d') AS incident_day,COUNT(*) AS incident_count FROM incident WHERE is_deleted=0 AND occurred_at >= CURRENT_DATE - INTERVAL ? DAY GROUP BY DATE(occurred_at)";
+        try (Connection connection = source().getConnection();PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, Math.max(0, days-1));
             try (ResultSet rows = statement.executeQuery()) {
                 while (rows.next()) {
@@ -102,8 +104,8 @@ public class IncidentManagementDAO {
         if (!"status".equals(column) && !"severity".equals(column)) {
             throw new IllegalArgumentException("Unsupported incident count field");
         }
-        try (Connection connection = DataSourceProvider.getDataSource().getConnection();
-        PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) FROM incident WHERE is_deleted=0 AND "      + column + "=?")) {
+        try (Connection connection = source().getConnection();
+        PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) FROM incident WHERE is_deleted=0 AND "  + column + "=?")) {
             statement.setString(1, value);
             try (ResultSet rows = statement.executeQuery()) {
                 rows.next();
@@ -113,11 +115,11 @@ public class IncidentManagementDAO {
     }
 
     public List<Incident> findIncidentList() throws SQLException, NamingException {
-        String sql = "SELECT incident_id, service_name, error_type, error_message, stack_trace, "      +
-        "severity, status, request_uri, http_method, occurred_at FROM incident "      +
+        String sql = "SELECT incident_id, service_name, error_type, error_message, stack_trace, "  +
+        "severity, status, request_uri, http_method, occurred_at FROM incident "  +
         "WHERE is_deleted = 0 ORDER BY occurred_at DESC, incident_id DESC LIMIT 50";
         List<Incident> incidents = new ArrayList<>();
-        try (Connection connection = DataSourceProvider.getDataSource().getConnection();
+        try (Connection connection = source().getConnection();
         PreparedStatement statement = connection.prepareStatement(sql);
         ResultSet rows = statement.executeQuery()) {
             while (rows.next()) {
@@ -128,10 +130,10 @@ public class IncidentManagementDAO {
     }
 
     public Incident findIncidentById(long id) throws SQLException, NamingException {
-        String sql = "SELECT incident_id, service_name, error_type, error_message, stack_trace, "      +
-        "severity, status, request_uri, http_method, occurred_at FROM incident "      +
+        String sql = "SELECT incident_id, service_name, error_type, error_message, stack_trace, "  +
+        "severity, status, request_uri, http_method, occurred_at FROM incident "  +
         "WHERE incident_id = ? AND is_deleted = 0";
-        try (Connection connection = DataSourceProvider.getDataSource().getConnection();
+        try (Connection connection = source().getConnection();
         PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setLong(1, id);
             try (ResultSet rows = statement.executeQuery()) {
@@ -141,10 +143,10 @@ public class IncidentManagementDAO {
     }
 
     public List<IncidentHistory> findIncidentHistoryList(long id) throws SQLException, NamingException {
-        String sql = "SELECT previous_status, new_status, changed_by, note, changed_at "      +
+        String sql = "SELECT previous_status, new_status, changed_by, note, changed_at "  +
         "FROM incident_history WHERE incident_id = ? ORDER BY history_id DESC";
         List<IncidentHistory> history = new ArrayList<>();
-        try (Connection connection = DataSourceProvider.getDataSource().getConnection();
+        try (Connection connection = source().getConnection();
         PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setLong(1, id);
             try (ResultSet rows = statement.executeQuery()) {
@@ -165,14 +167,14 @@ public class IncidentManagementDAO {
 
     public boolean updateIncidentStatus(long id, long actor, String expected, String next)
     throws SQLException, NamingException {
-        try (Connection connection = DataSourceProvider.getDataSource().getConnection()) {
+        try (Connection connection = source().getConnection()) {
             connection.setAutoCommit(false);
             try {
                 int updated;
                 try (PreparedStatement statement = connection.prepareStatement(
-                    "UPDATE incident SET status = ?, "      +
-                "acknowledged_at = CASE WHEN ? = 'ACKNOWLEDGED' THEN CURRENT_TIMESTAMP ELSE acknowledged_at END, "      +
-                "resolved_at = CASE WHEN ? = 'RESOLVED' THEN CURRENT_TIMESTAMP ELSE resolved_at END "      +
+                    "UPDATE incident SET status = ?, "  +
+                "acknowledged_at = CASE WHEN ? = 'ACKNOWLEDGED' THEN CURRENT_TIMESTAMP ELSE acknowledged_at END, "  +
+                "resolved_at = CASE WHEN ? = 'RESOLVED' THEN CURRENT_TIMESTAMP ELSE resolved_at END "  +
                 "WHERE incident_id = ? AND status = ? AND is_deleted = 0")) {
                     statement.setString(1, next);
                     statement.setString(2, next);
@@ -186,7 +188,7 @@ public class IncidentManagementDAO {
                     return false;
                 }
                 try (PreparedStatement statement = connection.prepareStatement(
-                    "INSERT INTO incident_history (incident_id, changed_by, previous_status, new_status) "      +
+                    "INSERT INTO incident_history (incident_id, changed_by, previous_status, new_status) "  +
                 "VALUES (?, ?, ?, ?)")) {
                     statement.setLong(1, id);
                     statement.setLong(2, actor);

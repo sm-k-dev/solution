@@ -1,6 +1,5 @@
 package board.dao;
 
-import common.db.DataSourceProvider;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,12 +11,13 @@ import javax.sql.DataSource;
 import board.dto.BoardCommentDTO;
 import board.dto.BoardDTO;
 import board.dto.BoardFileDTO;
+import common.db.DataSourceProvider;
 
 public class BoardDAO {
     private final DataSource dataSource;
 
     public BoardDAO() throws NamingException {
-        dataSource = DataSourceProvider.getDataSource();
+        dataSource = DataSourceProvider.get();
     }
 
     public List<BoardDTO> findPage(String category, String query, int offset, int pageSize) throws Exception {
@@ -44,7 +44,7 @@ public class BoardDAO {
             p.setString(index++, category);
 
             if (searching) {
-                String like = "%"     + term + "%";
+                String like = "%"  + term + "%";
                 p.setString(index++, like);
                 p.setString(index++, like);
                 p.setString(index++, like);
@@ -68,14 +68,12 @@ public class BoardDAO {
         String term = query == null ? "" : query.trim();
         boolean searching = !term.isEmpty();
         String sql = searching
-        ? "SELECT COUNT(*) FROM board b JOIN member m ON m.member_id=b.member_id "
-             + "WHERE b.is_deleted=FALSE AND b.category=? "
-             + "AND (b.title LIKE ? OR b.content LIKE ? OR b.tags LIKE ? OR m.name LIKE ?)"
+        ? "SELECT COUNT(*) FROM board b JOIN member m ON m.member_id=b.member_id WHERE b.is_deleted=FALSE AND b.category=? AND (b.title LIKE ? OR b.content LIKE ? OR b.tags LIKE ? OR m.name LIKE ?)"
         : "SELECT COUNT(*) FROM board WHERE is_deleted=FALSE AND category=?";
         try (Connection c = dataSource.getConnection(); PreparedStatement p = c.prepareStatement(sql)) {
             p.setString(1, category);
             if (searching) {
-                String like = "%"     + term + "%";
+                String like = "%"  + term + "%";
                 p.setString(2, like);
                 p.setString(3, like);
                 p.setString(4, like);
@@ -134,20 +132,14 @@ public class BoardDAO {
     }
 
     public boolean softDelete(long id) throws Exception {
-        String sql = "UPDATE board SET is_deleted=TRUE,deleted_at=CURRENT_TIMESTAMP "
-             + "WHERE board_id=? AND is_deleted=FALSE";
-        try (Connection c = dataSource.getConnection();
-        PreparedStatement p = c.prepareStatement(sql)) {
+        try (Connection c = dataSource.getConnection();PreparedStatement p = c.prepareStatement("UPDATE board SET is_deleted=TRUE,deleted_at=CURRENT_TIMESTAMP WHERE board_id=? AND is_deleted=FALSE")) {
             p.setLong(1, id);
             return p.executeUpdate() == 1;
         }
     }
 
     public boolean softDelete(long id, long ownerId) throws Exception {
-        String sql = "UPDATE board SET is_deleted=TRUE,deleted_at=CURRENT_TIMESTAMP "
-             + "WHERE board_id=? AND member_id=? AND is_deleted=FALSE";
-        try (Connection c = dataSource.getConnection();
-        PreparedStatement p = c.prepareStatement(sql)) {
+        try (Connection c = dataSource.getConnection();PreparedStatement p = c.prepareStatement("UPDATE board SET is_deleted=TRUE,deleted_at=CURRENT_TIMESTAMP WHERE board_id=? AND member_id=? AND is_deleted=FALSE")) {
             p.setLong(1, id);
             p.setLong(2, ownerId);
             return p.executeUpdate() == 1;
@@ -155,20 +147,14 @@ public class BoardDAO {
     }
 
     public void incrementViewCount(long id) throws Exception {
-        String sql = "UPDATE board SET view_count=view_count+1 "
-             + "WHERE board_id=? AND is_deleted=FALSE";
-        try (Connection c = dataSource.getConnection();
-        PreparedStatement p = c.prepareStatement(sql)) {
+        try (Connection c = dataSource.getConnection();PreparedStatement p = c.prepareStatement("UPDATE board SET view_count=view_count+1 WHERE board_id=? AND is_deleted=FALSE")) {
             p.setLong(1, id);
             p.executeUpdate();
         }
     }
 
     public int countAll() throws Exception {
-        String sql = "SELECT COUNT(*) FROM board WHERE is_deleted=FALSE";
-        try (Connection c = dataSource.getConnection();
-        PreparedStatement p = c.prepareStatement(sql);
-        ResultSet r = p.executeQuery()) {
+        try (Connection c = dataSource.getConnection();PreparedStatement p = c.prepareStatement("SELECT COUNT(*) FROM board WHERE is_deleted=FALSE");ResultSet r = p.executeQuery()) {
             r.next();
             return r.getInt(1);
         }
@@ -316,10 +302,7 @@ public class BoardDAO {
     }
 
     public boolean isCommentInBoard(long commentId, long boardId) throws Exception {
-        String sql = "SELECT 1 FROM board_comment "
-             + "WHERE comment_id=? AND board_id=? AND is_deleted=FALSE";
-        try (Connection c = dataSource.getConnection();
-        PreparedStatement p = c.prepareStatement(sql)) {
+        try (Connection c = dataSource.getConnection();PreparedStatement p = c.prepareStatement("SELECT 1 FROM board_comment WHERE comment_id=? AND board_id=? AND is_deleted=FALSE")) {
             p.setLong(1, commentId);
             p.setLong(2, boardId);
             try (ResultSet r = p.executeQuery()) {
@@ -329,7 +312,7 @@ public class BoardDAO {
     }
 
     public boolean softDeleteComment(long commentId, long memberId, boolean admin) throws Exception {
-        String sql = "UPDATE board_comment SET is_deleted=TRUE,deleted_at=CURRENT_TIMESTAMP WHERE comment_id=?"    + (admin?"":" AND member_id=?");
+        String sql = "UPDATE board_comment SET is_deleted=TRUE,deleted_at=CURRENT_TIMESTAMP WHERE comment_id=?" + (admin?"":" AND member_id=?");
         try (Connection c = dataSource.getConnection();PreparedStatement p = c.prepareStatement(sql)) {
             p.setLong(1, commentId);
             if (!admin) {
@@ -363,8 +346,7 @@ public class BoardDAO {
 
     public List<BoardFileDTO> findFiles(long boardId) throws Exception {
         List<BoardFileDTO> rows = new ArrayList<BoardFileDTO>();
-        String sql = "SELECT file_id,original_name,saved_name,file_path,file_size,file_type "
-             + "FROM board_file WHERE board_id=? AND is_deleted=FALSE ORDER BY file_id";
+        String sql = "SELECT file_id,original_name,saved_name,file_path,file_size,file_type FROM board_file WHERE board_id=? AND is_deleted=FALSE ORDER BY file_id";
         try (Connection c = dataSource.getConnection();PreparedStatement p = c.prepareStatement(sql)) {
             p.setLong(1, boardId);
             try (ResultSet r = p.executeQuery()) {
@@ -384,9 +366,7 @@ public class BoardDAO {
     }
 
     public BoardFileDTO findFile(long fileId) throws Exception {
-        String sql = "SELECT f.file_id,f.board_id,f.original_name,f.saved_name,f.file_path,f.file_size,f.file_type "
-             + "FROM board_file f JOIN board b ON b.board_id=f.board_id "
-             + "WHERE f.file_id=? AND f.is_deleted=FALSE AND b.is_deleted=FALSE";
+        String sql = "SELECT f.file_id,f.board_id,f.original_name,f.saved_name,f.file_path,f.file_size,f.file_type FROM board_file f JOIN board b ON b.board_id=f.board_id WHERE f.file_id=? AND f.is_deleted=FALSE AND b.is_deleted=FALSE";
         try (Connection c = dataSource.getConnection();PreparedStatement p = c.prepareStatement(sql)) {
             p.setLong(1, fileId);
             try (ResultSet r = p.executeQuery()) {

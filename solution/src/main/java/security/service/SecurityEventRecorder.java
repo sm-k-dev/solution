@@ -43,8 +43,8 @@ public class SecurityEventRecorder {
 
     private void persist(SecurityEvent event) {
         try {
-            String fingerprint = hash(safe(event.getCategory()) + "|"    + safe(event.getThreatType()) + "|"    +
-            safe(event.getRuleCode()) + "|"    + safe(event.getRequestUri()) + "|"    +
+            String fingerprint = hash(safe(event.getCategory()) + "|"  + safe(event.getThreatType()) + "|"  +
+            safe(event.getRuleCode()) + "|"  + safe(event.getRequestUri()) + "|"  +
             safe(event.getSourceIpHash()));
             long eventId = dao.insertOrIncrement(event, fingerprint,
                 System.currentTimeMillis() / WINDOW_MILLIS);

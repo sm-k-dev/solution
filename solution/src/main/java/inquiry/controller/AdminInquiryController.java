@@ -10,6 +10,8 @@ import inquiry.dao.InquiryDAO;
 import inquiry.dto.InquiryDTO;
 import inquiry.service.InquiryService;
 import common.security.CsrfTokenManager;
+import common.web.SessionUser;
+import common.web.WebRequestSupport;
 
 public class AdminInquiryController extends HttpServlet {
     private static final long serialVersionUID = 1L;
@@ -34,14 +36,13 @@ public class AdminInquiryController extends HttpServlet {
                 request.setAttribute("inquiryList", inquiryService.findAllInquiries());
                 request.getRequestDispatcher("/admin/inquiry-list.jsp").forward(request, response);
             } else if ("/detail".equals(path)) {
-                InquiryDTO inquiry = inquiryService.findInquiryById(parseId(request.getParameter("id")));
+                InquiryDTO inquiry = inquiryService.findInquiryById(
+                    WebRequestSupport.parsePositiveId(request.getParameter("id"), "inquiry id"));
                 if (inquiry == null) {
                     response.sendError(HttpServletResponse.SC_NOT_FOUND);
                     return;
                 }
                 request.setAttribute("inquiry", inquiry);
-                request.setAttribute("inquiryFiles",
-                    inquiryService.findFilesByInquiryId(inquiry.getInquiryId()));
                 request.getRequestDispatcher("/admin/inquiry-detail.jsp").forward(request, response);
             } else {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
@@ -66,31 +67,29 @@ public class AdminInquiryController extends HttpServlet {
         }
         long inquiryId;
         try {
-            inquiryId = parseId(request.getParameter("inquiryId"));
+            inquiryId = WebRequestSupport.parsePositiveId(
+                request.getParameter("inquiryId"), "inquiry id");
         } catch (IllegalArgumentException error) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
-        Object value = request.getSession(false).getAttribute("memberId");
-        if (!(value instanceof Number)) {
+        Long adminId = SessionUser.memberId(request);
+        if (adminId == null) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
             return;
         }
-        long adminId = ((Number) value).longValue();
         try {
-            boolean updated = inquiryService.answerInquiry(inquiryId, adminId,
+            boolean updated = inquiryService.answerInquiry(inquiryId, adminId.longValue(),
                 request.getParameter("adminAnswer"), request.getParameter("status"));
             if (!updated) {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
                 return;
             }
-            response.sendRedirect(request.getContextPath() + "/admin/inquiry/detail?id="     + inquiryId + "&saved=1");
+            response.sendRedirect(request.getContextPath() + "/admin/inquiry/detail?id="  + inquiryId + "&saved=1");
         } catch (IllegalArgumentException error) {
             request.setAttribute("errorMessage", error.getMessage());
             try {
                 request.setAttribute("inquiry", inquiryService.findInquiryById(inquiryId));
-                request.setAttribute("inquiryFiles",
-                    inquiryService.findFilesByInquiryId(inquiryId));
                 request.setAttribute("csrfToken", CsrfTokenManager.getOrCreate(request));
                 request.getRequestDispatcher("/admin/inquiry-detail.jsp").forward(request, response);
             } catch (Exception reloadError) {
@@ -101,10 +100,4 @@ public class AdminInquiryController extends HttpServlet {
         }
     }
 
-    private long parseId(String value) {
-        if (value == null || !value.matches("[0-9]{1,18}")) {
-            throw new IllegalArgumentException("invalid id");
-        }
-        return Long.parseLong(value);
-    }
 }

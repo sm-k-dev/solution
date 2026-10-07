@@ -165,10 +165,6 @@
     <servlet-name>InquiryController</servlet-name>
     <url-pattern>/inquiry/create</url-pattern>
   </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>InquiryController</servlet-name>
-    <url-pattern>/inquiry/file</url-pattern>
-  </servlet-mapping>
 
   <servlet>
     <servlet-name>AdminInquiryController</servlet-name>
@@ -226,23 +222,7 @@
     <location>/error/error.jsp</location>
   </error-page>
   <error-page>
-    <error-code>409</error-code>
-    <location>/error/error.jsp</location>
-  </error-page>
-  <error-page>
-    <error-code>413</error-code>
-    <location>/error/error.jsp</location>
-  </error-page>
-  <error-page>
-    <error-code>415</error-code>
-    <location>/error/error.jsp</location>
-  </error-page>
-  <error-page>
     <error-code>429</error-code>
-    <location>/error/error.jsp</location>
-  </error-page>
-  <error-page>
-    <error-code>501</error-code>
     <location>/error/error.jsp</location>
   </error-page>
   <error-page>
@@ -259,14 +239,6 @@
   </error-page>
   <error-page>
     <error-code>504</error-code>
-    <location>/error/error.jsp</location>
-  </error-page>
-  <error-page>
-    <error-code>505</error-code>
-    <location>/error/error.jsp</location>
-  </error-page>
-  <error-page>
-    <error-code>507</error-code>
     <location>/error/error.jsp</location>
   </error-page>
   <error-page>

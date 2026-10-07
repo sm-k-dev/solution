@@ -49,10 +49,7 @@ public class AdminDashboardController extends HttpServlet {
             request.setAttribute("memberCount", Integer.valueOf(memberDAO.countAll()));
             request.setAttribute("boardCount", Integer.valueOf(boardDAO.countAll()));
             Map<String, Integer> incidentCounts = incidentDAO.findDashboardCounts();
-            int low = value(incidentCounts, "low");
-            int medium = value(incidentCounts, "medium");
-            int high = value(incidentCounts, "high");
-            int critical = value(incidentCounts, "critical");
+            int low = value(incidentCounts, "low"), medium = value(incidentCounts, "medium"), high = value(incidentCounts, "high"), critical = value(incidentCounts, "critical");
             int total = value(incidentCounts, "total");
             request.setAttribute("openIncidentCount", Integer.valueOf(value(incidentCounts, "open")));
             request.setAttribute("criticalIncidentCount", Integer.valueOf(critical));

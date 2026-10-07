@@ -24,7 +24,7 @@
                 <div class="admin-eyebrow">POST DETAILS</div>
                 <h2>게시글 내용</h2>
             </div>
-            <span class="admin-info-badge">
+            <span class="admin-status status-IN_PROGRESS">
                 <c:out value="${board.category}"/>
             </span>
         </div>

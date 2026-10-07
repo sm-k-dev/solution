@@ -1,20 +1,16 @@
 package security.controller;
 
-import common.security.CsrfTokenManager;
-import common.web.SessionUser;
-import common.web.WebRequestSupport;
-import common.web.CacheControlSupport;
-
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.UUID;
 import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import common.security.CsrfTokenManager;
+import common.web.SessionUser;
+import common.web.WebRequestSupport;
 import security.dao.SecurityAnalysisDAO;
 import security.dao.SecurityEventDAO;
 import security.dto.SecurityEvent;
@@ -37,7 +33,6 @@ public class SecurityManagementServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        CacheControlSupport.preventCaching(response);
         if (!SessionUser.isAdmin(request)) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
             return;
@@ -52,7 +47,8 @@ public class SecurityManagementServlet extends HttpServlet {
                 return;
             }
             if ("/security/event".equals(path)) {
-                long id = WebRequestSupport.parsePositiveId(request.getParameter("id"));
+                long id = WebRequestSupport.parsePositiveId(request.getParameter("id"),
+                    "security event id");
                 SecurityEvent event = eventDao.findById(id);
                 if (event == null) {
                     response.sendError(HttpServletResponse.SC_NOT_FOUND);
@@ -78,7 +74,6 @@ public class SecurityManagementServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
-        CacheControlSupport.preventCaching(response);
         if (!SessionUser.isAdmin(request)) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
             return;
@@ -90,22 +85,22 @@ public class SecurityManagementServlet extends HttpServlet {
             response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
             return;
         }
-        HttpSession session = request.getSession(false);
-        Object actor = session.getAttribute("memberId");
-        if (!(actor instanceof Number) ||
-        !CsrfTokenManager.isValid(request, request.getParameter("csrfToken"))) {
+        Long actorId = SessionUser.memberId(request);
+        if (actorId == null || !CsrfTokenManager.isValid(
+            request, request.getParameter("csrfToken"))) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
             return;
         }
         try {
             if ("/security/daily-summary".equals(path)) {
                 boolean sent = alertService.sendPreviousDaySummary();
-                response.setHeader("X-Security-Summary", sent ? "sent" : "skipped");
+                response.setHeader("X-Operation-Result", sent ? "sent" : "skipped");
                 WebRequestSupport.completeMutation(request, response, request.getContextPath() +
-                "/security/events?summary="       + (sent ? "sent" : "skipped"));
+                "/security/events?summary="  + (sent ? "sent" : "skipped"));
                 return;
             }
-            long id = WebRequestSupport.parsePositiveId(request.getParameter("id"));
+            long id = WebRequestSupport.parsePositiveId(request.getParameter("id"),
+                "security event id");
             if ("/security/event/analyze".equals(path)) {
                 SecurityEvent event = eventDao.findById(id);
                 if (event == null) {
@@ -115,7 +110,7 @@ public class SecurityManagementServlet extends HttpServlet {
                 try {
                     analysisDao.insert(id, aiService.analyze(event));
                     WebRequestSupport.completeMutation(request, response,
-                        request.getContextPath() + "/security/event?id="       + id);
+                        request.getContextPath() + "/security/event?id="  + id);
                 } catch (IOException aiError) {
                     getServletContext().log("Security AI analysis unavailable", aiError);
                     response.sendError(HttpServletResponse.SC_BAD_GATEWAY,
@@ -129,11 +124,12 @@ public class SecurityManagementServlet extends HttpServlet {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST);
                 return;
             }
-            if (!statusService.update(id, ((Number) actor).longValue(), expected, next)) {
+            if (!statusService.update(id, actorId.longValue(), expected, next)) {
                 response.sendError(HttpServletResponse.SC_CONFLICT);
                 return;
             }
-            WebRequestSupport.completeMutation(request, response, request.getContextPath() + "/security/event?id="       + id);
+            WebRequestSupport.completeMutation(request, response,
+                request.getContextPath() + "/security/event?id="  + id);
         } catch (NumberFormatException error) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST);
         } catch (SQLException | NamingException error) {

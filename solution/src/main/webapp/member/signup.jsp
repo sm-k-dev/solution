@@ -14,7 +14,29 @@
         <link
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
         rel="stylesheet" />
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/common-page-reset.css"/>
+        <style>
+            @
+            layer base {html , body { margin:0;
+            padding: 0;
+            }
+
+            body {
+            overscroll-behavior: none;
+            }
+
+            main>:first-child {
+            margin-top: 0 !important;
+            }
+
+            main>:last-child {
+            margin-bottom: 0 !important;
+            }
+
+            }
+            ::-webkit-scrollbar {
+            display: none;
+            }
+        </style>
         <link rel="stylesheet"
         href="${pageContext.request.contextPath}/assets/css/pages/member_signup.css" />
         <link rel="stylesheet"

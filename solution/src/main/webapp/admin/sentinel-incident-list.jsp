@@ -42,20 +42,20 @@
                         <th>상태</th>
                         <th>오류 유형</th>
                         <th>요청 경로</th>
-                        <th>상세</th>
                     </tr>
                 </thead>
                 <tbody>
                     <c:forEach var="item" items="${incidents}">
                         <tr>
                             <td class="admin-ticket-id">
-                                #<c:out value="${item.incidentId}"/>
+                                <a href="${pageContext.request.contextPath}/sentinel/incident?id=${item.incidentId}">#<c:out value="${item.incidentId}"/>
+                                </a>
                             </td>
                             <td>
                                 <c:out value="${item.occurredAt}"/>
                             </td>
                             <td>
-                                <span class="incident-severity severity-${item.severity.toLowerCase()}">
+                                <span class="incident-severity severity-${item.severity}">
                                     <c:out value="${item.severity}"/>
                                 </span>
                             </td>
@@ -68,16 +68,11 @@
                             <td class="incident-path">
                                 <c:out value="${item.requestUri}"/>
                             </td>
-                            <td>
-                                <a class="admin-row-action admin-detail-row-link" href="${pageContext.request.contextPath}/sentinel/incident?id=${item.incidentId}">
-                                    상세 보기 <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
-                                </a>
-                            </td>
                         </tr>
                     </c:forEach>
                     <c:if test="${empty incidents}">
                         <tr>
-                            <td colspan="7" class="admin-empty-row">
+                            <td colspan="6" class="admin-empty-row">
                                 <span class="material-symbols-outlined">check_circle</span>
                                 <strong>기록된 인시던트가 없습니다.</strong>
                             </td>

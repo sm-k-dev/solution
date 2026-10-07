@@ -85,15 +85,15 @@
   font-weight: 700;
   white-space: nowrap
 }
-.status-received {
+.status-RECEIVED {
   background: #fff7ed;
   color: #c2410c
 }
-.status-in-progress {
+.status-IN_PROGRESS {
   background: #eff6ff;
   color: #1d4ed8
 }
-.status-completed {
+.status-COMPLETED {
   background: #ecfdf5;
   color: #047857
 }
@@ -402,15 +402,15 @@
   font-weight: 750;
   white-space: nowrap
 }
-.admin-status.status-received {
+.admin-status.status-RECEIVED {
   background: #fff1e5;
   color: #b65b18
 }
-.admin-status.status-in-progress {
+.admin-status.status-IN_PROGRESS {
   background: #e8efff;
   color: #3158bf
 }
-.admin-status.status-completed {
+.admin-status.status-COMPLETED {
   background: #e6f6ef;
   color: #177b5b
 }
@@ -588,19 +588,19 @@
   color: #4a5c73;
   font: 750 11px ui-monospace, monospace
 }
-.severity-critical {
+.severity-CRITICAL {
   background: #fee8e7;
   color: #b42318
 }
-.severity-high {
+.severity-HIGH {
   background: #fff0df;
   color: #b65b18
 }
-.severity-medium {
+.severity-MEDIUM {
   background: #fff8d9;
   color: #96720d
 }
-.severity-low {
+.severity-LOW {
   background: #e7f6ef;
   color: #177b5b
 }

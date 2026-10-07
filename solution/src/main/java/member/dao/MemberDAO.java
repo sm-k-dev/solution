@@ -3,21 +3,21 @@ package member.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import javax.naming.NamingException;
-import javax.sql.DataSource;
-import common.db.DataSourceProvider;
 
+import javax.sql.DataSource;
+
+import common.db.DataSourceProvider;
 import member.dto.MemberDTO;
 
 public class MemberDAO {
 
-    private final DataSource dataSource;
+    private DataSource dataSource;
 
     public MemberDAO() {
         try {
-            dataSource = DataSourceProvider.getDataSource();
-        } catch (NamingException error) {
-            throw new IllegalStateException("회원 데이터베이스 연결을 초기화할 수 없습니다.", error);
+            dataSource = DataSourceProvider.get();
+        } catch (Exception e) {
+            throw new IllegalStateException("Member DB 자원을 찾지 못했습니다.", e);
         }
     }
 
@@ -225,8 +225,7 @@ public class MemberDAO {
 
         int result = 0;
 
-        String sql = "UPDATE member SET name = ?, email = ?, phone = ?, postcode = ?, address = ?, "
-             + "address_detail = ?, updated_at = NOW() WHERE login_id = ? AND status = 'ACTIVE'";
+        String sql = "UPDATE member SET name = ?, email = ?, phone = ?, postcode = ?, address = ?, address_detail = ?, updated_at = NOW() WHERE login_id = ? AND status = 'ACTIVE'";
 
         try (Connection conn = dataSource.getConnection();
         PreparedStatement pstmt = conn.prepareStatement(sql)) {

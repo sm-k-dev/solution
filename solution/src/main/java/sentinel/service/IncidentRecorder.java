@@ -11,8 +11,8 @@ public class IncidentRecorder {
     private final IncidentAlertService alerts = new IncidentAlertService();
 
     public void record(HttpServletRequest request, Throwable error, int status) {
-        String type = error == null ? "HTTP_"    + status : error.getClass().getName();
-        String message = error == null ? "HTTP "    + status + " server error" : error.getMessage();
+        String type = error == null ? "HTTP_"  + status : error.getClass().getName();
+        String message = error == null ? "HTTP "  + status + " server error" : error.getMessage();
         String severity = classifier.classifySeverity(status, error, request.getRequestURI());
         String trace = null;
         if (error != null) {
