@@ -1,5 +1,6 @@
 package security.dao;
 
+import common.db.DataSourceProvider;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,14 +15,13 @@ import security.dto.SecurityEventHistory;
 public class SecurityEventDAO {
     public long insertOrIncrement(SecurityEvent event, String fingerprint, long timeBucket)
     throws SQLException, NamingException {
-        SecuritySchema.ensure();
         String sql = "INSERT INTO security_event "    +
         "(category,threat_type,severity,detection_source,rule_code,evidence_excerpt,"    +
         "request_uri,http_method,source_ip_hash,event_fingerprint,time_bucket) "    +
         "VALUES (?,?,?,?,?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE "    +
         "occurrence_count=occurrence_count+1,last_seen_at=CURRENT_TIMESTAMP,"    +
         "security_event_id=LAST_INSERT_ID(security_event_id)";
-        try (Connection connection = SecuritySchema.source().getConnection();
+        try (Connection connection = DataSourceProvider.getDataSource().getConnection();
         PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, limit(event.getCategory(), 20));
             statement.setString(2, limit(event.getThreatType(), 60));
@@ -45,13 +45,12 @@ public class SecurityEventDAO {
     }
 
     public List<SecurityEvent> findRecentEvents() throws SQLException, NamingException {
-        SecuritySchema.ensure();
         String sql = "SELECT security_event_id,category,threat_type,severity,status,detection_source,"    +
         "rule_code,evidence_excerpt,request_uri,http_method,source_ip_hash,occurrence_count,"    +
         "first_seen_at,last_seen_at FROM security_event WHERE is_deleted=0 "    +
         "ORDER BY last_seen_at DESC,security_event_id DESC LIMIT 100";
         List<SecurityEvent> result = new ArrayList<SecurityEvent>();
-        try (Connection connection = SecuritySchema.source().getConnection();
+        try (Connection connection = DataSourceProvider.getDataSource().getConnection();
         PreparedStatement statement = connection.prepareStatement(sql);
         ResultSet rows = statement.executeQuery()) {
             while (rows.next()) {
@@ -62,12 +61,11 @@ public class SecurityEventDAO {
     }
 
     public SecurityEvent findById(long id) throws SQLException, NamingException {
-        SecuritySchema.ensure();
         String sql = "SELECT security_event_id,category,threat_type,severity,status,detection_source,"    +
         "rule_code,evidence_excerpt,request_uri,http_method,source_ip_hash,occurrence_count,"    +
         "first_seen_at,last_seen_at FROM security_event "    +
         "WHERE security_event_id=? AND is_deleted=0";
-        try (Connection connection = SecuritySchema.source().getConnection();
+        try (Connection connection = DataSourceProvider.getDataSource().getConnection();
         PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setLong(1, id);
             try (ResultSet rows = statement.executeQuery()) {
@@ -77,11 +75,10 @@ public class SecurityEventDAO {
     }
 
     public List<SecurityEventHistory> findHistory(long id) throws SQLException, NamingException {
-        SecuritySchema.ensure();
         String sql = "SELECT previous_status,new_status,changed_by,changed_at "    +
         "FROM security_event_history WHERE security_event_id=? ORDER BY history_id DESC";
         List<SecurityEventHistory> result = new ArrayList<SecurityEventHistory>();
-        try (Connection connection = SecuritySchema.source().getConnection();
+        try (Connection connection = DataSourceProvider.getDataSource().getConnection();
         PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setLong(1, id);
             try (ResultSet rows = statement.executeQuery()) {
@@ -101,8 +98,7 @@ public class SecurityEventDAO {
 
     public boolean updateStatus(long id, long actor, String expected, String next)
     throws SQLException, NamingException {
-        SecuritySchema.ensure();
-        try (Connection connection = SecuritySchema.source().getConnection()) {
+        try (Connection connection = DataSourceProvider.getDataSource().getConnection()) {
             connection.setAutoCommit(false);
             try {
                 int updated;
