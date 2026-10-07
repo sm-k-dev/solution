@@ -55,7 +55,7 @@
                                 <c:out value="${item.occurredAt}"/>
                             </td>
                             <td>
-                                <span class="incident-severity severity-${item.severity}">
+                                <span class="incident-severity severity-${item.severity.toLowerCase()}">
                                     <c:out value="${item.severity}"/>
                                 </span>
                             </td>
