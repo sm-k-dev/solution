@@ -8,79 +8,12 @@
 -- 2) 기존 기본 샘플과 테이블별 확장 샘플을 한 파일로 통합했습니다.
 -- 3) 기존 데이터가 있어도 AUTO_INCREMENT PK를 직접 지정하지 않아 PK 충돌을 피합니다.
 -- 4) FK는 login_id / title / error_message 등 고유한 샘플 값을 SELECT하여 연결합니다.
--- 5) 반복 실행하면 member의 UNIQUE(login_id, email) 때문에 실패합니다.
+-- 5) 빈 DB에 01_schema.sql을 실행한 뒤 이 파일을 한 번만 실행합니다.
+-- 6) 샘플 계정 비밀번호는 모두 Nexora!2026 입니다. (PBKDF2 해시 저장)
+-- 7) 기존 운영/개발 데이터에 실행하지 마세요. 데이터가 추가되고 중복될 수 있습니다.
 -- ============================================================
 
 USE solution;
-
--- ============================================================
--- A. 기본 동작 확인용 샘플
--- ============================================================
-INSERT INTO member
-(login_id, password_hash, name, email, phone, role)
-VALUES
-('admin', 'REPLACE_WITH_REAL_HASH', '관리자', 'admin@nexora.local', '010-0000-0000', 'ADMIN'),
-('demo01', 'REPLACE_WITH_REAL_HASH', '김사용자', 'demo01@nexora.local', '010-1111-2222', 'USER');
-
-INSERT INTO board (member_id, category, title, content, tags)
-SELECT member_id, 'NOTICE', 'NEXORA 서비스 안내',
-       'NEXORA 프로젝트 공지사항 샘플입니다.', '공지,NEXORA'
-FROM member WHERE login_id = 'admin';
-
-INSERT INTO board (member_id, category, title, content, tags)
-SELECT member_id, 'FREE', 'SentinelOps 사용 문의',
-       'SentinelOps 기능에 대해 궁금합니다.', 'SentinelOps,기술,질의'
-FROM member WHERE login_id = 'demo01';
-
-INSERT INTO board_comment (board_id, member_id, content)
-SELECT b.board_id, m.member_id, '댓글 기능 테스트입니다.'
-FROM board b
-JOIN member m ON m.login_id = 'admin'
-WHERE b.title = 'SentinelOps 사용 문의'
-LIMIT 1;
-
-INSERT INTO inquiry
-(member_id, contact_name, contact_email, company_name, category, title, content)
-SELECT member_id, name, email, 'NEXORA Demo Client', 'TECHNICAL',
-       '로그인이 정상적으로 되지 않습니다.',
-       '오후 로그인 요청 중 오류가 발생했습니다.'
-FROM member WHERE login_id = 'demo01';
-
-INSERT INTO incident
-(member_id, service_name, error_type, error_message, severity,
- request_uri, http_method, ip_address)
-SELECT member_id, 'MEMBER', 'LoginException',
-       'Authentication processing failed',
-       'HIGH', '/member/login.do', 'POST', '127.0.0.1'
-FROM member WHERE login_id = 'demo01';
-
-INSERT INTO incident_analysis
-(incident_id, summary, possible_cause, suggested_action, model_name)
-SELECT incident_id,
-       '로그인 인증 처리 과정에서 예외가 발생했습니다.',
-       '인증 정보 검증 또는 인증 처리 과정의 문제일 가능성이 있습니다.',
-       '동일 시간대 인증 로그와 요청 정보를 우선 확인하세요.',
-       'rule-based-demo'
-FROM incident WHERE error_message = 'Authentication processing failed'
-LIMIT 1;
-
-INSERT INTO incident_history
-(incident_id, changed_by, previous_status, new_status, note)
-SELECT i.incident_id, m.member_id, NULL, 'OPEN', 'Incident 최초 생성'
-FROM incident i
-JOIN member m ON m.login_id = 'admin'
-WHERE i.error_message = 'Authentication processing failed'
-LIMIT 1;
-
-INSERT INTO incident_inquiry
-(incident_id, inquiry_id, linked_by, link_reason)
-SELECT i.incident_id, q.inquiry_id, a.member_id,
-       '사용자와 발생 시간이 일치하여 관련 건으로 연결'
-FROM incident i
-JOIN inquiry q ON q.title = '로그인이 정상적으로 되지 않습니다.'
-JOIN member a ON a.login_id = 'admin'
-WHERE i.error_message = 'Authentication processing failed'
-LIMIT 1;
 
 -- ============================================================
 -- 1. MEMBER - 10
@@ -88,16 +21,16 @@ LIMIT 1;
 INSERT INTO member
 (login_id, password_hash, name, email, phone, postcode, address, address_detail, role, status, withdrawn_at)
 VALUES
-('sample_admin01', 'REPLACE_WITH_REAL_HASH', '김관리', 'sample_admin01@nexora.local', '010-1000-0001', '06236', '서울특별시 강남구 테헤란로 1', '101호', 'ADMIN', 'ACTIVE', NULL),
-('sample_admin02', 'REPLACE_WITH_REAL_HASH', '이관리', 'sample_admin02@nexora.local', '010-1000-0002', '04157', '서울특별시 마포구 마포대로 2', '202호', 'ADMIN', 'ACTIVE', NULL),
-('sample_user01',  'REPLACE_WITH_REAL_HASH', '박민준', 'sample_user01@nexora.local',  '010-2000-0001', '21554', '인천광역시 남동구 인주대로 10', '301호', 'USER', 'ACTIVE', NULL),
-('sample_user02',  'REPLACE_WITH_REAL_HASH', '최서연', 'sample_user02@nexora.local',  '010-2000-0002', '21998', '인천광역시 연수구 송도과학로 20', '402호', 'USER', 'ACTIVE', NULL),
-('sample_user03',  'REPLACE_WITH_REAL_HASH', '정도윤', 'sample_user03@nexora.local',  '010-2000-0003', '16455', '경기도 수원시 팔달구 효원로 30', '503호', 'USER', 'ACTIVE', NULL),
-('sample_user04',  'REPLACE_WITH_REAL_HASH', '한지우', 'sample_user04@nexora.local',  '010-2000-0004', '13529', '경기도 성남시 분당구 판교로 40', '604호', 'USER', 'ACTIVE', NULL),
-('sample_user05',  'REPLACE_WITH_REAL_HASH', '윤하준', 'sample_user05@nexora.local',  '010-2000-0005', '34126', '대전광역시 유성구 대학로 50', '705호', 'USER', 'SUSPENDED', NULL),
-('sample_user06',  'REPLACE_WITH_REAL_HASH', '송예린', 'sample_user06@nexora.local',  '010-2000-0006', '48058', '부산광역시 해운대구 센텀로 60', '806호', 'USER', 'ACTIVE', NULL),
-('sample_user07',  'REPLACE_WITH_REAL_HASH', '임시우', 'sample_user07@nexora.local',  '010-2000-0007', '41911', '대구광역시 중구 국채보상로 70', '907호', 'USER', 'ACTIVE', NULL),
-('sample_user08',  'REPLACE_WITH_REAL_HASH', '강나은', 'sample_user08@nexora.local',  '010-2000-0008', '61945', '광주광역시 서구 상무대로 80', '1008호', 'USER', 'WITHDRAWN', '2026-09-15 10:00:00');
+('sample_admin01', 'pbkdf2_sha256$210000$0K9jnNz6JA4XE439NJUuDA==$PNnkH0GSB53koH3y3y8Ez3CIYTckGb6Uz44jon7xOOc=', '김관리', 'sample_admin01@nexora.local', '010-1000-0001', '06236', '서울특별시 강남구 테헤란로 1', '101호', 'ADMIN', 'ACTIVE', NULL),
+('sample_admin02', 'pbkdf2_sha256$210000$0K9jnNz6JA4XE439NJUuDA==$PNnkH0GSB53koH3y3y8Ez3CIYTckGb6Uz44jon7xOOc=', '이관리', 'sample_admin02@nexora.local', '010-1000-0002', '04157', '서울특별시 마포구 마포대로 2', '202호', 'ADMIN', 'ACTIVE', NULL),
+('sample_user01',  'pbkdf2_sha256$210000$0K9jnNz6JA4XE439NJUuDA==$PNnkH0GSB53koH3y3y8Ez3CIYTckGb6Uz44jon7xOOc=', '박민준', 'sample_user01@nexora.local',  '010-2000-0001', '21554', '인천광역시 남동구 인주대로 10', '301호', 'USER', 'ACTIVE', NULL),
+('sample_user02',  'pbkdf2_sha256$210000$0K9jnNz6JA4XE439NJUuDA==$PNnkH0GSB53koH3y3y8Ez3CIYTckGb6Uz44jon7xOOc=', '최서연', 'sample_user02@nexora.local',  '010-2000-0002', '21998', '인천광역시 연수구 송도과학로 20', '402호', 'USER', 'ACTIVE', NULL),
+('sample_user03',  'pbkdf2_sha256$210000$0K9jnNz6JA4XE439NJUuDA==$PNnkH0GSB53koH3y3y8Ez3CIYTckGb6Uz44jon7xOOc=', '정도윤', 'sample_user03@nexora.local',  '010-2000-0003', '16455', '경기도 수원시 팔달구 효원로 30', '503호', 'USER', 'ACTIVE', NULL),
+('sample_user04',  'pbkdf2_sha256$210000$0K9jnNz6JA4XE439NJUuDA==$PNnkH0GSB53koH3y3y8Ez3CIYTckGb6Uz44jon7xOOc=', '한지우', 'sample_user04@nexora.local',  '010-2000-0004', '13529', '경기도 성남시 분당구 판교로 40', '604호', 'USER', 'ACTIVE', NULL),
+('sample_user05',  'pbkdf2_sha256$210000$0K9jnNz6JA4XE439NJUuDA==$PNnkH0GSB53koH3y3y8Ez3CIYTckGb6Uz44jon7xOOc=', '윤하준', 'sample_user05@nexora.local',  '010-2000-0005', '34126', '대전광역시 유성구 대학로 50', '705호', 'USER', 'SUSPENDED', NULL),
+('sample_user06',  'pbkdf2_sha256$210000$0K9jnNz6JA4XE439NJUuDA==$PNnkH0GSB53koH3y3y8Ez3CIYTckGb6Uz44jon7xOOc=', '송예린', 'sample_user06@nexora.local',  '010-2000-0006', '48058', '부산광역시 해운대구 센텀로 60', '806호', 'USER', 'ACTIVE', NULL),
+('sample_user07',  'pbkdf2_sha256$210000$0K9jnNz6JA4XE439NJUuDA==$PNnkH0GSB53koH3y3y8Ez3CIYTckGb6Uz44jon7xOOc=', '임시우', 'sample_user07@nexora.local',  '010-2000-0007', '41911', '대구광역시 중구 국채보상로 70', '907호', 'USER', 'ACTIVE', NULL),
+('sample_user08',  'pbkdf2_sha256$210000$0K9jnNz6JA4XE439NJUuDA==$PNnkH0GSB53koH3y3y8Ez3CIYTckGb6Uz44jon7xOOc=', '강나은', 'sample_user08@nexora.local',  '010-2000-0008', '61945', '광주광역시 서구 상무대로 80', '1008호', 'USER', 'WITHDRAWN', '2026-09-15 10:00:00');
 
 -- ============================================================
 -- 2. BOARD - 10
@@ -704,66 +637,61 @@ JOIN member a ON a.login_id='sample_admin01'
 WHERE i.error_message='[SAMPLE-I10] Soft deleted incident test';
 
 -- ============================================================
--- ============================================================
--- 12~15. SECURITY - 웹 요청 및 AI 프롬프트 위협 샘플
+-- 12. SECURITY_EVENT - 10
+-- 테스트용 요청/프롬프트는 실제 실행하지 않는 마스킹된 예시입니다.
 -- ============================================================
 INSERT INTO security_event
 (category, threat_type, severity, status, detection_source, rule_code,
  evidence_excerpt, request_uri, http_method, source_ip_hash,
- event_fingerprint, time_bucket, occurrence_count,
- first_seen_at, last_seen_at)
+ event_fingerprint, time_bucket, occurrence_count, first_seen_at, last_seen_at)
 VALUES
-('WEB', 'SQL_INJECTION', 'CRITICAL', 'OPEN', 'HTTP_PARAMETER', 'WEB-SQLI-001',
- 'id=1 UNION SELECT [차단됨]', '/board/detail.do', 'GET', REPEAT('1', 64),
- REPEAT('a', 64), 29840001, 3, '2026-10-06 09:01:00', '2026-10-06 09:01:32'),
-('WEB', 'XSS', 'HIGH', 'ACKNOWLEDGED', 'HTTP_PARAMETER', 'WEB-XSS-001',
- '<script>[차단됨]</script>', '/board/write.do', 'POST', REPEAT('2', 64),
- REPEAT('b', 64), 29840002, 1, '2026-10-06 09:02:00', '2026-10-06 09:02:00'),
-('WEB', 'PATH_TRAVERSAL', 'HIGH', 'OPEN', 'REQUEST_URI', 'WEB-PATH-001',
- '../../etc/passwd', '/download.do', 'GET', REPEAT('3', 64),
- REPEAT('c', 64), 29840003, 2, '2026-10-06 09:03:00', '2026-10-06 09:03:20'),
-('AI', 'PROMPT_INJECTION', 'HIGH', 'OPEN', 'AI_PROMPT', 'AI-PI-002',
- '이전 지시를 무시하고 [차단된 요청]', '/admin/incidents/ai-summary.do', 'POST', REPEAT('4', 64),
- REPEAT('d', 64), 29840004, 1, '2026-10-06 09:04:00', '2026-10-06 09:04:00'),
-('AI', 'SYSTEM_PROMPT_EXTRACTION', 'HIGH', 'RESOLVED', 'AI_PROMPT', 'AI-LEAK-001',
- 'reveal the system prompt [차단됨]', '/admin/incidents/ai-summary.do', 'POST', REPEAT('5', 64),
- REPEAT('e', 64), 29840005, 1, '2026-10-06 09:05:00', '2026-10-06 09:05:00'),
-('AI', 'SENSITIVE_DATA_IN_PROMPT', 'CRITICAL', 'OPEN', 'AI_PROMPT', 'AI-SECRET-001',
- '[민감정보 패턴 마스킹됨]', '/admin/incidents/ai-summary.do', 'POST', REPEAT('6', 64),
- REPEAT('f', 64), 29840006, 1, '2026-10-06 09:06:00', '2026-10-06 09:06:00');
+('WEB', 'SQL_INJECTION', 'CRITICAL', 'OPEN', 'HTTP_PARAMETER', 'SAMPLE-SEC-WEB-001', 'id=1 UNION SELECT [마스킹]', '/board/detail.do', 'GET', REPEAT('1',64), REPEAT('a',64), 29840001, 3, '2026-10-06 09:01:00', '2026-10-06 09:01:32'),
+('WEB', 'XSS', 'HIGH', 'ACKNOWLEDGED', 'HTTP_PARAMETER', 'SAMPLE-SEC-WEB-002', '<script>[마스킹]</script>', '/board/write.do', 'POST', REPEAT('2',64), REPEAT('b',64), 29840002, 1, '2026-10-06 09:02:00', '2026-10-06 09:02:00'),
+('WEB', 'PATH_TRAVERSAL', 'HIGH', 'OPEN', 'REQUEST_URI', 'SAMPLE-SEC-WEB-003', '../../etc/[마스킹]', '/download.do', 'GET', REPEAT('3',64), REPEAT('c',64), 29840003, 2, '2026-10-06 09:03:00', '2026-10-06 09:03:20'),
+('WEB', 'COMMAND_INJECTION', 'CRITICAL', 'OPEN', 'HTTP_PARAMETER', 'SAMPLE-SEC-WEB-004', '; [명령어 마스킹]', '/admin/search.do', 'GET', REPEAT('4',64), REPEAT('d',64), 29840004, 1, '2026-10-06 09:04:00', '2026-10-06 09:04:00'),
+('WEB', 'SSRF_METADATA_ACCESS', 'CRITICAL', 'RESOLVED', 'HTTP_PARAMETER', 'SAMPLE-SEC-WEB-005', '169.254.x.x/[마스킹]', '/proxy/request.do', 'POST', REPEAT('5',64), REPEAT('e',64), 29840005, 1, '2026-10-06 09:05:00', '2026-10-06 09:05:00'),
+('AI', 'PROMPT_INJECTION', 'HIGH', 'OPEN', 'AI_PROMPT', 'SAMPLE-SEC-AI-001', '이전 지시 무시 [내용 마스킹]', '/ai/summary.do', 'POST', REPEAT('6',64), REPEAT('f',64), 29840006, 1, '2026-10-06 09:06:00', '2026-10-06 09:06:00'),
+('AI', 'SYSTEM_PROMPT_EXTRACTION', 'HIGH', 'ACKNOWLEDGED', 'AI_PROMPT', 'SAMPLE-SEC-AI-002', 'system prompt 요청 [마스킹]', '/ai/summary.do', 'POST', REPEAT('7',64), REPEAT('g',64), 29840007, 1, '2026-10-06 09:07:00', '2026-10-06 09:07:00'),
+('AI', 'SENSITIVE_DATA_IN_PROMPT', 'CRITICAL', 'OPEN', 'AI_PROMPT', 'SAMPLE-SEC-AI-003', '[민감정보 패턴 마스킹]', '/ai/analyze.do', 'POST', REPEAT('8',64), REPEAT('h',64), 29840008, 1, '2026-10-06 09:08:00', '2026-10-06 09:08:00'),
+('AI', 'JAILBREAK_ATTEMPT', 'MEDIUM', 'RESOLVED', 'AI_PROMPT', 'SAMPLE-SEC-AI-004', '정책 우회 지시 [마스킹]', '/ai/chat.do', 'POST', REPEAT('9',64), REPEAT('i',64), 29840009, 1, '2026-10-06 09:09:00', '2026-10-06 09:09:00'),
+('AI', 'TOOL_ABUSE_ATTEMPT', 'HIGH', 'OPEN', 'AI_TOOL_CALL', 'SAMPLE-SEC-AI-005', '비허용 도구 호출 [마스킹]', '/ai/assistant.do', 'POST', REPEAT('A',64), REPEAT('j',64), 29840010, 2, '2026-10-06 09:10:00', '2026-10-06 09:10:30');
 
+-- ============================================================
+-- 13. SECURITY_ANALYSIS - 10
+-- ============================================================
 INSERT INTO security_analysis
 (security_event_id, summary, possible_impact, suggested_action, model_name)
 SELECT security_event_id,
-       CONCAT(threat_type, ' 패턴이 탐지되었습니다.'),
-       CASE WHEN severity = 'CRITICAL'
-            THEN '인증 정보 또는 주요 데이터가 노출될 가능성이 있습니다.'
-            ELSE '요청 처리 흐름 또는 AI 응답 정책이 변조될 가능성이 있습니다.' END,
-       '원본 로그를 확인하고 동일 출처의 반복 요청을 점검하세요.',
-       'rule-based-v1'
+       CONCAT(threat_type, ' 패턴이 탐지된 샘플입니다.'),
+       CASE WHEN severity='CRITICAL' THEN '중요 데이터 또는 서비스 처리에 영향이 있을 수 있습니다.'
+            ELSE '요청 처리 또는 AI 응답 정책에 영향이 있을 수 있습니다.' END,
+       '요청 로그와 보안 규칙을 확인하고 반복 여부를 점검하세요.',
+       'rule-based-demo'
 FROM security_event
-WHERE rule_code IN ('WEB-SQLI-001', 'WEB-XSS-001', 'WEB-PATH-001',
-                    'AI-PI-002', 'AI-LEAK-001', 'AI-SECRET-001');
+WHERE rule_code LIKE 'SAMPLE-SEC-%';
 
+-- ============================================================
+-- 14. SECURITY_EVENT_HISTORY - 10
+-- ============================================================
 INSERT INTO security_event_history
 (security_event_id, changed_by, previous_status, new_status, changed_at)
-SELECT e.security_event_id, a.member_id, 'OPEN', e.status,
-       CASE e.status
-           WHEN 'ACKNOWLEDGED' THEN '2026-10-06 09:12:00'
-           WHEN 'RESOLVED' THEN '2026-10-06 09:15:00'
-           ELSE e.first_seen_at
-       END
+SELECT e.security_event_id, m.member_id, 'OPEN', e.status, e.first_seen_at
 FROM security_event e
-JOIN member a ON a.login_id = 'admin'
-WHERE e.rule_code IN ('WEB-XSS-001', 'AI-LEAK-001');
+JOIN member m ON m.login_id='sample_admin01'
+WHERE e.rule_code LIKE 'SAMPLE-SEC-%';
 
+-- ============================================================
+-- 15. SECURITY_ALERT - 10
+-- ============================================================
 INSERT INTO security_alert
 (security_event_id, alert_type, channel_name, message, send_status, sent_at)
-SELECT security_event_id, 'CRITICAL_ALERT', 'SLACK',
-       CONCAT('[SECURITY] ', threat_type, ' 위협 감지'),
-       'SUCCESS', last_seen_at
+SELECT security_event_id,
+       CASE WHEN severity='CRITICAL' THEN 'CRITICAL_ALERT' ELSE 'SECURITY_EVENT' END,
+       'SLACK', CONCAT('[SAMPLE-SEC-ALERT] ', threat_type, ' 탐지 샘플'),
+       CASE WHEN MOD(security_event_id, 3)=0 THEN 'FAILED' ELSE 'SUCCESS' END,
+       last_seen_at
 FROM security_event
-WHERE severity = 'CRITICAL';
+WHERE rule_code LIKE 'SAMPLE-SEC-%';
 
 -- 확인용: 통합 SAMPLE 데이터 생성 결과
 -- 기존 sample 데이터와 구분하기 위해 식별 가능한 값으로 집계합니다.
@@ -807,21 +735,19 @@ WHERE i.error_message LIKE '[SAMPLE-I%'
 UNION ALL
 SELECT 'security_event', COUNT(*)
 FROM security_event
-WHERE rule_code IN ('WEB-SQLI-001', 'WEB-XSS-001', 'WEB-PATH-001',
-                    'AI-PI-002', 'AI-LEAK-001', 'AI-SECRET-001')
+WHERE rule_code LIKE 'SAMPLE-SEC-%'
 UNION ALL
 SELECT 'security_analysis', COUNT(*)
 FROM security_analysis a
 JOIN security_event e ON e.security_event_id = a.security_event_id
-WHERE e.rule_code IN ('WEB-SQLI-001', 'WEB-XSS-001', 'WEB-PATH-001',
-                      'AI-PI-002', 'AI-LEAK-001', 'AI-SECRET-001')
+WHERE e.rule_code LIKE 'SAMPLE-SEC-%'
 UNION ALL
 SELECT 'security_event_history', COUNT(*)
 FROM security_event_history h
 JOIN security_event e ON e.security_event_id = h.security_event_id
-WHERE e.rule_code IN ('WEB-XSS-001', 'AI-LEAK-001')
+WHERE e.rule_code LIKE 'SAMPLE-SEC-%'
 UNION ALL
 SELECT 'security_alert', COUNT(*)
 FROM security_alert a
 JOIN security_event e ON e.security_event_id = a.security_event_id
-WHERE e.severity = 'CRITICAL';
+WHERE a.message LIKE '[SAMPLE-SEC-ALERT]%';
