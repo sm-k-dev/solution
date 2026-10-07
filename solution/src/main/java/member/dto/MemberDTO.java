@@ -4,15 +4,15 @@ import java.sql.Date;
 
 public class MemberDTO {
 
-    private String loginId, pass, name, role, status, email, phone, address, addressDetail;
-    private int memberId, postcode;
+    private String loginId, pass, name, role, status, email, phone, address, addressDetail, postcode;
+    private int memberId;
     private Date createdAt, updatedAt, withdrawnAt;
 
     public MemberDTO() {
     }
 
     public MemberDTO(String loginId, String pass, String name, String role, String status, String email, String phone,
-        String address, String addressDetail, int memberId, int postcode, Date createdAt, Date updatedAt,
+        String address, String addressDetail, int memberId, String postcode, Date createdAt, Date updatedAt,
         Date withdrawnAt) {
         this.loginId = loginId;
         this.pass = pass;
@@ -110,11 +110,11 @@ public class MemberDTO {
         this.memberId = memberId;
     }
 
-    public int getPostcode() {
+    public String getPostcode() {
         return postcode;
     }
 
-    public void setPostcode(int postcode) {
+    public void setPostcode(String postcode) {
         this.postcode = postcode;
     }
 

@@ -179,7 +179,7 @@ public class MemberDAO {
                     member.setName(rs.getString("name"));
                     member.setEmail(rs.getString("email"));
                     member.setPhone(rs.getString("phone"));
-                    member.setPostcode(rs.getInt("postcode"));
+                    member.setPostcode(rs.getString("postcode"));
                     member.setAddress(rs.getString("address"));
                     member.setAddressDetail(rs.getString("address_detail"));
                     member.setRole(rs.getString("role"));
@@ -221,7 +221,7 @@ public class MemberDAO {
         return result;
     }
 
-    public int updateMember(String loginId, String name, String email, String phone, Integer postcode, String address, String addressDetail) {
+    public int updateMember(String loginId, String name, String email, String phone, String postcode, String address, String addressDetail) {
 
         int result = 0;
 
@@ -234,7 +234,7 @@ public class MemberDAO {
             pstmt.setString(1, name);
             pstmt.setString(2, email);
             pstmt.setString(3, phone);
-            pstmt.setObject(4, postcode);
+            pstmt.setString(4, postcode);
             pstmt.setString(5, address);
             pstmt.setString(6, addressDetail);
             pstmt.setString(7, loginId);
