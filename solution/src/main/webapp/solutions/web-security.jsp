@@ -8,7 +8,7 @@
         <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
         <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet" />
         <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/pages/solutions_solutions.css?v=20261002-4" />
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/top.css?v=20261002-4" />
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/common.css?v=20261013-1" />
     </head>
     <body class="bg-background font-body-md text-body-md text-on-surface antialiased min-h-screen">
         <jsp:include page="/inc/top.jsp" />

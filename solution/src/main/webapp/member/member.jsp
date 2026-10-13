@@ -40,7 +40,7 @@
         <link rel="stylesheet"
         href="${pageContext.request.contextPath}/assets/css/pages/member_member.css?v=20261002-1" />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"/>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/top.css?v=20261002-4"/>
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/common.css?v=20261013-1"/>
     </head>
     <body class="bg-background font-body-md text-on-surface antialiased">
         <jsp:include page="/inc/top.jsp" />

@@ -220,7 +220,7 @@ List<BoardDTO> postList = (List<BoardDTO>) request.getAttribute("postList");
                                     }
                                     }
                                 </style>
-                                <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/top.css?v=20261002-4"/>
+                                <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/common.css?v=20261013-1"/>
                             </head>
                             <body>
                                 <jsp:include page="/inc/top.jsp" />

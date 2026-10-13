@@ -10,7 +10,7 @@
         <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/pages/index.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/pages/inquiry_flow.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"/>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/top.css?v=20261002-4"/>
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/common.css?v=20261013-1"/>
     </head>
     <body>
         <jsp:include page="/inc/top.jsp"/>

@@ -11,7 +11,7 @@
         <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/pages/index.css"/>
         <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/pages/inquiry_write.css"/>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"/>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/top.css?v=20261002-4"/>
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/common.css?v=20261013-1"/>
     </head>
     <body class="bg-[#f8f9ff] text-[#0b1c30] font-[Inter] min-h-screen">
         <jsp:include page="/inc/top.jsp" />

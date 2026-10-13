@@ -8,6 +8,7 @@
         <title>
             <c:out value="${requestScope.adminPageTitle}"/> | NEXORA Admin</title>
         <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/common.css?v=20261013-1">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/pages/admin_admin.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/pages/inquiry_flow.css">
     </head>

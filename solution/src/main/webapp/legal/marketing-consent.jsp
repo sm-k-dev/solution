@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width,initial-scale=1.0">
         <title>마케팅 정보 수신 동의 | NEXORA</title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/top.css?v=20261002-4">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/common.css?v=20261013-1">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/pages/legal_document.css">
     </head>
     <body>
