@@ -45,17 +45,24 @@ public class SecurityEventDAO {
     }
 
     public List<SecurityEvent> findRecentEvents() throws SQLException, NamingException {
+        return findRecentEvents(100);
+    }
+
+    public List<SecurityEvent> findRecentEvents(int limit) throws SQLException, NamingException {
         SecuritySchema.ensure();
+        int safeLimit = Math.max(1, Math.min(limit, 100));
         String sql = "SELECT security_event_id,category,threat_type,severity,status,detection_source,"  +
         "rule_code,evidence_excerpt,request_uri,http_method,source_ip_hash,occurrence_count,"  +
         "first_seen_at,last_seen_at FROM security_event WHERE is_deleted=0 "  +
-        "ORDER BY last_seen_at DESC,security_event_id DESC LIMIT 100";
+        "ORDER BY last_seen_at DESC,security_event_id DESC LIMIT ?";
         List<SecurityEvent> result = new ArrayList<SecurityEvent>();
         try (Connection connection = SecuritySchema.source().getConnection();
-        PreparedStatement statement = connection.prepareStatement(sql);
-        ResultSet rows = statement.executeQuery()) {
-            while (rows.next()) {
-                result.add(readEvent(rows));
+        PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, safeLimit);
+            try (ResultSet rows = statement.executeQuery()) {
+                while (rows.next()) {
+                    result.add(readEvent(rows));
+                }
             }
         }
         return result;

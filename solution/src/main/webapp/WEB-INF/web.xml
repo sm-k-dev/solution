@@ -197,6 +197,60 @@
     <url-pattern>/admin/boards/*</url-pattern>
   </servlet-mapping>
 
+  <servlet>
+    <servlet-name>IncidentApiServlet</servlet-name>
+    <servlet-class>sentinel.api.IncidentApiServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>IncidentApiServlet</servlet-name>
+    <url-pattern>/api/v1/incidents</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>IncidentApiServlet</servlet-name>
+    <url-pattern>/api/v1/incidents/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>SecurityEventApiServlet</servlet-name>
+    <servlet-class>security.api.SecurityEventApiServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>SecurityEventApiServlet</servlet-name>
+    <url-pattern>/api/v1/security/events</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SecurityEventApiServlet</servlet-name>
+    <url-pattern>/api/v1/security/events/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>EventIngestApiServlet</servlet-name>
+    <servlet-class>sentinel.api.EventIngestApiServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>EventIngestApiServlet</servlet-name>
+    <url-pattern>/api/v1/events</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>HealthApiServlet</servlet-name>
+    <servlet-class>common.api.HealthApiServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>HealthApiServlet</servlet-name>
+    <url-pattern>/api/v1/health</url-pattern>
+  </servlet-mapping>
+
+  <!-- /api/* 아래 미정의 경로는 HTML 오류 페이지 대신 JSON 404로 응답합니다. -->
+  <servlet>
+    <servlet-name>ApiNotFoundServlet</servlet-name>
+    <servlet-class>common.api.ApiNotFoundServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ApiNotFoundServlet</servlet-name>
+    <url-pattern>/api/*</url-pattern>
+  </servlet-mapping>
+
   <error-page>
     <error-code>400</error-code>
     <location>/error/error.jsp</location>
