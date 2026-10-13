@@ -2,7 +2,9 @@ package security.service;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.sql.SQLException;
 import java.util.Locale;
+import javax.naming.NamingException;
 import javax.servlet.http.HttpServletRequest;
 import security.dao.SecurityEventDAO;
 import security.dto.SecurityEvent;
@@ -41,19 +43,38 @@ public class SecurityEventRecorder {
         persist(event);
     }
 
+    /**
+     * REST API로 외부 서비스가 보고한 이벤트를 저장하고 ID를 반환합니다.
+     * clientIp는 원문 대신 SHA-256 해시로만 저장합니다.
+     */
+    public long recordExternal(SecurityEvent event, String clientIp)
+    throws SQLException, NamingException {
+        event.setSourceIpHash(clientIp == null ? null : hash(clientIp));
+        return save(event);
+    }
+
     private void persist(SecurityEvent event) {
         try {
-            String fingerprint = hash(safe(event.getCategory()) + "|"  + safe(event.getThreatType()) + "|"  +
-            safe(event.getRuleCode()) + "|"  + safe(event.getRequestUri()) + "|"  +
-            safe(event.getSourceIpHash()));
-            long eventId = dao.insertOrIncrement(event, fingerprint,
-                System.currentTimeMillis() / WINDOW_MILLIS);
-            if ("CRITICAL".equals(event.getSeverity())) {
-                alerts.sendCriticalAlert(eventId, event.getThreatType(), event.getRequestUri());
-            }
+            save(event);
         } catch (Exception ignored) {
             // Security telemetry failure must not take down the customer request.
         }
+    }
+
+    private long save(SecurityEvent event) throws SQLException, NamingException {
+        String fingerprint = hash(safe(event.getCategory()) + "|"  + safe(event.getThreatType()) + "|"  +
+            safe(event.getRuleCode()) + "|"  + safe(event.getRequestUri()) + "|"  +
+            safe(event.getSourceIpHash()));
+        long eventId = dao.insertOrIncrement(event, fingerprint,
+            System.currentTimeMillis() / WINDOW_MILLIS);
+        if ("CRITICAL".equals(event.getSeverity())) {
+            try {
+                alerts.sendCriticalAlert(eventId, event.getThreatType(), event.getRequestUri());
+            } catch (Exception ignored) {
+                // Alert delivery failure must not undo a stored event.
+            }
+        }
+        return eventId;
     }
 
     private String clientAddress(HttpServletRequest request) {

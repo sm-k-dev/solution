@@ -10,6 +10,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
+import common.api.JsonApiServlet;
 import sentinel.service.IncidentRecorder;
 
 public class IncidentFilter implements Filter {
@@ -39,7 +40,8 @@ public class IncidentFilter implements Filter {
             recorder.record(httpRequest, error, 500);
             throw error;
         }
-        if (wrapped.getStatus() >= 500) {
+        if (wrapped.getStatus() >= 500 &&
+            httpRequest.getAttribute(JsonApiServlet.SKIP_INCIDENT_ATTRIBUTE) == null) {
             recorder.record(httpRequest, null, wrapped.getStatus());
         }
     }
