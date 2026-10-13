@@ -1,3 +1,5 @@
+package tests.sentinel;
+
 import java.io.IOException;
 import sentinel.dto.IncidentAnalysis;
 import sentinel.service.IncidentAiService;

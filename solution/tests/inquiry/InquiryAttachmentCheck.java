@@ -1,3 +1,5 @@
+package tests.inquiry;
+
 import inquiry.service.InquiryAttachmentService;
 
 public class InquiryAttachmentCheck {

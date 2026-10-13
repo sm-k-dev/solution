@@ -90,7 +90,7 @@ PR의 base는 `team`, compare는 본인 작업 브랜치로 설정합니다. PR�
 
 ## 5. DB 변경
 
-공용 DB 구조나 샘플 데이터를 바꾸면 `database/01_schema.sql`, `database/02_sample_data.sql`, ERD와 `docs/데이터베이스_가이드.md`를 함께 검토합니다. 기존 데이터에 미치는 영향과 새 DB에서의 실행 순서도 PR에 적습니다.
+공용 DB 구조나 샘플 데이터를 바꾸면 `database/01_schema.sql`, `database/02_sample_data.sql`, ERD와 `docs/운영/데이터베이스_가이드.md`를 함께 검토합니다. 기존 데이터에 미치는 영향과 새 DB에서의 실행 순서도 PR에 적습니다.
 
 ## 6. 보안 및 stage 점검
 

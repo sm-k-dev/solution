@@ -1,3 +1,5 @@
+package tests.common;
+
 import common.util.TextUtils;
 
 public class CommonTextUtilsCheck {
