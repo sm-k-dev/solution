@@ -13,7 +13,7 @@
         <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/pages/board_write.css">
         <style>.board-error{margin-bottom:1.25rem;border:1px solid #fecaca;border-radius:.5rem;background:#fef2f2;padding:.75rem 1rem;color:#b91c1c;font-size:.875rem}</style>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"/>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/top.css?v=20261002-4"/>
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/common.css?v=20261013-1"/>
     </head>
     <body class="bg-page text-navy font-sans min-h-screen">
         <jsp:include page="/inc/top.jsp" />

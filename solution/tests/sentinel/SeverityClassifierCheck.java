@@ -1,3 +1,5 @@
+package tests.sentinel;
+
 import java.sql.SQLException;
 import sentinel.service.SeverityClassifier;
 

@@ -1,3 +1,5 @@
+package tests.sentinel;
+
 import sentinel.service.IncidentStatusService;
 
 public class IncidentStatusCheck {

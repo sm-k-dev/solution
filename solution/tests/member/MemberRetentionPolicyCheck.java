@@ -1,3 +1,5 @@
+package tests.member;
+
 import java.time.LocalDateTime;
 import member.service.MemberRetentionPolicy;
 

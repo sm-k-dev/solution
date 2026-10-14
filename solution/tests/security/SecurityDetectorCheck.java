@@ -1,3 +1,5 @@
+package tests.security;
+
 import java.util.List;
 import security.dto.ThreatFinding;
 import security.service.SecurityThreatDetector;

@@ -1,3 +1,5 @@
+package tests.common;
+
 import common.security.PasswordHasher;
 
 public class PasswordHasherCheck {

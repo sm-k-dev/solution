@@ -1,3 +1,5 @@
+package tests.common;
+
 import java.io.IOException;
 import common.notification.SlackWebhookClient;
 

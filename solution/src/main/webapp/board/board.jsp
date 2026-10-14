@@ -13,9 +13,9 @@
         <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/pages/index.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/pages/board_board.css">
-        <style>.community-content{white-space:pre-wrap;overflow-wrap:anywhere;min-height:10rem}.community-title{overflow-wrap:anywhere}</style>
+        
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"/>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/top.css?v=20261002-4"/>
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/common.css?v=20261013-1"/>
     </head>
     <body class="bg-background font-body-md text-on-surface min-h-screen">
         <jsp:include page="/inc/top.jsp" />
@@ -209,7 +209,7 @@
                                 </div>
                             </section>
                         </c:if>
-                        <div class="px-6 md:px-8 py-6 space-y-5 text-on-surface font-body-md leading-relaxed community-content">
+                        <div class="px-6 md:px-8 py-6 space-y-5 text-on-surface font-body-md leading-relaxed community-content community-content--list">
                             <c:out value="${selectedBoard.content}"/>
                         </div>
                         <div class="p-5 md:p-8 bg-surface-container-low/30 border-t border-surface-container-highest flex flex-wrap items-center justify-between gap-3">
