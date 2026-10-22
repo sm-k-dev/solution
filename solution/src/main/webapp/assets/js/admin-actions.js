@@ -55,8 +55,12 @@
         }
 
         const originalHtml = button.innerHTML;
+        const isSecurityAnalysis = button.dataset.adminAction.endsWith('/security/event/analyze');
         button.disabled = true;
         button.setAttribute('aria-busy', 'true');
+        if (isSecurityAnalysis) {
+            button.innerHTML = '<span class="material-symbols-outlined">progress_activity</span> AI 분석 중...';
+        }
         try {
             const response = await postForm(button.dataset.adminAction, parameters);
             if (!response.ok) {
