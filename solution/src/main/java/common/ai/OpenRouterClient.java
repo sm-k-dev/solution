@@ -20,6 +20,17 @@ public class OpenRouterClient {
 
     public Completion requestJson(String systemPrompt, String userPrompt, int maxTokens)
         throws IOException {
+        return requestJson(systemPrompt, userPrompt, maxTokens, false);
+    }
+
+    /** Requests a JSON object response for callers that need machine-readable fields. */
+    public Completion requestJsonObject(String systemPrompt, String userPrompt, int maxTokens)
+        throws IOException {
+        return requestJson(systemPrompt, userPrompt, maxTokens, true);
+    }
+
+    private Completion requestJson(String systemPrompt, String userPrompt, int maxTokens,
+        boolean jsonObjectResponse) throws IOException {
         String apiKey = requiredEnvironment("OPENROUTER_API_KEY");
         String model = requiredEnvironment("OPENROUTER_MODEL");
 
@@ -32,9 +43,32 @@ public class OpenRouterClient {
         messages.add(message("system", systemPrompt));
         messages.add(message("user", userPrompt));
         body.put("messages", messages);
+        if (jsonObjectResponse) {
+            JSONObject responseFormat = new JSONObject();
+            responseFormat.put("type", "json_object");
+            body.put("response_format", responseFormat);
+        }
 
-        String response = execute(apiKey, body.toJSONString());
-        return new Completion(parseJsonFields(response), model);
+        String response;
+        try {
+            response = execute(apiKey, body.toJSONString());
+        } catch (IOException error) {
+            if (!jsonObjectResponse || error.getMessage() == null
+                || !error.getMessage().contains("HTTP 400")) {
+                throw error;
+            }
+
+            // Some automatically routed providers may reject response_format.
+            // Retry once without that optional parameter for Security only.
+            body.remove("response_format");
+            response = execute(apiKey, body.toJSONString());
+        }
+        try {
+            return new Completion(parseJsonFields(response), model);
+        } catch (IOException error) {
+            throw new IOException(error.getMessage() + " (finish_reason="
+                + getFinishReason(response) + ")", error);
+        }
     }
 
     public JSONObject parseJsonFields(String response) throws IOException {
@@ -44,11 +78,19 @@ public class OpenRouterClient {
             if (choices == null || choices.isEmpty()) {
                 throw new IOException("AI response has no choices");
             }
-            JSONObject answer = (JSONObject) ((JSONObject) choices.get(0)).get("message");
-            String content = (String) answer.get("content");
-            if (content == null) {
+            Object choiceValue = choices.get(0);
+            if (!(choiceValue instanceof JSONObject)) {
+                throw new IOException("AI response choice is invalid");
+            }
+            Object answerValue = ((JSONObject) choiceValue).get("message");
+            if (!(answerValue instanceof JSONObject)) {
+                throw new IOException("AI response message is missing");
+            }
+            Object contentValue = ((JSONObject) answerValue).get("content");
+            if (!(contentValue instanceof String) || ((String) contentValue).trim().isEmpty()) {
                 throw new IOException("AI response has no content");
             }
+            String content = (String) contentValue;
             String normalized = content.trim();
             if (normalized.startsWith("```")) {
                 normalized = normalized.replaceFirst("^```(?:json)?\\s*", "")
@@ -57,6 +99,20 @@ public class OpenRouterClient {
             return (JSONObject) new JSONParser().parse(normalized);
         } catch (ParseException | ClassCastException | NullPointerException error) {
             throw new IOException("AI response format is invalid", error);
+        }
+    }
+
+    private String getFinishReason(String response) {
+        try {
+            JSONObject root = (JSONObject) new JSONParser().parse(response);
+            JSONArray choices = (JSONArray) root.get("choices");
+            if (choices == null || choices.isEmpty() || !(choices.get(0) instanceof JSONObject)) {
+                return "unavailable";
+            }
+            Object reason = ((JSONObject) choices.get(0)).get("finish_reason");
+            return reason == null ? "unavailable" : String.valueOf(reason);
+        } catch (ParseException | ClassCastException | NullPointerException error) {
+            return "unavailable";
         }
     }
 
