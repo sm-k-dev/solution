@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NEXORA ERD - 통합 데이터베이스 스키마</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Malgun Gothic','맑은 고딕',sans-serif;background:#0f172a;color:#e2e8f0;overflow:hidden;user-select:none}
+#header{position:fixed;top:0;left:0;right:0;height:56px;background:linear-gradient(135deg,#1e40af,#1e3a8a);display:flex;align-items:center;padding:0 20px;z-index:100;box-shadow:0 4px 12px #0008}
+#header h1{font-size:20px;color:#fff;font-weight:700;letter-spacing:-0.5px}
+#header .sub{margin-left:12px;font-size:12px;color:#60a5fa;font-weight:400}
+#controls{margin-left:auto;display:flex;gap:10px;align-items:center}
+.btn{padding:6px 14px;border-radius:6px;border:1px solid #334155;background:#1e293b;color:#cbd5e1;cursor:pointer;font-size:12px;font-family:inherit;transition:all.2s}
+.btn:hover{background:#334155;color:#fff;border-color:#475569}
+#legend{position:fixed;top:64px;right:12px;background:#1e293b;border:1px solid #334155;border-radius:10px;padding:12px 16px;z-index:99;font-size:11px;min-width:160px;max-height:80vh;overflow-y:auto}
+#legend h3{font-size:11px;color:#60a5fa;margin-bottom:8px;font-weight:700;text-transform:uppercase;letter-spacing:1px}
+.leg-item{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.leg-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+#canvas{position:fixed;top:56px;left:0;right:0;bottom:0;cursor:grab}
+#canvas:active{cursor:grabbing}
+svg{width:100%;height:100%}
+.table-card{cursor:grab}
+.table-card:active{cursor:grabbing}
+.col-row{transition:fill.15s}
+.col-row:hover{fill:#2a3f5f!important}
+#tooltip{position:fixed;background:#1e293b;border:1px solid #475569;border-radius:8px;padding:10px 14px;font-size:11px;pointer-events:none;display:none;z-index:200;max-width:320px;line-height:1.7;font-family:Consolas,'Courier New',monospace}
+#tooltip code{color:#a78bfa;background:#0f172a;padding:2px 4px;border-radius:3px}
+</style>
+</head>
+<body>
+<div id="header">
+  <h1>📊 NEXORA 통합 데이터베이스 ERD</h1>
+  <span class="sub">Unified Database Schema v5 — MySQL 8.4.x</span>
+  <div id="controls">
+    <button class="btn" onclick="resetView()">🔄 초기화</button>
+    <button class="btn" onclick="zoomIn()">🔍 확대</button>
+    <button class="btn" onclick="zoomOut()">🔍 축소</button>
+    <span style="font-size:11px;color:#64748b" id="zoomLabel">70%</span>
+  </div>
+</div>
+<div id="legend">
+  <h3>테이블 분류</h3>
+  <div class="leg-item"><div class="leg-dot" style="background:#7c3aed"></div><span>회원</span></div>
+  <div class="leg-item"><div class="leg-dot" style="background:#0284c7"></div><span>게시판/문의</span></div>
+  <div class="leg-item"><div class="leg-dot" style="background:#059669"></div><span>장애 관리</span></div>
+  <div class="leg-item"><div class="leg-dot" style="background:#7c2d12"></div><span>보안 모니터링</span></div>
+  <h3 style="margin-top:12px">제약조건</h3>
+  <div class="leg-item"><div class="leg-dot" style="background:#f59e0b"></div><span>PK (기본키)</span></div>
+  <div class="leg-item"><div class="leg-dot" style="background:#10b981"></div><span>FK (외래키)</span></div>
+  <div class="leg-item"><div class="leg-dot" style="background:#ef4444"></div><span>NN (NOT NULL)</span></div>
+  <div class="leg-item"><div class="leg-dot" style="background:#a78bfa"></div><span>AI (자동증가)</span></div>
+</div>
+<div id="canvas"><svg id="svg">
+<defs>
+  <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+    <polygon points="0 0,8 3,0 6" fill="#60a5fa" opacity=".8"/>
+  </marker>
+  <filter id="shadow"><feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000" flood-opacity=".5"/></filter>
+</defs>
+<g id="root">
+  <g id="rels"></g>
+  <g id="tables"></g>
+</g>
+</svg></div>
+<div id="tooltip"></div>
+
+<script>
+const TABLES = [
+  {id:'member', label:'MEMBER\n(회원)', cat:'#7c3aed', hdr:'#4c1d95', x:80, y:60,
+   cols:[
+    {n:'member_id',t:'BIGINT UNSIGNED',c:'PK·AI',note:'회원 ID'},
+    {n:'login_id',t:'VARCHAR(50)',c:'NN·UQ',note:'로그인 ID'},
+    {n:'password_hash',t:'VARCHAR(255)',c:'NN',note:'비밀번호 해시'},
+    {n:'name',t:'VARCHAR(50)',c:'NN',note:'회원명'},
+    {n:'email',t:'VARCHAR(150)',c:'NN·UQ',note:'이메일'},
+    {n:'phone',t:'VARCHAR(30)',c:'',note:'전화번호'},
+    {n:'postcode',t:'VARCHAR(10)',c:'',note:'우편번호'},
+    {n:'address',t:'VARCHAR(255)',c:'',note:'주소'},
+    {n:'address_detail',t:'VARCHAR(255)',c:'',note:'상세주소'},
+    {n:'role',t:'ENUM(USER,ADMIN)',c:'NN',note:'역할'},
+    {n:'status',t:'ENUM(ACTIVE,SUSPENDED,WITHDRAWN)',c:'NN',note:'상태'},
+    {n:'created_at',t:'DATETIME',c:'NN',note:'가입일자'},
+    {n:'updated_at',t:'DATETIME',c:'NN',note:'수정일'},
+    {n:'withdrawn_at',t:'DATETIME',c:'',note:'탈퇴일'},
+  ]},
+  {id:'board', label:'BOARD\n(게시글)', cat:'#0284c7', hdr:'#0c4a6e', x:420, y:60,
+   cols:[
+    {n:'board_id',t:'BIGINT UNSIGNED',c:'PK·AI',note:'게시글 ID'},
+    {n:'member_id',t:'BIGINT UNSIGNED',c:'FK·NN',note:'→ member'},
+    {n:'category',t:'ENUM(NOTICE,RESOURCE,FREE)',c:'NN',note:'카테고리'},
+    {n:'title',t:'VARCHAR(200)',c:'NN',note:'제목'},
+    {n:'content',t:'LONGTEXT',c:'NN',note:'내용'},
+    {n:'tags',t:'VARCHAR(500)',c:'',note:'태그'},
+    {n:'view_count',t:'INT UNSIGNED',c:'NN',note:'조회수'},
+    {n:'is_deleted',t:'BOOLEAN',c:'NN',note:'삭제 여부'},
+    {n:'created_at',t:'DATETIME',c:'NN',note:'작성일'},
+    {n:'updated_at',t:'DATETIME',c:'NN',note:'수정일'},
+    {n:'deleted_at',t:'DATETIME',c:'',note:'삭제일'},
+  ]},
+  {id:'board_comment', label:'BOARD_COMMENT\n(댓글)', cat:'#0284c7', hdr:'#0c4a6e', x:760, y:60,
+   cols:[
+    {n:'comment_id',t:'BIGINT UNSIGNED',c:'PK·AI',note:'댓글 ID'},
+    {n:'board_id',t:'BIGINT UNSIGNED',c:'FK·NN',note:'→ board'},
+    {n:'member_id',t:'BIGINT UNSIGNED',c:'FK·NN',note:'→ member'},
+    {n:'parent_comment_id',t:'BIGINT UNSIGNED',c:'FK',note:'→ board_comment'},
+    {n:'content',t:'VARCHAR(2000)',c:'NN',note:'댓글 내용'},
+    {n:'is_deleted',t:'BOOLEAN',c:'NN',note:'삭제 여부'},
+    {n:'created_at',t:'DATETIME',c:'NN',note:'작성일'},
+    {n:'updated_at',t:'DATETIME',c:'NN',note:'수정일'},
+    {n:'deleted_at',t:'DATETIME',c:'',note:'삭제일'},
+  ]},
+  {id:'board_file', label:'BOARD_FILE\n(파일)', cat:'#0284c7', hdr:'#0c4a6e', x:1100, y:60,
+   cols:[
+    {n:'file_id',t:'BIGINT UNSIGNED',c:'PK·AI',note:'파일 ID'},
+    {n:'board_id',t:'BIGINT UNSIGNED',c:'FK·NN',note:'→ board'},
+    {n:'original_name',t:'VARCHAR(255)',c:'NN',note:'원본 파일명'},
+    {n:'saved_name',t:'VARCHAR(255)',c:'NN',note:'저장 파일명'},
+    {n:'file_path',t:'VARCHAR(500)',c:'NN',note:'파일 경로'},
+    {n:'file_size',t:'BIGINT UNSIGNED',c:'NN',note:'파일 크기'},
+    {n:'file_type',t:'VARCHAR(100)',c:'',note:'MIME type'},
+    {n:'is_deleted',t:'BOOLEAN',c:'NN',note:'삭제 여부'},
+    {n:'created_at',t:'DATETIME',c:'NN',note:'업로드일'},
+    {n:'deleted_at',t:'DATETIME',c:'',note:'삭제일'},
+  ]},
+  {id:'inquiry', label:'INQUIRY\n(문의)', cat:'#0284c7', hdr:'#0c4a6e', x:420, y:380,
+   cols:[
+    {n:'inquiry_id',t:'BIGINT UNSIGNED',c:'PK·AI',note:'문의 ID'},
+    {n:'member_id',t:'BIGINT UNSIGNED',c:'FK',note:'→ member'},
+    {n:'assigned_admin_id',t:'BIGINT UNSIGNED',c:'FK',note:'→ member'},
+    {n:'contact_name',t:'VARCHAR(100)',c:'NN',note:'문의자명'},
+    {n:'contact_email',t:'VARCHAR(150)',c:'NN',note:'문의자 이메일'},
+    {n:'company_name',t:'VARCHAR(150)',c:'',note:'회사명'},
+    {n:'category',t:'ENUM(GENERAL,TECHNICAL...)',c:'NN',note:'문의 카테고리'},
+    {n:'title',t:'VARCHAR(200)',c:'NN',note:'제목'},
+    {n:'content',t:'LONGTEXT',c:'NN',note:'문의 내용'},
+    {n:'status',t:'ENUM(RECEIVED,IN_PROGRESS,COMPLETED)',c:'NN',note:'상태'},
+    {n:'admin_answer',t:'LONGTEXT',c:'',note:'관리자 답변'},
+    {n:'is_deleted',t:'BOOLEAN',c:'NN',note:'삭제 여부'},
+    {n:'created_at',t:'DATETIME',c:'NN',note:'작성일'},
+    {n:'updated_at',t:'DATETIME',c:'NN',note:'수정일'},
+    {n:'answered_at',t:'DATETIME',c:'',note:'답변일'},
+    {n:'deleted_at',t:'DATETIME',c:'',note:'삭제일'},
+  ]},
+  {id:'inquiry_file', label:'INQUIRY_FILE\n(파일)', cat:'#0284c7', hdr:'#0c4a6e', x:760, y:380,
+   cols:[
+    {n:'file_id',t:'BIGINT UNSIGNED',c:'PK·AI',note:'파일 ID'},
+    {n:'inquiry_id',t:'BIGINT UNSIGNED',c:'FK·NN',note:'→ inquiry'},
+    {n:'original_name',t:'VARCHAR(255)',c:'NN',note:'원본 파일명'},
+    {n:'saved_name',t:'VARCHAR(255)',c:'NN',note:'저장 파일명'},
+    {n:'file_path',t:'VARCHAR(500)',c:'NN',note:'파일 경로'},
+    {n:'file_size',t:'BIGINT UNSIGNED',c:'NN',note:'파일 크기'},
+    {n:'file_type',t:'VARCHAR(100)',c:'',note:'MIME type'},
+    {n:'is_deleted',t:'BOOLEAN',c:'NN',note:'삭제 여부'},
+    {n:'created_at',t:'DATETIME',c:'NN',note:'업로드일'},
+    {n:'deleted_at',t:'DATETIME',c:'',note:'삭제일'},
+  ]},
+  {id:'incident', label:'INCIDENT\n(장애)', cat:'#059669', hdr:'#064e3b', x:80, y:700,
+   cols:[
+    {n:'incident_id',t:'BIGINT UNSIGNED',c:'PK·AI',note:'장애 ID'},
+    {n:'member_id',t:'BIGINT UNSIGNED',c:'FK',note:'→ member'},
+    {n:'service_name',t:'VARCHAR(100)',c:'NN',note:'서비스명'},
+    {n:'error_type',t:'VARCHAR(150)',c:'NN',note:'에러 타입'},
+    {n:'error_message',t:'TEXT',c:'NN',note:'에러 메시지'},
+    {n:'stack_trace',t:'LONGTEXT',c:'',note:'스택 트레이스'},
+    {n:'severity',t:'ENUM(LOW,MEDIUM,HIGH,CRITICAL)',c:'NN',note:'심각도'},
+    {n:'status',t:'ENUM(OPEN,ACKNOWLEDGED,RESOLVED)',c:'NN',note:'상태'},
+    {n:'request_uri',t:'VARCHAR(500)',c:'',note:'요청 URI'},
+    {n:'http_method',t:'VARCHAR(10)',c:'',note:'HTTP 메소드'},
+    {n:'ip_address',t:'VARCHAR(45)',c:'',note:'IP 주소'},
+    {n:'is_deleted',t:'BOOLEAN',c:'NN',note:'삭제 여부'},
+    {n:'occurred_at',t:'DATETIME',c:'NN',note:'발생 일시'},
+    {n:'acknowledged_at',t:'DATETIME',c:'',note:'확인 일시'},
+    {n:'resolved_at',t:'DATETIME',c:'',note:'해결 일시'},
+    {n:'created_at',t:'DATETIME',c:'NN',note:'생성일'},
+    {n:'updated_at',t:'DATETIME',c:'NN',note:'수정일'},
+    {n:'deleted_at',t:'DATETIME',c:'',note:'삭제일'},
+  ]},
+  {id:'incident_analysis', label:'INCIDENT_ANALYSIS\n(분석)', cat:'#059669', hdr:'#064e3b', x:420, y:700,
+   cols:[
+    {n:'analysis_id',t:'BIGINT UNSIGNED',c:'PK·AI',note:'분석 ID'},
+    {n:'incident_id',t:'BIGINT UNSIGNED',c:'FK·NN',note:'→ incident'},
+    {n:'summary',t:'TEXT',c:'NN',note:'분석 요약'},
+    {n:'possible_cause',t:'TEXT',c:'',note:'가능한 원인'},
+    {n:'suggested_action',t:'TEXT',c:'',note:'제안 조치'},
+    {n:'model_name',t:'VARCHAR(100)',c:'',note:'AI 모델명'},
+    {n:'is_deleted',t:'BOOLEAN',c:'NN',note:'삭제 여부'},
+    {n:'created_at',t:'DATETIME',c:'NN',note:'생성일'},
+    {n:'deleted_at',t:'DATETIME',c:'',note:'삭제일'},
+  ]},
+  {id:'incident_alert', label:'INCIDENT_ALERT\n(알림)', cat:'#059669', hdr:'#064e3b', x:760, y:700,
+   cols:[
+    {n:'alert_id',t:'BIGINT UNSIGNED',c:'PK·AI',note:'알림 ID'},
+    {n:'incident_id',t:'BIGINT UNSIGNED',c:'FK',note:'→ incident'},
+    {n:'alert_type',t:'ENUM(INCIDENT,CRITICAL_ALERT...)',c:'NN',note:'알림 타입'},
+    {n:'channel_name',t:'VARCHAR(100)',c:'',note:'채널명'},
+    {n:'message',t:'TEXT',c:'NN',note:'메시지'},
+    {n:'send_status',t:'ENUM(PENDING,SUCCESS,FAILED)',c:'NN',note:'전송 상태'},
+    {n:'error_message',t:'VARCHAR(1000)',c:'',note:'에러 메시지'},
+    {n:'sent_at',t:'DATETIME',c:'',note:'전송 시간'},
+    {n:'created_at',t:'DATETIME',c:'NN',note:'생성일'},
+  ]},
+  {id:'incident_history', label:'INCIDENT_HISTORY\n(이력)', cat:'#059669', hdr:'#064e3b', x:1100, y:700,
+   cols:[
+    {n:'history_id',t:'BIGINT UNSIGNED',c:'PK·AI',note:'이력 ID'},
+    {n:'incident_id',t:'BIGINT UNSIGNED',c:'FK·NN',note:'→ incident'},
+    {n:'changed_by',t:'BIGINT UNSIGNED',c:'FK',note:'→ member'},
+    {n:'previous_status',t:'ENUM(OPEN,ACKNOWLEDGED,RESOLVED)',c:'',note:'이전 상태'},
+    {n:'new_status',t:'ENUM(OPEN,ACKNOWLEDGED,RESOLVED)',c:'NN',note:'새 상태'},
+    {n:'note',t:'VARCHAR(1000)',c:'',note:'변경 노트'},
+    {n:'changed_at',t:'DATETIME',c:'NN',note:'변경 일시'},
+  ]},
+  {id:'incident_inquiry', label:'INCIDENT_INQUIRY\n(연결)', cat:'#059669', hdr:'#064e3b', x:1440, y:380,
+   cols:[
+    {n:'incident_inquiry_id',t:'BIGINT UNSIGNED',c:'PK·AI',note:'연결 ID'},
+    {n:'incident_id',t:'BIGINT UNSIGNED',c:'FK·NN·UQ',note:'→ incident'},
+    {n:'inquiry_id',t:'BIGINT UNSIGNED',c:'FK·NN·UQ',note:'→ inquiry'},
+    {n:'linked_by',t:'BIGINT UNSIGNED',c:'FK',note:'→ member'},
+    {n:'link_reason',t:'VARCHAR(500)',c:'',note:'연결 사유'},
+    {n:'is_deleted',t:'BOOLEAN',c:'NN',note:'삭제 여부'},
+    {n:'linked_at',t:'DATETIME',c:'NN',note:'연결 일시'},
+    {n:'deleted_at',t:'DATETIME',c:'',note:'삭제일'},
+  ]},
+  {id:'security_event', label:'SECURITY_EVENT\n(위협)', cat:'#7c2d12', hdr:'#5a2d0c', x:1100, y:380,
+   cols:[
+    {n:'security_event_id',t:'BIGINT',c:'PK·AI',note:'위협 ID'},
+    {n:'category',t:'VARCHAR(20)',c:'NN',note:'카테고리'},
+    {n:'threat_type',t:'VARCHAR(60)',c:'NN',note:'위협 타입'},
+    {n:'severity',t:'VARCHAR(20)',c:'NN',note:'심각도'},
+    {n:'status',t:'VARCHAR(20)',c:'NN',note:'상태'},
+    {n:'detection_source',t:'VARCHAR(60)',c:'NN',note:'탐지 출처'},
+    {n:'rule_code',t:'VARCHAR(80)',c:'NN',note:'규칙 코드'},
+    {n:'evidence_excerpt',t:'VARCHAR(500)',c:'',note:'증거 요약'},
+    {n:'request_uri',t:'VARCHAR(500)',c:'',note:'요청 URI'},
+    {n:'http_method',t:'VARCHAR(10)',c:'',note:'HTTP 메소드'},
+    {n:'source_ip_hash',t:'VARCHAR(64)',c:'',note:'소스 IP 해시'},
+    {n:'event_fingerprint',t:'CHAR(64)',c:'NN·UQ',note:'이벤트 지문'},
+    {n:'time_bucket',t:'BIGINT',c:'NN·UQ',note:'시간 버킷'},
+    {n:'occurrence_count',t:'INT',c:'NN',note:'발생 횟수'},
+    {n:'first_seen_at',t:'TIMESTAMP',c:'NN',note:'첫 감지'},
+    {n:'last_seen_at',t:'TIMESTAMP',c:'NN',note:'마지막 감지'},
+    {n:'acknowledged_at',t:'TIMESTAMP',c:'',note:'확인 시간'},
+    {n:'resolved_at',t:'TIMESTAMP',c:'',note:'해결 시간'},
+    {n:'is_deleted',t:'TINYINT(1)',c:'NN',note:'삭제 여부'},
+  ]},
+  {id:'security_event_history', label:'SECURITY_EVENT_HISTORY\n(이력)', cat:'#7c2d12', hdr:'#5a2d0c', x:80, y:1040,
+   cols:[
+    {n:'history_id',t:'BIGINT',c:'PK·AI',note:'이력 ID'},
+    {n:'security_event_id',t:'BIGINT',c:'FK·NN',note:'→ security_event'},
+    {n:'changed_by',t:'BIGINT',c:'',note:'변경자'},
+    {n:'previous_status',t:'VARCHAR(20)',c:'NN',note:'이전 상태'},
+    {n:'new_status',t:'VARCHAR(20)',c:'NN',note:'새 상태'},
+    {n:'changed_at',t:'TIMESTAMP',c:'NN',note:'변경 시간'},
+  ]},
+  {id:'security_analysis', label:'SECURITY_ANALYSIS\n(분석)', cat:'#7c2d12', hdr:'#5a2d0c', x:420, y:1040,
+   cols:[
+    {n:'analysis_id',t:'BIGINT',c:'PK·AI',note:'분석 ID'},
+    {n:'security_event_id',t:'BIGINT',c:'FK·NN',note:'→ security_event'},
+    {n:'summary',t:'VARCHAR(500)',c:'NN',note:'분석 요약'},
+    {n:'possible_impact',t:'VARCHAR(500)',c:'NN',note:'예상 영향'},
+    {n:'suggested_action',t:'VARCHAR(500)',c:'NN',note:'제안 조치'},
+    {n:'model_name',t:'VARCHAR(100)',c:'NN',note:'AI 모델명'},
+    {n:'created_at',t:'TIMESTAMP',c:'NN',note:'생성일'},
+    {n:'is_deleted',t:'TINYINT(1)',c:'NN',note:'삭제 여부'},
+  ]},
+  {id:'security_alert', label:'SECURITY_ALERT\n(알림)', cat:'#7c2d12', hdr:'#5a2d0c', x:760, y:1040,
+   cols:[
+    {n:'alert_id',t:'BIGINT',c:'PK·AI',note:'알림 ID'},
+    {n:'security_event_id',t:'BIGINT',c:'FK',note:'→ security_event'},
+    {n:'alert_type',t:'VARCHAR(40)',c:'NN',note:'알림 타입'},
+    {n:'channel_name',t:'VARCHAR(30)',c:'NN',note:'채널명'},
+    {n:'message',t:'VARCHAR(1000)',c:'NN',note:'메시지'},
+    {n:'send_status',t:'VARCHAR(20)',c:'NN',note:'전송 상태'},
+    {n:'error_message',t:'VARCHAR(1000)',c:'',note:'에러 메시지'},
+    {n:'created_at',t:'TIMESTAMP',c:'NN',note:'생성일'},
+    {n:'sent_at',t:'TIMESTAMP',c:'',note:'전송 시간'},
+  ]},
+];
+
+const RELS = [
+  ['board','member','member_id FK','#60a5fa'],
+  ['board_comment','board','board_id FK','#60a5fa'],
+  ['board_comment','member','member_id FK','#60a5fa'],
+  ['board_file','board','board_id FK','#60a5fa'],
+  ['inquiry','member','member_id FK','#60a5fa'],
+  ['inquiry_file','inquiry','inquiry_id FK','#60a5fa'],
+  ['incident','member','member_id FK','#10b981'],
+  ['incident_analysis','incident','incident_id FK','#10b981'],
+  ['incident_alert','incident','incident_id FK','#10b981'],
+  ['incident_history','incident','incident_id FK','#10b981'],
+  ['incident_inquiry','incident','incident_id FK','#10b981'],
+  ['incident_inquiry','inquiry','inquiry_id FK','#10b981'],
+  ['security_event_history','security_event','security_event_id FK','#f59e0b'],
+  ['security_analysis','security_event','security_event_id FK','#f59e0b'],
+  ['security_alert','security_event','security_event_id FK','#f59e0b'],
+];
+
+const TBL_W = 280, ROW_H = 16, HDR_H = 44, PADDING = 2;
+
+let vx=40, vy=30, scale=0.7, dragging=false, dragEl=null;
+let startX=0, startY=0, startVX=0, startVY=0, dragTX=0, dragTY=0;
+let positions = {};
+TABLES.forEach(t => { positions[t.id] = {x:t.x, y:t.y}; });
+
+const svg = document.getElementById('svg');
+const root = document.getElementById('root');
+const relsG = document.getElementById('rels');
+const tablesG = document.getElementById('tables');
+const tooltip = document.getElementById('tooltip');
+
+function getTableHeight(t){ return HDR_H + t.cols.length * ROW_H + PADDING*2; }
+
+function getCBadge(c){
+  const badges=[];
+  if(c.includes('PK')) badges.push({lbl:'PK',col:'#f59e0b'});
+  if(c.includes('FK')) badges.push({lbl:'FK',col:'#10b981'});
+  if(c.includes('AI')) badges.push({lbl:'AI',col:'#a78bfa'});
+  if(c.includes('UQ')) badges.push({lbl:'UQ',col:'#38bdf8'});
+  if(c.includes('NN')) badges.push({lbl:'NN',col:'#ef4444'});
+  return badges;
+}
+
+function render(){
+  relsG.innerHTML=''; tablesG.innerHTML='';
+
+  RELS.forEach(([from,to,lbl,col])=>{
+    const fp=positions[from], tp=positions[to];
+    const ft=TABLES.find(t=>t.id===from), tt=TABLES.find(t=>t.id===to);
+    if(!fp||!tp||!ft||!tt) return;
+    const x1=fp.x+TBL_W/2, y1=fp.y+getTableHeight(ft)/2;
+    const x2=tp.x+TBL_W/2, y2=tp.y+getTableHeight(tt)/2;
+    const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+    const dx=Math.abs(x2-x1)*0.3;
+    path.setAttribute('d',`M${x1},${y1} C${x1+dx},${y1} ${x2-dx},${y2} ${x2},${y2}`);
+    path.setAttribute('stroke',col);
+    path.setAttribute('stroke-width','1.2');
+    path.setAttribute('fill','none');
+    path.setAttribute('opacity','0.6');
+    path.setAttribute('marker-end','url(#arrow)');
+    relsG.appendChild(path);
+  });
+
+  TABLES.forEach(t=>{
+    const pos=positions[t.id];
+    const h=getTableHeight(t);
+    const g=document.createElementNS('http://www.w3.org/2000/svg','g');
+    g.setAttribute('class','table-card');
+    g.setAttribute('transform',`translate(${pos.x},${pos.y})`);
+    g.setAttribute('data-id',t.id);
+    g.setAttribute('filter','url(#shadow)');
+
+    const bg=document.createElementNS('http://www.w3.org/2000/svg','rect');
+    bg.setAttribute('width',TBL_W);
+    bg.setAttribute('height',h);
+    bg.setAttribute('rx','8');
+    bg.setAttribute('fill','#1e293b');
+    bg.setAttribute('stroke',t.cat);
+    bg.setAttribute('stroke-width','1.5');
+    g.appendChild(bg);
+
+    const hdr=document.createElementNS('http://www.w3.org/2000/svg','rect');
+    hdr.setAttribute('width',TBL_W);
+    hdr.setAttribute('height',HDR_H);
+    hdr.setAttribute('rx','8');
+    hdr.setAttribute('fill',t.hdr);
+    g.appendChild(hdr);
+
+    const hdr2=document.createElementNS('http://www.w3.org/2000/svg','rect');
+    hdr2.setAttribute('width',TBL_W);
+    hdr2.setAttribute('height','10');
+    hdr2.setAttribute('y',HDR_H-10);
+    hdr2.setAttribute('fill',t.hdr);
+    g.appendChild(hdr2);
+
+    const lines=t.label.split('\n');
+    lines.forEach((line,i)=>{
+      const txt=document.createElementNS('http://www.w3.org/2000/svg','text');
+      txt.setAttribute('x',TBL_W/2);
+      txt.setAttribute('y', lines.length===1 ? HDR_H/2+3 : 10 + i*12);
+      txt.setAttribute('fill','#ffffff');
+      txt.setAttribute('font-size', i===0?'11':'9');
+      txt.setAttribute('font-weight', i===0?'700':'400');
+      txt.setAttribute('font-family','Malgun Gothic,sans-serif');
+      txt.setAttribute('text-anchor','middle');
+      txt.setAttribute('dominant-baseline','middle');
+      txt.textContent=line;
+      g.appendChild(txt);
+    });
+
+    const sep=document.createElementNS('http://www.w3.org/2000/svg','line');
+    sep.setAttribute('x1','0');
+    sep.setAttribute('y1',HDR_H);
+    sep.setAttribute('x2',TBL_W);
+    sep.setAttribute('y2',HDR_H);
+    sep.setAttribute('stroke',t.cat);
+    sep.setAttribute('stroke-width','1');
+    g.appendChild(sep);
+
+    t.cols.forEach((col,ci)=>{
+      const ry=HDR_H + PADDING + ci*ROW_H;
+      const rbg=document.createElementNS('http://www.w3.org/2000/svg','rect');
+      rbg.setAttribute('x','0');
+      rbg.setAttribute('y',ry);
+      rbg.setAttribute('width',TBL_W);
+      rbg.setAttribute('height',ROW_H);
+      rbg.setAttribute('fill', ci%2===0?'#1e293b':'#0f172a');
+      rbg.setAttribute('class','col-row');
+      g.appendChild(rbg);
+
+      const cn=document.createElementNS('http://www.w3.org/2000/svg','text');
+      cn.setAttribute('x','6');
+      cn.setAttribute('y',ry+ROW_H/2);
+      cn.setAttribute('fill', col.c.includes('PK')?'#fbbf24': col.c.includes('FK')?'#34d399':'#cbd5e1');
+      cn.setAttribute('font-size','9');
+      cn.setAttribute('font-family','Consolas,monospace');
+      cn.setAttribute('dominant-baseline','middle');
+      cn.setAttribute('font-weight', col.c.includes('PK')||col.c.includes('FK')?'700':'400');
+      cn.textContent=col.n;
+      g.appendChild(cn);
+
+      const ct=document.createElementNS('http://www.w3.org/2000/svg','text');
+      ct.setAttribute('x',TBL_W-90);
+      ct.setAttribute('y',ry+ROW_H/2);
+      ct.setAttribute('fill','#64748b');
+      ct.setAttribute('font-size','7');
+      ct.setAttribute('font-family','Consolas,monospace');
+      ct.setAttribute('dominant-baseline','middle');
+      ct.textContent=col.t.substring(0,18);
+      g.appendChild(ct);
+
+      const badges=getCBadge(col.c);
+      let bx=TBL_W-4;
+      badges.slice(0,2).reverse().forEach(b=>{
+        bx-=14;
+        const br=document.createElementNS('http://www.w3.org/2000/svg','rect');
+        br.setAttribute('x',bx);
+        br.setAttribute('y',ry+1);
+        br.setAttribute('width','12');
+        br.setAttribute('height','10');
+        br.setAttribute('rx','1.5');
+        br.setAttribute('fill',b.col);
+        br.setAttribute('opacity','0.2');
+        g.appendChild(br);
+        const bt=document.createElementNS('http://www.w3.org/2000/svg','text');
+        bt.setAttribute('x',bx+6);
+        bt.setAttribute('y',ry+ROW_H/2);
+        bt.setAttribute('fill',b.col);
+        bt.setAttribute('font-size','6');
+        bt.setAttribute('font-family','Consolas,monospace');
+        bt.setAttribute('text-anchor','middle');
+        bt.setAttribute('dominant-baseline','middle');
+        bt.setAttribute('font-weight','700');
+        bt.textContent=b.lbl;
+        g.appendChild(bt);
+      });
+
+      if(ci < t.cols.length-1){
+        const sl=document.createElementNS('http://www.w3.org/2000/svg','line');
+        sl.setAttribute('x1','0');
+        sl.setAttribute('y1',ry+ROW_H);
+        sl.setAttribute('x2',TBL_W);
+        sl.setAttribute('y2',ry+ROW_H);
+        sl.setAttribute('stroke','#1e3a5f');
+        sl.setAttribute('stroke-width','0.5');
+        g.appendChild(sl);
+      }
+
+      const ov=document.createElementNS('http://www.w3.org/2000/svg','rect');
+      ov.setAttribute('x','0');
+      ov.setAttribute('y',ry);
+      ov.setAttribute('width',TBL_W);
+      ov.setAttribute('height',ROW_H);
+      ov.setAttribute('fill','transparent');
+      ov.addEventListener('mouseenter',e=>{
+        tooltip.style.display='block';
+        const constr = col.c ? col.c.split('·').join(', ') : '없음';
+        tooltip.innerHTML=`<b style="color:#fbbf24">${t.id}.${col.n}</b><br>
+          <code>${col.t}</code><br>
+          제약: ${constr}<br>
+          <span style="color:#94a3b8">${col.note}</span>`;
+      });
+      ov.addEventListener('mousemove',e=>{
+        tooltip.style.left=(e.clientX+12)+'px';
+        tooltip.style.top=(e.clientY+8)+'px';
+      });
+      ov.addEventListener('mouseleave',()=>{tooltip.style.display='none';});
+      g.appendChild(ov);
+    });
+
+    g.addEventListener('mousedown',e=>{
+      e.stopPropagation();
+      dragging=true;
+      dragEl=t.id;
+      dragTX=positions[t.id].x;
+      dragTY=positions[t.id].y;
+      startX=e.clientX;
+      startY=e.clientY;
+    });
+
+    tablesG.appendChild(g);
+  });
+
+  root.setAttribute('transform',`translate(${vx},${vy}) scale(${scale})`);
+}
+
+svg.addEventListener('mousedown',e=>{
+  if(dragEl) return;
+  dragging=true;
+  dragEl=null;
+  startX=e.clientX;
+  startY=e.clientY;
+  startVX=vx;
+  startVY=vy;
+});
+
+document.addEventListener('mousemove',e=>{
+  if(!dragging) return;
+  if(dragEl){
+    const dx=(e.clientX-startX)/scale, dy=(e.clientY-startY)/scale;
+    positions[dragEl].x=dragTX+dx;
+    positions[dragEl].y=dragTY+dy;
+    render();
+  } else {
+    vx=startVX+(e.clientX-startX);
+    vy=startVY+(e.clientY-startY);
+    root.setAttribute('transform',`translate(${vx},${vy}) scale(${scale})`);
+  }
+});
+
+document.addEventListener('mouseup',()=>{ dragging=false; dragEl=null; });
+
+svg.addEventListener('wheel',e=>{
+  e.preventDefault();
+  const delta=e.deltaY>0?0.9:1.1;
+  const rect=svg.getBoundingClientRect();
+  const mx=e.clientX-rect.left, my=e.clientY-rect.top;
+  vx=(vx-mx)*delta+mx;
+  vy=(vy-my)*delta+my;
+  scale*=delta;
+  scale=Math.max(0.2,Math.min(3,scale));
+  document.getElementById('zoomLabel').textContent=Math.round(scale*100)+'%';
+  root.setAttribute('transform',`translate(${vx},${vy}) scale(${scale})`);
+});
+
+function resetView(){ vx=40; vy=30; scale=0.7; document.getElementById('zoomLabel').textContent=Math.round(scale*100)+'%'; render(); }
+function zoomIn(){ scale=Math.min(3,scale*1.2); document.getElementById('zoomLabel').textContent=Math.round(scale*100)+'%'; render(); }
+function zoomOut(){ scale=Math.max(0.2,scale*0.8); document.getElementById('zoomLabel').textContent=Math.round(scale*100)+'%'; render(); }
+
+resetView();
+</script>
+</body>
+</html>
